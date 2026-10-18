@@ -350,6 +350,9 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 .grp input,.grp select,.grp textarea{background:var(--sheet)}
 .grp .field>label{color:var(--ink)}
 .grp .field .hint{margin-top:4px}
+.expbox{margin:8px 0 12px}
+.expbox textarea{word-break:break-all;font-family:ui-monospace,Menlo,monospace}
+.expbox a{color:var(--blue);font-weight:800}
 
 /* celebration: he jumps in with the reward */
 #celebrate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;pointer-events:none;opacity:0;transition:opacity .2s;overflow-y:auto;
@@ -362,7 +365,7 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 #celebrate.show .celchar{animation:jumpIn .5s cubic-bezier(.3,1.5,.5,1)}
 @keyframes jumpIn{from{transform:translateY(60px) scale(.6);opacity:0}}
 .celcard{position:relative;width:min(360px,100%);background:var(--sheet);border-radius:26px;padding:30px 18px 16px;text-align:center;box-shadow:0 7px 0 var(--shade)}
-.ribbon{position:absolute;left:50%;top:-18px;transform:translateX(-50%);background:var(--red);color:var(--on);font:900 18px var(--f-body);padding:7px 22px;border-radius:14px;box-shadow:0 4px 0 var(--red-e);white-space:nowrap}
+.ribbon{position:absolute;z-index:2;left:50%;top:-18px;transform:translateX(-50%);background:var(--red);color:var(--on);font:900 18px var(--f-body);padding:7px 22px;border-radius:14px;box-shadow:0 4px 0 var(--red-e);white-space:nowrap}
 #celebrate.show .ribbon{animation:stampIn .4s .15s cubic-bezier(.3,1.6,.5,1) backwards}
 .celcard .xp{font:900 22px var(--f-num);color:var(--sun-e)}
 .celcard p{margin:6px 0 0;font-weight:700}
@@ -472,10 +475,12 @@ const I18N = {
     statsHint:'How this week went. Use the arrows to switch weeks.', complSub:'Tasks done ÷ all tasks this week', hoursSub:'Time of finished tasks (rest not counted)',
     streakSub:'Days in a row with at least 1 task done', perDaySub:'Each bar is one day. Green = every task that day done.', perCatSub:'Bar = how much of the planned time you finished',
     secImp:'Schedule & backup', secImpHint:'Paste the backup text {c} sent you below, then tap Import.', impWarn:'Importing replaces all current tasks and progress.',
-    fileHint:'Export data saves your progress as a file. Use Import file to bring it back on a new phone.',
+    fileHint:'Export data turns all your progress into text you can copy or save. Paste it above (or use Import file) to bring it back on a new phone.',
+    copy:'Copy text', copied:'Copied ✓', copyFail:'Long-press the text above, Select All, then Copy.', shareFile:'Share / Save file',
+    expHint:'This is all your progress. Copy it and send it to yourself (e.g. a chat with yourself) to keep it safe.', dlLink:'Nothing happened? Tap here to download the file.',
     secYou:'You & him', secShow:'Display', replayGuide:'Show the guide again',
     guideTitle:'How it works', guideGo:'Got it!',
-    guide:['This is {c}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Rewards shows medals and stickers you unlock.','The gear opens settings: import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
+    guide:['This is {c}, and the girl next to him is you, {h}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Rewards shows medals and stickers you unlock.','The gear opens settings: import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
   },
   zh:{
     tabs:{home:'主页',week:'任务',ach:'奖励',stats:'统计'},
@@ -516,10 +521,12 @@ const I18N = {
     statsHint:'看看这周做得怎么样，用上面的箭头切换周。', complSub:'做完的任务 ÷ 本周全部任务', hoursSub:'做完的任务时长加起来（不含休息）',
     streakSub:'连续每天至少完成 1 个任务的天数', perDaySub:'每根柱子是一天，绿色 = 那天全部完成。', perCatSub:'条越满，计划的时间完成得越多',
     secImp:'课表和备份', secImpHint:'把{c}发给你的备份文字粘贴到下面，再点「导入」。', impWarn:'注意：导入会替换现在所有的任务和进度。',
-    fileHint:'「导出数据」把现在的进度存成文件，换手机时用「导入文件」恢复。',
+    fileHint:'「导出数据」把现在的全部进度变成一段文字，可以复制或存成文件。换手机时粘贴到上面的框里（或用「导入文件」）就能恢复。',
+    copy:'复制文字', copied:'已复制 ✓', copyFail:'请长按上面的文字，全选后复制。', shareFile:'分享 / 存成文件',
+    expHint:'这是你的全部进度。复制下来发给自己（比如微信「文件传输助手」）保存好。', dlLink:'没反应？点这里下载文件。',
     secYou:'你和他', secShow:'显示', replayGuide:'重新看一遍怎么玩',
     guideTitle:'怎么玩', guideGo:'知道啦！',
-    guide:['这是{c}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
+    guide:['这是{c}，站在他旁边的女生就是你：{h}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
   }
 };
 
@@ -861,7 +868,7 @@ function renderHome(){
 function showGuide(){
   const l = L(), el = document.getElementById('celebrate');
   el.innerHTML = `<img class="celchar" src="${charSrc('happy')}" alt=""><div class="celcard"><div class="ribbon">${esc(l.guideTitle)}</div>
-    <ol class="steps">${l.guide.map(x => `<li>${esc(fill(x,{c:coachName()}))}</li>`).join('')}</ol>
+    <ol class="steps">${l.guide.map(x => `<li>${esc(fill(x,{c:coachName(), h:herName()}))}</li>`).join('')}</ol>
     <button class="c3d go" id="gok" style="width:100%;margin-top:12px;font-size:17px">${esc(l.guideGo)}</button></div>`;
   el.classList.add('show','guide'); el.onclick = null; clearTimeout(celTimer); el.scrollTop = 0;
   if(profDlg.open) profDlg.close();
@@ -1195,13 +1202,13 @@ function openProfile(opt={}){
       <div class="err" id="pErr" role="alert"></div>
       ${noTasks ? '' : `<div class="hint" style="color:var(--danger);font-weight:700">${l.impWarn}</div>`}
       <div class="btnrow" style="margin-top:10px"><button class="ghost" id="pImp">${l.importBtn}</button><button class="ghost" id="pExp">${l.exportBtn}</button></div>
-      <div class="hint" style="margin-bottom:12px">${l.fileHint}</div>`, noTasks ? 'top' : '');
+      <div class="hint" style="margin-bottom:12px">${l.fileHint}</div><div class="expbox" id="expBox" hidden></div>`, noTasks ? 'top' : '');
   const you = grp(l.secYou, '', `
       <div class="prof-av"><div class="ava">${avatarHTML()}</div>
         <div class="btnrow"><button class="primary" id="pUp">${l.upload}</button>
         ${state.profile.avatar ? `<button class="ghost" id="pRm">${l.removePhoto}</button>` : ''}</div></div>
       <div class="field"><label for="pName">${l.name}</label><input id="pName" maxlength="30" value="${esc(state.profile.name)}" placeholder="${esc(l.defaultName)}"></div>
-      <div class="field"><label for="pCoach">${l.coachLabel}</label><input id="pCoach" maxlength="30" value="${esc(state.profile.coach)}" placeholder="${esc(coachDefault())}">
+      <div class="field"><label for="pCoach">${l.coachLabel}</label><input id="pCoach" maxlength="30" value="${esc(/^\s*claude\s*$/i.test(state.profile.coach || '') ? '' : state.profile.coach)}" placeholder="${esc(coachDefault())}">
         <div class="hint">${l.coachHint}</div></div>
       <div class="field"><label for="pHer">${l.herLabel}</label><input id="pHer" maxlength="30" value="${esc(state.profile.herName)}" placeholder="${esc(herDefault())}">
         <div class="hint">${l.herHint}</div></div>
@@ -1214,7 +1221,7 @@ function openProfile(opt={}){
         Notification.permission === 'denied' ? `<div class="hint">${C.notifBlocked}</div>` :
         `<div class="btnrow"><button class="ghost" id="pNotif">${C.notif}</button></div>`) : ''}</div>
       <div class="field"><div class="btnrow"><button class="c3d" id="pCal">${C.calBtn}</button></div>
-      <div class="hint">${C.calNote}</div></div>`);
+      <div class="hint">${C.calNote}</div><div class="expbox" id="calBox" hidden></div></div>`);
   const show = grp(l.secShow, '', `
       <div class="row">
         <div class="field"><label for="pLang">${l.language}</label><select id="pLang"><option value="en" ${state.lang==='en'?'selected':''}>English</option><option value="zh" ${state.lang==='zh'?'selected':''}>中文</option></select></div>
@@ -1270,19 +1277,51 @@ document.getElementById('avatarFile').onchange = e => {
   img.src = URL.createObjectURL(file);
 };
 
+/* saving files: an iPhone home-screen app ignores a.download, so offer copy / the share sheet first and keep a plain link last */
+const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function fileOf(name, text, type){try{return new File([text], name, {type});}catch(e){return null;}}
+function canShareFile(f){try{return !!(f && navigator.share && navigator.canShare && navigator.canShare({files:[f]}));}catch(e){return false;}}
+function shareFile(f, fail){navigator.share({files:[f], title:f.name}).catch(e => {if(!e || e.name !== 'AbortError') fail();});}
+const fileUrls = {};
+function fileLink(name, text, type){
+  if(fileUrls[type]) URL.revokeObjectURL(fileUrls[type]);
+  const u = fileUrls[type] = URL.createObjectURL(new Blob([text], {type}));
+  return `<a href="${u}" download="${esc(name)}" target="_blank" rel="noopener">${esc(L().dlLink)}</a>`;
+}
 function exportData(){
-  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `study-quest-backup-${keyOf(today())}.json`;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  const l = L(), box = document.getElementById('expBox'), text = JSON.stringify(state);
+  const name = `study-quest-backup-${keyOf(today())}.json`, f = fileOf(name, text, 'application/json');
+  box.hidden = false;
+  box.innerHTML = `<div class="hint" style="margin:0 0 6px">${esc(l.expHint)}</div>
+    <textarea id="expTxt" rows="4" readonly aria-label="${esc(l.exportBtn)}">${esc(text)}</textarea>
+    <div class="btnrow"><button class="c3d go" id="expCopy" style="flex:1">${esc(l.copy)}</button>${canShareFile(f) ? `<button class="ghost" id="expShare">${esc(l.shareFile)}</button>` : ''}</div>
+    <div class="err" id="expErr"></div><div class="hint">${fileLink(name, text, 'application/json')}</div>`;
+  const ta = document.getElementById('expTxt'), cb = document.getElementById('expCopy');
+  const done = () => cb.textContent = l.copied, fail = () => document.getElementById('expErr').textContent = l.copyFail;
+  // select the text (so a manual long-press copy also works) and copy it in the same tap; clipboard API as the backup
+  const copy = () => {
+    ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+    let ok = false; try{ok = document.execCommand('copy');}catch(e){}
+    if(ok) done();
+    else if(navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fail);
+    else fail();
+  };
+  cb.onclick = copy;
+  const sb = document.getElementById('expShare');
+  if(sb) sb.onclick = () => shareFile(f, fail);
+  box.scrollIntoView({block:'nearest'});
 }
 function importText(txt){
   try{
     const s = JSON.parse(String(txt).trim());
-    if(!s || !Array.isArray(s.tasks)) throw 0;
-    state = migrate(Object.assign(freshState(), s)); save(); profDlg.close(); render(); toast('', L().imported);
+    if(!s || typeof s !== 'object' || !Array.isArray(s.tasks)) throw 0;
+    // a schedule he sends has no photo / her names: keep what she already set on this phone
+    const keep = state.profile, guided = state.guided, pet = state.pet;
+    state = migrate(Object.assign(freshState(), s));
+    if((+(s.pet && s.pet.last) || 0) < (+pet.last || 0)) state.pet = pet;
+    for(const k of ['name','avatar','herName','nicks','coach']) if(!String(state.profile[k] || '').trim() && keep[k]) state.profile[k] = keep[k];
+    if(guided) state.guided = guided;
+    save(); profDlg.close(); render(); toast('', L().imported);
   }catch(e){
     const pe = profDlg.open && document.getElementById('pErr');
     if(pe) pe.textContent = L().badImport; else toast('', L().badImport);
@@ -1391,7 +1430,8 @@ const COACH = {
     cal:['{n}, you\'ve got this!','Let\'s go, {n}!','{n}, I believe in you','Focus time, {n}','You\'re doing amazing, {n}'],
     calDesc:'Hey {n}, “{t}” starts at {s}. Do your best, then open Study Quest and mark it done for +{x} XP. — {c}',
     nicks:'What should he call you? (separate with commas)', calBtn:'Add reminders to phone calendar',
-    calNote:'Downloads a calendar file. Open it on your phone and add the events, and your phone shows the reminders even when this app is closed. If your schedule changes, delete the old Study Quest events and add the new file.',
+    calNote:'Makes a calendar file with all your tasks. Add its events to your phone\'s calendar and your phone shows the reminders even when this app is closed. If your schedule changes, delete the old Study Quest events and add the new file.',
+    calHint:'In the share menu pick Calendar, or Save to Files and then open the file, and tap Add All.', calNone:'No tasks yet. Import your schedule first.',
     ok:'Got it', doneBtn:'Done!', remind:'Reminders', before:'Remind me before a task',
     notif:'Allow notifications', notifOn:'Notifications are on.', notifBlocked:'Notifications are blocked in this browser.',
     remindNote:'Reminders work while this app is open.'
@@ -1408,7 +1448,8 @@ const COACH = {
     cal:['{n}，你可以的！','冲呀 {n}！','{n}，我相信你','{n}，专注时间到','{n} 今天也超棒'],
     calDesc:'{n}，「{t}」{s} 开始啦。认真完成，然后打开学习闯关打卡领取 +{x} 经验！—— {c}',
     nicks:'想让他怎么叫你？（用逗号分开）', calBtn:'把提醒加到手机日历',
-    calNote:'会下载一个日历文件。在手机上打开它并添加日程，这样即使 App 没打开，手机也会弹出提醒。如果改了安排，先删掉旧的 Study Quest 日程，再重新添加。',
+    calNote:'会生成一个包含所有任务的日历文件。把里面的日程添加到手机日历，这样即使 App 没打开，手机也会弹出提醒。如果改了安排，先删掉旧的 Study Quest 日程，再重新添加。',
+    calHint:'在分享菜单里选「日历」，或者「存储到文件」后打开这个文件，点「全部添加」。', calNone:'还没有任务，先导入课表吧。',
     ok:'知道了', doneBtn:'完成！', remind:'提醒', before:'任务开始前提醒我',
     notif:'允许通知', notifOn:'通知已开启。', notifBlocked:'浏览器已禁止通知。',
     remindNote:'App 开着的时候提醒才会生效。'
@@ -1693,12 +1734,24 @@ function exportCalendar(){
       'END:VEVENT');
   }
   lines.push('END:VCALENDAR');
-  const blob = new Blob([lines.map(icsFold).join('\r\n')+'\r\n'], {type:'text/calendar'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'study-quest-reminders.ics';
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  const box = document.getElementById('calBox');
+  if(lines.length < 7){if(box){box.hidden = false; box.innerHTML = `<div class="err">${esc(c.calNone)}</div>`;} return;}
+  const text = lines.map(icsFold).join('\r\n')+'\r\n', name = 'study-quest-reminders.ics', type = 'text/calendar';
+  const f = fileOf(name, text, type);
+  // iPhone: the share sheet (Calendar / Save to Files); else open the file so iOS offers "Add All"; else a normal download
+  const open = () => {
+    if(IOS && window.open('data:text/calendar;charset=utf-8,' + encodeURIComponent(text), '_blank')) return;
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type})); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+  };
+  if(canShareFile(f)) shareFile(f, open); else open();
+  if(box){
+    box.hidden = false;
+    box.innerHTML = `<div class="hint" style="margin:0 0 6px">${esc(c.calHint)}</div>${canShareFile(f) ? `<div class="btnrow"><button class="ghost" id="calShare">${esc(L().shareFile)}</button></div>` : ''}
+      <div class="hint">${fileLink(name, text, type)}</div>`;
+    const sb = document.getElementById('calShare');
+    if(sb) sb.onclick = () => shareFile(f, open);
+  }
 }
 
 /* refresh "now" info every 30s; check reminders every 20s */
