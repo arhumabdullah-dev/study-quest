@@ -76,7 +76,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
 .mode{display:flex;flex-direction:column;align-items:stretch;background:var(--sheet);border-radius:26px;overflow:hidden;box-shadow:0 7px 0 var(--shade);text-align:center;transition:transform .08s,box-shadow .08s}
 .mode:active{transform:translateY(5px);box-shadow:0 2px 0 var(--shade)}
-.mode .pic{height:min(30vh,250px);display:flex;justify-content:center;align-items:flex-end;padding-top:10px;
+.mode .pic{height:min(25vh,220px);display:flex;justify-content:center;align-items:flex-end;padding-top:10px;
   background:radial-gradient(130% 30% at 50% 100%,var(--floor2) 0 55%,transparent 56%),linear-gradient(180deg,var(--c1),var(--c2))}
 .mode.couple{--c1:var(--couple1);--c2:var(--couple2);--g:var(--m);--ge:var(--m-e)}
 .mode.enemy{--c1:var(--enemy1);--c2:var(--enemy2);--g:var(--orange);--ge:var(--orange-e)}
@@ -122,7 +122,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .bubble::after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-9px;border:9px solid transparent;border-bottom:0;border-top-color:var(--bubble)}
 @keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
 /* absolutely placed so its height comes from the room (a % height inside a flex item with no fixed height resolves to 0) */
-.figwrap{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);height:min(calc(100% - 76px),460px);aspect-ratio:466/760;max-width:100%;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.figwrap{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);height:min(calc(100% - 56px),460px);aspect-ratio:466/760;max-width:100%;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .fig{position:absolute;inset:0;transform-origin:50% 100%}
 .fig img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;display:block;pointer-events:none;filter:drop-shadow(0 8px 6px rgba(60,30,10,.2))}
 .fig canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -177,7 +177,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .tool b{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:var(--paper);box-shadow:0 4px 0 var(--shade);transition:transform .08s,box-shadow .08s}
 .tool:active b{transform:translateY(3px);box-shadow:0 1px 0 var(--shade)}
 .tool span{padding:1px 7px;border-radius:999px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.tools.five .tool span{padding:1px 4px}
+.tools.five .tool span{padding:1px 2px}
 .tool.on b{background:var(--m);box-shadow:0 4px 0 var(--m-e),0 0 0 3px var(--sheet),0 0 0 6px var(--m);transform:scale(1.08)}
 .tool.on span{color:var(--on);background:var(--m)}
 .foods{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none;overscroll-behavior-x:contain}
@@ -196,7 +196,9 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 .modal p{margin:0;font-weight:700}
 .modal .mini{height:min(30vh,220px);display:flex;justify-content:center}
 .modal .mini img{height:100%;filter:drop-shadow(0 6px 6px rgba(0,0,0,.2))}
-.breath{width:150px;height:150px;margin:26px auto;border-radius:50%;background:var(--paper);box-shadow:0 0 0 12px color-mix(in srgb,var(--m) 25%,transparent);
+.modal .shot{display:block;width:auto;max-width:100%;max-height:52vh;margin:0 auto;border-radius:18px;-webkit-touch-callout:default}
+.modal a.c3d{text-decoration:none;display:flex;align-items:center;justify-content:center}
+.breath{width:150px;height:150px;margin:46px auto;border-radius:50%;background:var(--paper);box-shadow:0 0 0 12px color-mix(in srgb,var(--m) 25%,transparent);
   display:grid;place-items:center;font-size:18px;font-weight:900;transition:transform 4s ease-in-out}
 .breath.in{transform:scale(1.4)}
 .count{color:var(--pencil);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
@@ -238,7 +240,7 @@ const T = {
     endTitle:'压力清零！', breathe:'跟我做 30 秒放松呼吸', breathTitle:'放松呼吸', doneTitle:'辛苦了', again:'再来一局', home:'回首页',
     inhale:'吸气……', exhale:'呼气……', left:'秒', breathHow:'圆圈变大时吸气，变小时呼气', skip:'跳过',
     breatheDone:'做得很好。压力是真实的，但你比它更强大。今天也辛苦了，记得对自己好一点 💛',
-    loveFull:'甜度满分！', loveFullSub:'保存一张图片发给{h}吧～', herFullSub:'把可爱的{s}保存成图片吧～', keep:'继续玩', saved:'图片已保存！',
+    loveFull:'甜度满分！', loveFullSub:'保存一张图片发给{h}吧～', herFullSub:'把可爱的{s}保存成图片吧～', keep:'继续玩', saved:'图片已保存！', saveHint:'长按图片，就能保存到相册', share:'分享 / 保存', close:'关闭',
     defEnemy:'老板', him:'安仁', himPh:'给他起个名字', her:'小春', herPh:'给她起个名字', howTitle:'怎么玩', go:'开始！', help:'怎么玩',
     howEnemy:['在下面选一个工具，比如 👊 拳头','点{n}的身上打他！（选「涂鸦」就用手指在他身上画）','把上面的「你的压力」打到 0 就赢了，最后做个放松呼吸'],
     howCouple:['点下面的食物喂{h}，越喂越胖','点「亲亲」「抱抱」等按钮，或者直接点他的脸','把上面的「甜蜜度」加满 100，有惊喜'],
@@ -260,7 +262,7 @@ const T = {
     endTitle:'Stress cleared!', breathe:'30-second calm breathing', breathTitle:'Calm breathing', doneTitle:'Nice work', again:'Play again', home:'Home',
     inhale:'Breathe in…', exhale:'Breathe out…', left:'s', breathHow:'Breathe in as the circle grows, out as it shrinks', skip:'Skip',
     breatheDone:'Well done. Stress is real, but you\'re stronger than it. You worked hard today. Be kind to yourself 💛',
-    loveFull:'Max sweetness!', loveFullSub:'Save a picture and send it to {h}~', herFullSub:'Save a picture of cute {s}~', keep:'Keep playing', saved:'Picture saved!',
+    loveFull:'Max sweetness!', loveFullSub:'Save a picture and send it to {h}~', herFullSub:'Save a picture of cute {s}~', keep:'Keep playing', saved:'Picture saved!', saveHint:'Press and hold the picture to save it', share:'Share / Save', close:'Close',
     defEnemy:'Boss', him:'Anren', himPh:'Give him a name', her:'Xiao Chun', herPh:'Give her a name', howTitle:'How to play', go:'Let\'s go!', help:'How to play',
     howEnemy:['Pick a tool at the bottom, like 👊 Punch','Tap {n} to hit him! (With Doodle, drag your finger on him)','Get "Your stress" at the top down to 0 to win, then relax with a breathing exercise'],
     howCouple:['Tap a food at the bottom to feed {h}. He gets chubbier!','Tap Kiss, Hug and the other buttons, or tap his face','Fill "Sweetness" at the top to 100 for a surprise'],
@@ -652,7 +654,8 @@ function setMeter(v){
 }
 let exprTimer;
 function setExpr(e, ms=1900){
-  ps.expr = e; redraw();
+  // once the boss is bald he stays bald (only the pie picture hides his head)
+  ps.expr = mode === 'enemy' && ps.bald && e !== 'pie' ? 'bald' : e; redraw();
   clearTimeout(exprTimer);
   exprTimer = setTimeout(() => {ps.expr = idleExpr(); redraw();}, ms);
 }
@@ -690,7 +693,7 @@ function enemyAct(k, x=50, y=40){
   ps.stress = Math.max(0, ps.stress - cost);
   setMeter(ps.stress);
   if(ps.stress > 0 && ps.stress <= 20 && !(k === 'snip' && ps.bald)) setHint('🔥', tx().almost);
-  if(ps.stress === 0 && !ps.ended){ps.ended = true; setTimeout(showEnding, 1300);}
+  if(ps.stress === 0 && !ps.ended){ps.ended = true; const p = ps; setTimeout(() => ps === p && showEnding(), 1300);}
 }
 
 function coupleAct(k, food){
@@ -718,7 +721,7 @@ function coupleAct(k, food){
   ps.love = Math.min(100, ps.love + gain);
   setMeter(ps.love);
   if(ps.love >= 80 && ps.love < 100) setHint('💗', tx().loveAlmost);
-  if(ps.love >= 100 && !ps.celebrated){ps.celebrated = true; setTimeout(showLoveFull, 900);}
+  if(ps.love >= 100 && !ps.celebrated){ps.celebrated = true; const p = ps; setTimeout(() => ps === p && screen === 'play' && showLoveFull(), 900);}
 }
 
 /* ---------- first-time guide ---------- */
@@ -749,7 +752,7 @@ function showEnding(){
   speak(line); sfx('win');
   const o = overlay(`<h2>${t.endTitle}</h2>
     <div class="mini"><img src="img/boss/sorry.webp" alt=""></div>
-    <p>${esc(enemyName())}：${esc(line)}</p>
+    <p>${esc(enemyName())}${store.lang === 'zh' ? '：' : ': '}${esc(line)}</p>
     <button class="c3d wide" id="br">${t.breathe}</button>
     <button class="c3d white wide" id="ag">${t.again}</button><button class="c3d white wide" id="hm">${t.home}</button>`);
   o.querySelector('#ag').onclick = () => {o.remove(); startPlay(); render();};
@@ -819,19 +822,25 @@ function savePicture(){
         ctx.save(); ctx.translate(bx + bw/2, by + .6*bh); ctx.rotate(-4*Math.PI/180);
         ctx.font = '900 26px ui-rounded,"PingFang SC",sans-serif'; const tw = ctx.measureText(enemyName()).width + 28;
         ctx.fillStyle = '#fff'; ctx.strokeStyle = '#ff6a2b'; ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.roundRect(-tw/2, -20, tw, 40, 10); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-tw/2, -20, tw, 40, 10) : ctx.rect(-tw/2, -20, tw, 40); ctx.fill(); ctx.stroke();
         ctx.fillStyle = '#2b2840'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(enemyName(), 0, 1); ctx.restore();
       }
     }
     drawStrokes(ctx, bx, by, bw, bh);
     ctx.fillStyle = 'rgba(43,40,64,.55)'; ctx.font = '700 22px ui-rounded,"PingFang SC",sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(tx().appTitle, W - 20, H - 20);
+    // a home-screen app on iPhone can't download files, so show the picture: press and hold saves it, Share opens the share sheet
     cv.toBlob(b => {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(b); a.download = `stress-room-${mode}.png`; a.click();
-      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
-      toast(tx().saved);
-    });
+      if(!b) return;
+      const t = tx(), url = URL.createObjectURL(b), file = new File([b], `stress-room-${mode}.png`, {type:'image/png'});
+      const canShare = !!(navigator.canShare && navigator.canShare({files:[file]}));
+      const o = overlay(`<p class="count">${t.saveHint}</p><img class="shot" src="${url}" alt="">
+        ${canShare ? `<button class="c3d wide" id="shr">${t.share}</button>` : `<a class="c3d wide" id="dl" href="${url}" download="${file.name}">${t.save}</a>`}
+        <button class="c3d white wide" id="cl">${t.close}</button>`);
+      const shr = o.querySelector('#shr');
+      if(shr) shr.onclick = () => navigator.share({files:[file]}).catch(() => {});
+      o.querySelector('#cl').onclick = () => {o.remove(); URL.revokeObjectURL(url);};
+    }, 'image/png');
   };
   img.src = poseSrc();
 }
