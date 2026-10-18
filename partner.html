@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>他的页面</title>
+<link rel="icon" type="image/png" href="icons/study-192.png">
+<link rel="apple-touch-icon" href="icons/study-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="他的页面">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#bfe6ff">
+<style>
+/* His side of the couple apps: same sky-blue room, warm floor and candy buttons as 学习闯关. */
+:root{
+  --sky1:#aee0ff; --sky2:#e6f6ff; --floor1:#ffe3bd; --floor2:#ffcf94;
+  --sheet:#ffffff; --paper:#eef8ff; --ink:#25304b; --pencil:#6b7595; --rule:#e2e8f3; --shade:rgba(37,48,75,.16);
+  --sun:#ffc21f; --sun-e:#e59a00; --go:#36c66b; --go-e:#1f9a4d; --pink:#ff6f9f; --pink-e:#de4b7f;
+  --red:#ff5d50; --red-e:#d23b2f; --blue:#3b8cff; --blue-e:#2367d4; --on:#ffffff; --on-sun:#4a2c00;
+  --hl-soft:#fff0a8; --good:#1f9a4d; --danger:#e23d31; --bubble:#ffffff; --bubble-ink:#25304b; --read:#2367d4;
+  --c-english:#3b8cff; --c-class:#8b5cf6; --c-study:#14a895; --c-sport:#ff8a2a; --c-rest:#8a94a6; --c-life:#ff5f9e;
+  --backdrop:rgba(20,26,50,.5);
+  --f-body:ui-rounded,"SF Pro Rounded","PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,"Segoe UI",sans-serif;
+  --f-num:ui-rounded,"SF Pro Rounded",-apple-system,"Segoe UI",sans-serif;
+  --navh:78px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --sky1:#18214a; --sky2:#2a3470; --floor1:#3d3166; --floor2:#2b2350;
+    --sheet:#232b4d; --paper:#1b2244; --ink:#eef1ff; --pencil:#a6aed0; --rule:#38426e; --shade:rgba(0,0,0,.35);
+    --sun:#ffc21f; --sun-e:#c98400; --go:#36c66b; --go-e:#1b7d3f; --pink:#ff6f9f; --pink-e:#b93a68;
+    --red:#ff6a5e; --red-e:#b8352b; --blue:#5b9dff; --blue-e:#2e5fb8; --on:#ffffff; --on-sun:#3b2300;
+    --hl-soft:rgba(232,197,71,.3); --good:#5ad48a; --danger:#ff6a5e; --bubble:#ffffff; --bubble-ink:#25304b; --read:#8bb8ff;
+    --c-english:#6ea8ff; --c-class:#a88bf0; --c-study:#3cc2ad; --c-sport:#ffa055; --c-rest:#a2acb9; --c-life:#ff86b6;
+    --backdrop:rgba(5,8,20,.65);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --sky1:#18214a; --sky2:#2a3470; --floor1:#3d3166; --floor2:#2b2350;
+  --sheet:#232b4d; --paper:#1b2244; --ink:#eef1ff; --pencil:#a6aed0; --rule:#38426e; --shade:rgba(0,0,0,.35);
+  --sun:#ffc21f; --sun-e:#c98400; --go:#36c66b; --go-e:#1b7d3f; --pink:#ff6f9f; --pink-e:#b93a68;
+  --red:#ff6a5e; --red-e:#b8352b; --blue:#5b9dff; --blue-e:#2e5fb8; --on:#ffffff; --on-sun:#3b2300;
+  --hl-soft:rgba(232,197,71,.3); --good:#5ad48a; --danger:#ff6a5e; --bubble:#ffffff; --bubble-ink:#25304b; --read:#8bb8ff;
+  --c-english:#6ea8ff; --c-class:#a88bf0; --c-study:#3cc2ad; --c-sport:#ffa055; --c-rest:#a2acb9; --c-life:#ff86b6;
+  --backdrop:rgba(5,8,20,.65);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--sky2);background-image:linear-gradient(180deg,var(--sky1),var(--sky2) 70%);background-attachment:fixed;
+  color:var(--ink);font:15px/1.45 var(--f-body);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:2px solid var(--rule);border-radius:14px;padding:10px 12px;width:100%;min-height:46px}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);outline:0}
+a{color:var(--blue);font-weight:800}
+.wrap{max-width:560px;margin:0 auto;padding-top:max(10px,env(safe-area-inset-top));padding-bottom:calc(var(--navh) + 24px + env(safe-area-inset-bottom));
+  padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+body.out .wrap{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--pencil)}
+.hint{font-size:13px;color:var(--pencil);margin-top:6px;font-weight:600;line-height:1.45}
+.spacer{flex:1}
+.icon{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+.c3d{--b:var(--sun);--e:var(--sun-e);--t:var(--on-sun);background:var(--b);color:var(--t);border:0;border-radius:16px;box-shadow:0 5px 0 var(--e);
+  font-weight:800;padding:11px 18px;min-height:48px;transition:transform .08s,box-shadow .08s}
+.c3d:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 var(--e)}
+.c3d.go{--b:var(--go);--e:var(--go-e);--t:var(--on)}
+.c3d.pink{--b:var(--pink);--e:var(--pink-e);--t:var(--on)}
+.c3d.red{--b:var(--red);--e:var(--red-e);--t:var(--on)}
+.c3d.blue{--b:var(--blue);--e:var(--blue-e);--t:var(--on)}
+.c3d.wide{width:100%;font-size:18px;padding:14px}
+.ghost{background:var(--sheet);border:2px solid var(--rule);border-radius:14px;padding:9px 14px;font-weight:700;min-height:44px}
+.ghost:active{transform:translateY(1px)}
+.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 40%,var(--rule))}
+.card{background:var(--sheet);border-radius:24px;box-shadow:0 6px 0 var(--shade)}
+.warn{background:var(--sheet);color:var(--danger);border-radius:16px;padding:9px 12px;margin-bottom:10px;font-size:13px;font-weight:700;box-shadow:0 3px 0 var(--shade);display:flex;gap:8px;align-items:center}
+.warn button{margin-left:auto;flex:none}
+.err{color:var(--danger);font-size:14px;font-weight:700;min-height:1.2em;margin:4px 0}
+.ok{color:var(--good)}
+
+/* sign in / pair: the two of them on the floor, form below */
+.stage{position:relative;height:min(34vh,290px);margin:6px 0 -8px;display:flex;justify-content:center;align-items:flex-end;
+  background:radial-gradient(70% 30% at 50% 100%,var(--floor2) 0 55%,transparent 56%),radial-gradient(90% 38% at 50% 104%,var(--floor1) 0 60%,transparent 61%)}
+.stage img{height:100%;display:block;object-fit:contain;filter:drop-shadow(0 8px 6px rgba(60,40,10,.18))}
+.stage img.her{height:84%;margin-left:-9%}
+.stage img.bob{animation:bob 2.8s ease-in-out infinite}
+.stage img.her.bob{animation-delay:-1.4s}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.gate{padding:20px 16px 18px;position:relative;z-index:1}
+.gate h1{margin:0;font:900 26px/1.2 var(--f-body)}
+.gate .lead{margin:4px 0 14px;font-weight:700;color:var(--pencil);line-height:1.45}
+.field{margin-bottom:12px}
+.field>label{display:block;font-size:13px;font-weight:800;color:var(--pencil);margin-bottom:5px}
+.pw{position:relative}
+.pw input{padding-right:64px}
+.pw button{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--blue);font-weight:800;min-height:44px;min-width:56px;padding:0 8px}
+.seg{display:flex;background:var(--paper);border-radius:14px;padding:4px;gap:4px;margin-bottom:14px}
+.seg label{flex:1;position:relative}
+.seg input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;padding:0;opacity:0;pointer-events:none;min-height:0}
+.seg span{display:flex;align-items:center;justify-content:center;min-height:40px;text-align:center;padding:6px 4px;font-size:15px;font-weight:800;cursor:pointer;user-select:none;border-radius:10px;color:var(--pencil)}
+.seg input:checked+span{background:var(--sheet);box-shadow:0 2px 0 var(--shade);color:var(--ink)}
+.seg input:focus-visible+span{outline:3px solid var(--blue)}
+.langrow{display:flex;justify-content:flex-end;margin-bottom:4px}
+.pill{border:0;background:var(--sheet);border-radius:999px;min-height:44px;padding:0 14px;font-weight:800;box-shadow:0 3px 0 var(--shade)}
+.code{font:900 34px/1 var(--f-num);letter-spacing:.32em;text-align:center;padding:14px 8px 14px calc(8px + .32em);min-height:68px;border-radius:18px;background:var(--paper)}
+.where{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 14px;font-size:13px;font-weight:800}
+.where span{background:var(--paper);border-radius:999px;padding:5px 10px}
+.where i{font-style:normal;color:var(--pencil)}
+
+/* HUD */
+.hud{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:8px 8px 8px 8px;border-radius:22px}
+.ava{width:52px;height:52px;border-radius:50%;border:3px solid var(--pink);overflow:hidden;background:var(--paper);flex:none}
+.ava img{width:100%;height:100%;object-fit:cover;display:block}
+.hname{display:flex;align-items:center;gap:6px;font-weight:900;font-size:17px;min-width:0}
+.hname span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv{flex:none;background:var(--blue);color:var(--on);font:800 12px/1 var(--f-num);padding:4px 7px;border-radius:999px}
+.xpbar{position:relative;height:16px;margin-top:5px;background:var(--paper);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 0 var(--shade)}
+.xpbar i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(180deg,#ffe066,var(--sun));transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.xpline{display:flex;align-items:center;gap:6px;margin-top:5px}
+.xpline .xpbar{flex:1;margin:0;min-width:30px}
+.xpline small{font:800 11px/1 var(--f-num);color:var(--pencil);white-space:nowrap}
+.chip{display:flex;align-items:center;gap:2px;background:var(--paper);border:0;border-radius:999px;padding:0 10px;min-height:44px;font:800 15px var(--f-num);color:var(--ink)}
+.chip svg{width:18px;height:18px}
+.rbtn{width:44px;height:44px;border-radius:50%;border:0;background:var(--sun);color:var(--on-sun);box-shadow:0 3px 0 var(--sun-e);display:grid;place-items:center;padding:0}
+.rbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--sun-e)}
+.rbtn.spin svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.syncline{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;margin:8px 4px 0;font-size:12px;font-weight:700;color:var(--ink);opacity:.75}
+
+/* the room */
+.room{position:relative;margin-top:10px;height:var(--H);min-height:250px;display:flex;justify-content:center;align-items:flex-end;border-radius:28px;overflow:hidden;
+  background:radial-gradient(120% 30% at 50% 100%,var(--floor2) 0 55%,transparent 56%),radial-gradient(150% 36% at 50% 104%,var(--floor1) 0 60%,transparent 61%)}
+.room{--H:min(38vh,340px)}
+@supports (height:1dvh){.room{--H:min(38dvh,340px)}}
+.room.short{--H:min(30vh,260px)}
+@supports (height:1dvh){.room.short{--H:min(30dvh,260px)}}
+.doll{height:calc(100% - 64px);display:block;object-fit:contain;transform-origin:50% 100%;filter:drop-shadow(0 8px 6px rgba(60,40,10,.18));cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.doll.idle{animation:bob 2.8s ease-in-out infinite}
+.doll.hop{animation:hop .5s cubic-bezier(.3,1.4,.5,1)}
+.doll.wig{animation:wiggle .45s ease 3}
+@keyframes hop{40%{transform:translateY(-22px)}}
+@keyframes wiggle{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+.bubble{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:3;width:max-content;max-width:calc(100% - 32px);background:var(--bubble);color:var(--bubble-ink);
+  border-radius:20px;padding:9px 14px;font-weight:800;font-size:14px;line-height:1.35;text-align:center;box-shadow:0 4px 0 var(--shade);animation:pop .3s cubic-bezier(.3,1.5,.5,1)}
+.bubble small{display:block;font-weight:700;font-size:12px;color:#6b7595}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-9px;border:9px solid transparent;border-bottom:0;border-top-color:var(--bubble)}
+.bubble .live{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--red);margin-right:6px;animation:pulse 1.4s ease-in-out infinite;vertical-align:1px}
+@keyframes pulse{50%{opacity:.3}}
+@keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
+.fxe{position:absolute;font-size:34px;pointer-events:none;animation:floatUp 1.3s ease-out forwards;z-index:4}
+@keyframes floatUp{0%{opacity:0;transform:translateY(20px) scale(.6)}20%{opacity:1;transform:translateY(0) scale(1.15)}100%{opacity:0;transform:translateY(-110px)}}
+
+/* today card */
+.today{padding:14px;margin-top:12px}
+.thead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.thead h2{margin:0;font:900 19px var(--f-body);flex:1}
+.thead .big{font:900 20px var(--f-num)}
+.meter{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;margin:2px 0 6px}
+.track{flex:1;height:14px;background:var(--paper);border-radius:999px;overflow:hidden}
+.track i{display:block;height:100%;border-radius:999px;background:var(--go);transition:width .5s}
+.trow{display:grid;grid-template-columns:52px minmax(0,1fr) 40px;gap:10px;align-items:center;padding:11px 0;border-bottom:2px solid var(--rule);min-height:56px}
+.trow:last-child{border-bottom:0}
+.trow.tap{cursor:pointer}
+.t-time{font:800 14px/1.2 var(--f-num)}
+.t-time small{display:block;color:var(--pencil);font-size:11px;font-weight:700}
+.t-title{font-weight:800;font-size:16px;overflow-wrap:anywhere}
+.t-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--pencil);margin-top:1px;font-weight:600}
+.cat{color:var(--cc);font-weight:800;display:inline-flex;align-items:center;gap:5px}
+.cat::before{content:"";width:9px;height:9px;background:var(--cc);border-radius:50%}
+.trow.now{background:var(--hl-soft);margin:0 -14px;padding-left:14px;padding-right:14px}
+.trow.done .t-title{color:var(--pencil);text-decoration:line-through}
+.tick{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font:900 18px var(--f-body);justify-self:end}
+.tick.y{background:var(--go);color:var(--on);box-shadow:0 3px 0 var(--go-e)}
+.tick.n{border:3px dashed var(--rule)}
+.tick.miss{border-color:var(--red)}
+.tick.edit{background:var(--paper);color:var(--pencil);font-size:16px}
+.empty{padding:22px 6px;text-align:center;color:var(--pencil);font-size:14px;font-weight:700}
+.nodata{padding:18px 16px;margin-top:12px;text-align:center}
+.nodata h2{margin:0 0 4px;font:900 20px var(--f-body)}
+.nodata p{margin:0;font-weight:700;color:var(--pencil);line-height:1.5}
+
+/* send love */
+.sec-title{font:900 21px var(--f-body);margin:8px 4px 2px}
+.sec-sub{margin:0 4px 0;font-size:13px;font-weight:700;color:var(--pencil);line-height:1.4}
+.lovegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.lovegrid .c3d{display:flex;align-items:center;justify-content:center;gap:10px;min-height:68px;font-size:19px;border-radius:20px;box-shadow:0 6px 0 var(--e)}
+.lovegrid .c3d:active:not(:disabled){transform:translateY(5px);box-shadow:0 1px 0 var(--e)}
+.lovegrid .c3d b{font-size:30px;line-height:1}
+.lovegrid .note{grid-column:1/-1}
+.hist{padding:4px 14px;margin-top:12px}
+.mrow{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:2px solid var(--rule)}
+.mrow:last-child{border-bottom:0}
+.mrow .em{font-size:26px;text-align:center}
+.mrow .mb{min-width:0}
+.mrow .mb b{display:block;font-weight:800;overflow-wrap:anywhere}
+.mrow .mb small{font:700 12px var(--f-num);color:var(--pencil)}
+.rd{font:800 12px var(--f-body);color:var(--pencil);white-space:nowrap;text-align:right}
+.rd.y{color:var(--read)}
+.h3{font:900 17px var(--f-body);margin:22px 4px 8px}
+
+/* schedule */
+.weeknav{display:flex;align-items:center;gap:6px;margin-top:6px}
+.weeknav h2{flex:1;min-width:0;margin:0 4px;font:900 17px/1.25 var(--f-body)}
+.weeknav .ghost{min-width:44px;padding:8px 12px}
+.daystrip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:12px 0 14px}
+.dchip{border:0;background:var(--sheet);border-radius:16px;padding:7px 0 5px;text-align:center;font-size:11px;font-weight:700;color:var(--pencil);min-width:0;min-height:58px;box-shadow:0 3px 0 var(--shade)}
+.dchip b{display:block;font:900 18px var(--f-num);color:var(--ink)}
+.dchip i{display:block;font-style:normal;font-size:10px;min-height:15px;font-family:var(--f-num)}
+.dchip.today b{color:var(--red)}
+.dchip.sel{background:var(--sun);box-shadow:0 3px 0 var(--sun-e);color:var(--on-sun)}
+.dchip.sel b,.dchip.sel i{color:var(--on-sun)}
+.dayline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 4px 8px}
+.dayline h3{margin:0;font:900 17px var(--f-body)}
+.dayline .c3d{min-height:44px;padding:8px 16px}
+.sheet{background:var(--sheet);border-radius:24px;padding:4px 14px;box-shadow:0 6px 0 var(--shade)}
+
+/* settings */
+.grp{padding:14px 16px;margin-top:12px}
+.grp h3{margin:0 0 8px;font:900 17px var(--f-body)}
+.grp p{margin:0 0 10px;font-weight:600;color:var(--pencil);line-height:1.45}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.links a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;text-decoration:none;border-radius:16px;background:var(--paper);color:var(--ink);font-weight:900}
+.links img{width:32px;height:32px;border-radius:9px}
+
+/* bottom tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--sheet);border-radius:26px 26px 0 0;box-shadow:0 -4px 0 var(--shade);
+  padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.tabs-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;font-size:12px;font-weight:800;color:var(--pencil);min-height:56px}
+.tab b{width:46px;height:40px;border-radius:16px;display:grid;place-items:center;transition:transform .15s}
+.tab.on{color:var(--ink)}
+.tab.on b{background:var(--sun);color:var(--on-sun);box-shadow:0 4px 0 var(--sun-e);transform:translateY(-2px)}
+
+/* bottom-sheet dialogs */
+dialog{border:0;padding:0;background:var(--sheet);color:var(--ink);width:100vw;max-width:560px;max-height:92vh;margin:auto auto 0;border-radius:26px 26px 0 0;overflow:auto;overscroll-behavior:contain}
+dialog::backdrop{background:var(--backdrop)}
+.dlg{padding:20px max(16px,env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.dlg h3{margin:0 0 14px;font:900 20px var(--f-body)}
+.row{display:flex;gap:12px}
+.row>*{flex:1;min-width:0}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.days label{position:relative}
+.days input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;padding:0;opacity:0;pointer-events:none;min-height:0}
+.days span{display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:12px;background:var(--paper);font-size:12px;font-weight:800;cursor:pointer;user-select:none}
+.days input:checked+span{background:var(--sun);color:var(--on-sun)}
+.days input:focus-visible+span{outline:3px solid var(--blue)}
+.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.count{text-align:right;font:700 12px var(--f-num);color:var(--pencil);margin-top:4px}
+
+/* "sent!" pop-up */
+#sent{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--backdrop);opacity:0;pointer-events:none;transition:opacity .2s;
+  padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+#sent.show{opacity:1;pointer-events:auto}
+#sent img{height:min(36vh,300px);display:block;margin-bottom:-24px;position:relative;z-index:1;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
+#sent.show img{animation:jumpIn .5s cubic-bezier(.3,1.5,.5,1)}
+@keyframes jumpIn{from{transform:translateY(60px) scale(.6);opacity:0}}
+.sentcard{position:relative;z-index:2;width:min(340px,100%);background:var(--sheet);border-radius:26px;padding:30px 18px 16px;text-align:center;box-shadow:0 7px 0 var(--shade)}
+.sentcard h3{margin:0;font:900 24px var(--f-body);color:var(--good)}
+.sentcard p{margin:6px 0 12px;font-weight:700}
+
+#toasts{position:fixed;left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right));bottom:calc(var(--navh) + 24px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
+body.out #toasts{bottom:calc(24px + env(safe-area-inset-bottom))}
+.toast{background:var(--sheet);border-radius:18px;padding:10px 16px;font-size:14px;font-weight:800;animation:rise .3s ease;max-width:380px;box-shadow:0 5px 0 var(--shade);text-align:center}
+@keyframes rise{from{transform:translateY(12px);opacity:0}}
+#ptr{position:fixed;left:50%;top:calc(6px + env(safe-area-inset-top));z-index:40;transform:translate(-50%,-70px);width:44px;height:44px;border-radius:50%;background:var(--sheet);box-shadow:0 3px 0 var(--shade);display:grid;place-items:center;color:var(--ink);pointer-events:none}
+#ptr.go svg{animation:spin .8s linear infinite}
+
+@media (max-height:700px){.stage{height:min(26vh,200px)}.room{--H:min(32vh,280px)}@supports (height:1dvh){.room{--H:min(32dvh,280px)}}.room.short{--H:min(26vh,210px)}@supports (height:1dvh){.room.short{--H:min(26dvh,210px)}}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="out">
+<div id="ptr" aria-hidden="true"></div>
+<div class="wrap">
+  <div id="warn"></div>
+  <main id="view"></main>
+</div>
+<nav class="tabs" id="tabs" hidden></nav>
+<div id="sent" role="dialog" aria-live="polite"></div>
+<div id="toasts" aria-live="polite"></div>
+<dialog id="taskDlg"><form class="dlg" id="taskForm" method="dialog"></form></dialog>
+<dialog id="noteDlg"><form class="dlg" id="noteForm" method="dialog"></form></dialog>
+
+<script>
+/* ---------- config (see supabase/CONTRACT.md) ---------- */
+const SB_URL = 'https://uaxmcjuxkuepystatqyn.supabase.co';
+const SB_KEY = 'sb_publishable_QxMM_jpZLHnA5CAijHwmyQ_9VVs2uR5';
+const SESS = 'sq.session', PREFS = 'sq.him.v1', CACHE = 'sq.him.cache';
+const HER_TZ = 'Asia/Shanghai';   // she lives in mainland China; her "today" is China time
+const CATS = ['english','class','study','sport','rest','life'];
+const DIFF_XP = {1:10,2:20,3:30};
+const KINDS = [
+  {k:'kiss', emoji:'😘', img:'kiss', cls:'pink'},
+  {k:'hug', emoji:'🤗', img:'blush', cls:''},
+  {k:'gift', emoji:'🎁', img:'happy', cls:'go'},
+  {k:'reward', emoji:'⭐', img:'happy', cls:'blue'},
+  {k:'note', emoji:'✉️', img:'remind', cls:'red'}
+];
+const ICONS = {
+  home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  love:'<path d="M12 20s-7-4.4-9-9a4.6 4.6 0 0 1 9-3 4.6 4.6 0 0 1 9 3c-2 4.6-9 9-9 9z"/>',
+  week:'<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4M8 14l2 2 4-4"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',
+  flame:'<path d="M12 22c4 0 7-3 7-7 0-5-5-7-5-12-3 2-5 5-5 8-1-1-2-2-2-4-2 2-2 5-2 8 0 4 3 7 7 7z" fill="#ff7a1a" stroke="#ff7a1a"/><path d="M12 22c-2 0-3-1.5-3-3.5S12 14 12 14s3 2.5 3 4.5-1 3.5-3 3.5z" fill="#ffd23f" stroke="none"/>'
+};
+const icon = k => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>`;
+
+const T = {
+  zh:{
+    title:'他的页面', tabs:{home:'她的今天', love:'送爱', week:'课表', set:'设置'},
+    cats:{english:'英语',class:'课程',study:'自习',sport:'运动',rest:'休息',life:'生活'},
+    diff:{1:'简单',2:'普通',3:'困难'}, daysShort:['周日','周一','周二','周三','周四','周五','周六'],
+    lead:'看看{h}今天怎么样，给她送爱，帮她改课表。',
+    signIn:'登录', signUp:'注册', username:'用户名', usernameHint:'小写字母、数字或 _，3–20 位', password:'密码', passwordHint:'至少 6 位',
+    nick:'你的名字（她会看到，可不填）', show:'显示', hide:'隐藏', go:'登录', create:'创建账号', busy:'请稍等…',
+    errUser:'用户名只能用小写字母、数字和 _，3–20 位。', errPass:'密码至少 6 位。', errWrong:'用户名或密码不对。',
+    errTaken:'这个用户名已经有人用了，换一个吧。', errNet:'连不上服务器，先离线使用。', errSetup:'账号已创建，请稍后再登录。',
+    errEmail:'这个用户名不能用，试试只用字母和数字。', errRate:'试得太多次了，过几分钟再试。', errOther:'出错了：{m}',
+    expired:'登录过期了，请重新登录。',
+    pairTitle:'和她连接', pairLead:'输入她 App 里显示的配对码', pairWhere:'她在哪里找到：', pairSteps:['她的 App','⚙ 设置','账号','和他连接'],
+    pairHint:'配对码 30 分钟内有效。过期了就让她再点一次生成新的。', connect:'连接', errCode:'请输入 6 位数字。', errBadCode:'配对码不对或已过期，请她重新生成一个。',
+    paired:'连接成功！', notHim:'这个账号是她的账号（role: her）。这一页是给他用的。', openHers:'打开她的学习闯关', signOut:'退出登录',
+    level:'Lv.', streak:'天', xpTip:'升级还需要的经验',
+    synced:'她上次同步：{t}', herTime:'她那边 {t}', justNow:'刚刚', minAgo:'{n} 分钟前', hrAgo:'{n} 小时前', never:'还没有',
+    nowDoing:'她现在在做', nextUp:'接下来 {t}', freeNow:'现在是自由时间', allDone:'今天的任务全部完成啦！', noTasks:'今天没有安排',
+    notStarted:'还没开始打卡', todayL:'今天', weekPct:'本周完成', doneOf:'{d}/{n} 完成',
+    noDataT:'她还没登录同步', noDataP:'让她在学习闯关里打开 ⚙ 设置 → 账号 登录，你就能在这里看到她的进度。',
+    offline:'连不上服务器，显示的是上次的数据。', retry:'重试', refreshed:'已刷新',
+    loveTitle:'送爱给她', loveSub:'点一下就发送，她打开 App 就会看到。',
+    kinds:{kiss:'亲亲',hug:'抱抱',gift:'礼物',reward:'奖励',note:'留言'},
+    bodies:{kiss:'亲亲你 😘',hug:'抱抱你 🤗',gift:'送你一个小礼物 🎁',reward:'奖励你一颗星 ⭐ 你太棒了！'},
+    sentT:'已发送！', sentP:'她打开 App 就会看到', ok:'好的',
+    noteTitle:'给她留言', notePh:'想对她说的话…', send:'发送', cancel:'取消', errEmpty:'写点什么再发送吧。',
+    history:'最近发送', noHistory:'还没有发送过。点上面的按钮试试！', readY:'✓✓ 已读', readN:'✓ 未读',
+    bubbleLove:'想给她什么？',
+    schedTitle:'她的课表', thisWeek:'本周', prevWeek:'上一周', nextWeek:'下一周', add:'+ 添加', dayEmpty:'这天没有安排。',
+    schedHint:'点任务可以修改或删除。保存后，她下次打开 App 就会更新。',
+    editQuest:'编辑任务', addQuest:'新任务', titleL:'标题', category:'分类', when:'时间安排', weekly:'每周重复', once:'只有一天',
+    repeatOn:'重复日', date:'日期', start:'开始', end:'结束（可不填）', difficulty:'难度', notes:'备注', save:'保存', del:'删除', delConfirm:'再点一次确认删除',
+    errTitle:'请输入标题。', errDays:'请至少选择一天。', errDate:'请选择日期。', errTime:'结束时间要晚于开始时间。', errStart:'请选择开始时间。',
+    savedT:'已保存！她下次打开 App 就会更新', deletedT:'已删除！她下次打开 App 就会更新', gone:'这个任务在她那边已经被删掉了。', saving:'保存中…',
+    language:'语言', account:'账号', signedAs:'已登录：{u}', pairedWith:'已连接：{h}', unlink:'解除连接', unlinkConfirm:'再点一次确认解除',
+    unlinked:'已解除连接', apps:'她的 App', appStudy:'学习闯关', appStress:'解压室', appsHint:'这两个是她手机上的 App，在这里也能打开看看。',
+    tapHer:'去「送爱」给她鼓励吧', defaultHer:'小春'
+  },
+  en:{
+    title:'His page', tabs:{home:'Her day', love:'Send love', week:'Schedule', set:'Settings'},
+    cats:{english:'English',class:'Class',study:'Study',sport:'Sport',rest:'Rest',life:'Self-care'},
+    diff:{1:'Easy',2:'Normal',3:'Hard'}, daysShort:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    lead:'See how {h} is doing, send her love, edit her schedule.',
+    signIn:'Sign in', signUp:'Sign up', username:'Username', usernameHint:'Lowercase letters, numbers or _, 3–20 characters', password:'Password', passwordHint:'At least 6 characters',
+    nick:'Your name (she sees it, optional)', show:'Show', hide:'Hide', go:'Sign in', create:'Create account', busy:'One moment…',
+    errUser:'Username: lowercase letters, numbers and _, 3–20 characters.', errPass:'Password needs at least 6 characters.', errWrong:'Wrong username or password.',
+    errTaken:'That username is taken. Try another one.', errNet:'Can\'t reach the server, keep using offline.', errSetup:'Account created; sign-in will work once setup is finished.',
+    errEmail:'That username can\'t be used. Try letters and numbers only.', errRate:'Too many tries. Wait a few minutes and try again.', errOther:'Something went wrong: {m}',
+    expired:'Your sign-in expired. Please sign in again.',
+    pairTitle:'Connect with her', pairLead:'Enter the code shown in her app', pairWhere:'Where she finds it:', pairSteps:['Her app','⚙ Settings','Account','Connect with him'],
+    pairHint:'The code works for 30 minutes. If it expired, ask her to make a new one.', connect:'Connect', errCode:'Enter the 6 digits.', errBadCode:'That code is wrong or expired. Ask her for a new one.',
+    paired:'Connected!', notHim:'This is her account (role: her). This page is for him.', openHers:'Open her Study Quest', signOut:'Sign out',
+    level:'Lv.', streak:'d', xpTip:'XP to the next level',
+    synced:'She last synced: {t}', herTime:'Her time {t}', justNow:'just now', minAgo:'{n} min ago', hrAgo:'{n} h ago', never:'never',
+    nowDoing:'She\'s doing now', nextUp:'Next at {t}', freeNow:'Free time right now', allDone:'Every task today is done!', noTasks:'Nothing scheduled today',
+    notStarted:'Nothing ticked off yet', todayL:'Today', weekPct:'This week', doneOf:'{d}/{n} done',
+    noDataT:'She hasn\'t signed in and synced yet', noDataP:'Ask her to open Study Quest → ⚙ Settings → Account and sign in. Her progress will show up here.',
+    offline:'Can\'t reach the server. Showing the last saved data.', retry:'Retry', refreshed:'Updated',
+    loveTitle:'Send her love', loveSub:'One tap sends it. She\'ll see it when she opens her app.',
+    kinds:{kiss:'Kiss',hug:'Hug',gift:'Gift',reward:'Reward',note:'Note'},
+    bodies:{kiss:'A kiss for you 😘',hug:'A big hug 🤗',gift:'A little gift for you 🎁',reward:'A gold star for you ⭐ You\'re amazing!'},
+    sentT:'Sent!', sentP:'She\'ll see it when she opens her app', ok:'OK',
+    noteTitle:'Write her a note', notePh:'Something to tell her…', send:'Send', cancel:'Cancel', errEmpty:'Write something first.',
+    history:'Recently sent', noHistory:'Nothing sent yet. Try a button above!', readY:'✓✓ Read', readN:'✓ Unread',
+    bubbleLove:'What will you send her?',
+    schedTitle:'Her schedule', thisWeek:'This week', prevWeek:'Previous week', nextWeek:'Next week', add:'+ Add', dayEmpty:'Nothing scheduled this day.',
+    schedHint:'Tap a task to edit or delete it. Saved changes reach her phone next time she opens the app.',
+    editQuest:'Edit task', addQuest:'New task', titleL:'Title', category:'Category', when:'When', weekly:'Every week', once:'One day',
+    repeatOn:'Repeat on', date:'Date', start:'Start', end:'End (optional)', difficulty:'Difficulty', notes:'Notes', save:'Save', del:'Delete', delConfirm:'Tap again to delete',
+    errTitle:'Enter a title.', errDays:'Pick at least one day.', errDate:'Pick a date.', errTime:'End time must be after the start time.', errStart:'Pick a start time.',
+    savedT:'Saved! Updates on her phone next time she opens the app', deletedT:'Deleted! Updates on her phone next time she opens the app', gone:'She already deleted this task on her side.', saving:'Saving…',
+    language:'Language', account:'Account', signedAs:'Signed in as {u}', pairedWith:'Connected with {h}', unlink:'Unlink', unlinkConfirm:'Tap again to unlink',
+    unlinked:'Unlinked', apps:'Her apps', appStudy:'Study Quest', appStress:'Stress Room', appsHint:'These are the two apps on her phone. You can open them here too.',
+    tapHer:'Cheer her on in Send love', defaultHer:'Xiaochun'
+  }
+};
+
+/* ---------- storage ---------- */
+const readJSON = k => {try{return JSON.parse(localStorage.getItem(k) || 'null');}catch(e){return null;}};
+const writeJSON = (k,v) => {try{v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v));}catch(e){}};
+const prefs = Object.assign({lang:/^zh/i.test(navigator.language || '') ? 'zh' : 'en'}, readJSON(PREFS) || {});
+const validSession = s => s && s.access_token && s.refresh_token && s.user && s.user.id ? s : null;
+const cache = readJSON(CACHE) || {};
+
+const S = {
+  session: validSession(readJSON(SESS)),
+  me:null, partner:null, her:null, msgs:[], at:0,        // her: app_state row, false = no row yet, null = unknown
+  online:true, loading:false, tab:'home', wk:0, sel:null, authMode:'in', authErr:'', authOk:'', pairErr:''
+};
+if(S.session && cache.uid === S.session.user.id){
+  Object.assign(S, {me:cache.me || null, partner:cache.partner || null, her:cache.her ?? null, msgs:cache.msgs || [], at:cache.at || 0});
+}
+function saveCache(){
+  writeJSON(CACHE, S.session ? {uid:S.session.user.id, me:S.me, partner:S.partner, her:S.her, msgs:S.msgs, at:S.at} : null);
+}
+
+const L = () => T[prefs.lang] || T.zh;
+const locale = () => prefs.lang === 'zh' ? 'zh-CN' : 'en-US';
+const fill = (s,o) => String(s).replace(/\{(\w+)\}/g, (_,k) => o[k] ?? '');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseKey = k => {const [y,m,d] = k.split('-').map(Number); return new Date(y,m-1,d);};
+const addDays = (d,n) => {const x = new Date(d); x.setDate(x.getDate()+n); return x;};
+const mins = hhmm => {if(!hhmm) return null; const [h,m] = hhmm.split(':').map(Number); return h*60+m;};
+const mondayOf = d => {const x = new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate() - ((x.getDay()+6)%7)); return x;};
+const timeLabel = t => t.end ? `${t.start}–${t.end}` : t.start;
+const taskTitle = t => (prefs.lang === 'zh' && t.titleZh) ? t.titleZh : t.title;
+
+/* her wall clock (China time), as a local Date with the same numbers */
+function herNow(){
+  try{
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:HER_TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'})
+      .formatToParts(new Date()).map(x => [x.type, x.value]));
+    return new Date(+p.year, +p.month-1, +p.day, (+p.hour)%24, +p.minute);
+  }catch(e){return new Date();}
+}
+const herToday = () => {const d = herNow(); d.setHours(0,0,0,0); return d;};
+const sameClock = () => {const a = herNow(), b = new Date(); return a.getHours() === b.getHours() && a.getMinutes() === b.getMinutes() && a.getDate() === b.getDate();};
+
+/* ---------- her numbers (same rules as index.html) ---------- */
+function levelInfo(xp){
+  let lvl = 1, need = 100, rest = xp;
+  while(rest >= need){rest -= need; lvl++; need = 100 + (lvl-1)*50;}
+  return {lvl, cur:rest, need};
+}
+const herData = () => (S.her && S.her.data) || {};
+const herTasks = () => Array.isArray(herData().tasks) ? herData().tasks : [];
+const herDone = () => herData().done || {};
+const isDone = (t,k) => herDone()[t.id+'|'+k] != null;
+function tasksFor(d){
+  const k = keyOf(d), wd = d.getDay();
+  return herTasks().filter(t => t.date ? t.date === k : (t.repeat||[]).includes(wd)).sort((a,b) => mins(a.start)-mins(b.start));
+}
+function herStats(){
+  const done = herDone();
+  const xp = Object.values(done).reduce((a,b) => a+(+b||0), 0);
+  const dates = new Set(Object.keys(done).map(k => k.split('|')[1]));
+  let d = herToday(), streak = 0;
+  if(!dates.has(keyOf(d))) d = addDays(d,-1);
+  while(dates.has(keyOf(d))){streak++; d = addDays(d,-1);}
+  const mon = mondayOf(herToday());
+  let wTot = 0, wDone = 0;
+  for(let i = 0; i < 7; i++){const day = addDays(mon,i), k = keyOf(day); for(const t of tasksFor(day)){wTot++; if(isDone(t,k)) wDone++;}}
+  return {xp, li:levelInfo(xp), streak, wTot, wDone, wPct: wTot ? Math.round(wDone*100/wTot) : 0};
+}
+const herName = () => {
+  const p = herData().profile || {};
+  return (S.partner && S.partner.display_name) || p.name || (S.partner && S.partner.username) || L().defaultHer;
+};
+
+/* ---------- Supabase over plain fetch ---------- */
+async function rawFetch(path, opt={}){
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 15000);
+  const headers = {apikey:SB_KEY, 'Content-Type':'application/json'};
+  if(opt.token) headers.Authorization = 'Bearer ' + opt.token;
+  if(opt.prefer) headers.Prefer = opt.prefer;
+  let res, txt;
+  try{
+    res = await fetch(SB_URL + path, {method:opt.method || 'GET', headers, body:opt.body !== undefined ? JSON.stringify(opt.body) : undefined, signal:ctl.signal});
+    txt = await res.text();
+  }catch(e){throw Object.assign(new Error('network'), {net:true});}
+  finally{clearTimeout(tm);}
+  let json = null;
+  try{json = txt ? JSON.parse(txt) : null;}catch(e){}
+  if(!res.ok){
+    const m = json && (json.msg || json.message || json.error_description || json.error) || ('HTTP ' + res.status);
+    throw Object.assign(new Error(m), {status:res.status, code:json && (json.error_code || json.code)});
+  }
+  return json;
+}
+function setSession(r){
+  S.session = {access_token:r.access_token, refresh_token:r.refresh_token,
+    expires_at: r.expires_at || Math.floor(Date.now()/1000) + (r.expires_in || 3600), user:{id:r.user.id}};
+  writeJSON(SESS, S.session);
+}
+let refreshing = null;
+function freshToken(force){
+  const stored = validSession(readJSON(SESS));                 // another tab may have refreshed already
+  if(stored && S.session && stored.user.id === S.session.user.id && stored.expires_at > S.session.expires_at) S.session = stored;
+  const s = S.session;
+  if(!s) return Promise.reject(Object.assign(new Error('signed out'), {auth:true}));
+  if(!force && s.expires_at*1000 - Date.now() > 60000) return Promise.resolve(s.access_token);
+  if(!refreshing) refreshing = rawFetch('/auth/v1/token?grant_type=refresh_token', {method:'POST', body:{refresh_token:s.refresh_token}})
+    .then(r => {setSession(r); return r.access_token;})
+    .catch(e => {if(!e.net && e.status >= 400 && e.status < 500) e.auth = true; throw e;})
+    .finally(() => {refreshing = null;});
+  return refreshing;
+}
+async function api(path, opt={}){
+  let tok = await freshToken();
+  try{return await rawFetch(path, {...opt, token:tok});}
+  catch(e){
+    if(e.status !== 401) throw e;
+    tok = await freshToken(true);
+    try{return await rawFetch(path, {...opt, token:tok});}
+    catch(e2){if(e2.status === 401) e2.auth = true; throw e2;}
+  }
+}
+const uid = () => S.session.user.id;
+const emailOf = u => `${u}@study-quest.app`;
+
+function authMessage(e){
+  const l = L(), m = (e.message || '') + ' ' + (e.code || '');
+  if(e.net) return l.errNet;
+  if(/invalid_credentials|Invalid login/i.test(m)) return l.errWrong;
+  if(/already registered|user_already_exists/i.test(m)) return l.errTaken;
+  if(/email_not_confirmed|not confirmed/i.test(m)) return l.errSetup;
+  if(/email_address_invalid|invalid format|is invalid/i.test(m)) return l.errEmail;
+  if(e.status === 429 || /rate limit/i.test(m)) return l.errRate;
+  return fill(l.errOther, {m:esc(e.message || '')});
+}
+
+/* ---------- load everything ---------- */
+async function loadAll(){
+  if(!S.session){render(); return;}
+  S.loading = true; paintRefresh();
+  try{
+    const me = uid();
+    const rows = await api('/rest/v1/profiles?select=*');
+    S.me = rows.find(r => r.id === me) || null;
+    S.partner = S.me && S.me.partner_id ? (rows.find(r => r.id === S.me.partner_id) || {id:S.me.partner_id}) : null;
+    if(S.partner){
+      const [st, msgs] = await Promise.all([
+        api(`/rest/v1/app_state?user_id=eq.${S.partner.id}&select=*`),
+        api(`/rest/v1/messages?from_id=eq.${me}&select=*&order=created_at.desc&limit=20`)
+      ]);
+      S.her = st[0] || false;
+      S.msgs = msgs || [];
+    } else {S.her = null; S.msgs = [];}
+    S.online = true; S.at = Date.now();
+    saveCache();
+  }catch(e){
+    if(e.auth){signOutLocal(L().expired); return;}
+    S.online = false;
+  }
+  S.loading = false;
+  if(!anyDialogOpen()) render(); else paintRefresh();
+}
+const anyDialogOpen = () => taskDlg.open || noteDlg.open;
+
+/* ---------- small UI helpers ---------- */
+function toast(msg){
+  const box = document.getElementById('toasts');
+  const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
+  box.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+function burst(host, emoji, n=6, top=25){
+  if(!host) return;
+  for(let i = 0; i < n; i++){
+    const e = document.createElement('span'); e.className = 'fxe'; e.textContent = emoji;
+    e.style.left = (12 + Math.random()*70) + '%'; e.style.top = (top + Math.random()*30) + '%'; e.style.animationDelay = (i*90) + 'ms';
+    host.appendChild(e); setTimeout(() => e.remove(), 1600 + i*90);
+  }
+}
+function rel(iso){
+  const l = L();
+  if(!iso) return l.never;
+  const m = Math.round((Date.now() - new Date(iso).getTime())/60000);
+  if(m < 1) return l.justNow;
+  if(m < 60) return fill(l.minAgo, {n:m});
+  if(m < 24*60) return fill(l.hrAgo, {n:Math.round(m/60)});
+  return new Date(iso).toLocaleString(locale(), {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'});
+}
+function paintRefresh(){
+  document.querySelectorAll('[data-refresh]').forEach(b => b.classList.toggle('spin', S.loading));
+}
+
+/* ---------- render ---------- */
+const view = document.getElementById('view');
+function render(){
+  const l = L();
+  document.documentElement.lang = prefs.lang === 'zh' ? 'zh-CN' : 'en';
+  document.title = l.title;
+  const signedIn = !!S.session, paired = signedIn && S.me && S.partner;
+  document.body.classList.toggle('out', !paired);
+  document.getElementById('tabs').hidden = !paired;
+  const w = document.getElementById('warn');
+  w.innerHTML = signedIn && !S.online && S.me ? `<div class="warn">📡 ${l.offline}<button class="ghost" id="retry">${l.retry}</button></div>` : '';
+  if(!S.online && signedIn && S.me) document.getElementById('retry').onclick = () => loadAll();
+  if(!signedIn) return renderAuth();
+  if(!S.me){ // first load still running or failed with no cache
+    view.innerHTML = `<div class="stage">${stageImgs()}</div><div class="card gate"><p class="lead">${S.loading ? l.busy : l.errNet}</p>
+      <button class="c3d wide" id="again">${l.retry}</button><p style="text-align:center"><button class="ghost" id="so">${l.signOut}</button></p></div>`;
+    document.getElementById('again').onclick = () => loadAll();
+    document.getElementById('so').onclick = signOut;
+    return;
+  }
+  if(!S.partner) return renderPair();
+  renderTabs();
+  ({home:renderHome, love:renderLove, week:renderWeek, set:renderSettings})[S.tab]();
+}
+const stageImgs = () => `<img class="bob" src="img/anren/idle.webp" alt=""><img class="her bob" src="img/xiaochun/idle.webp" alt="">`;
+const langBtn = () => `<div class="langrow"><button class="pill" id="langBtn">${prefs.lang === 'zh' ? 'English' : '中文'}</button></div>`;
+function bindLang(){
+  const b = document.getElementById('langBtn');
+  if(b) b.onclick = () => {prefs.lang = prefs.lang === 'zh' ? 'en' : 'zh'; writeJSON(PREFS, prefs); render();};
+}
+
+function renderAuth(){
+  const l = L(), up = S.authMode === 'up';
+  view.innerHTML = `${langBtn()}
+    <div class="stage">${stageImgs()}</div>
+    <form class="card gate" id="authForm" novalidate>
+      <h1>${l.title}</h1>
+      <p class="lead">${fill(l.lead, {h:l.defaultHer})}</p>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="mode" value="in" ${!up?'checked':''}><span>${l.signIn}</span></label>
+        <label><input type="radio" name="mode" value="up" ${up?'checked':''}><span>${l.signUp}</span></label>
+      </div>
+      <div class="field"><label for="aUser">${l.username}</label>
+        <input id="aUser" name="user" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="20" value="${esc(S.lastUser || '')}">
+        ${up ? `<div class="hint">${l.usernameHint}</div>` : ''}</div>
+      ${up ? `<div class="field"><label for="aNick">${l.nick}</label><input id="aNick" name="nick" maxlength="30" autocomplete="nickname"></div>` : ''}
+      <div class="field"><label for="aPass">${l.password}</label>
+        <div class="pw"><input id="aPass" name="pass" type="password" autocomplete="${up?'new-password':'current-password'}">
+        <button type="button" id="pwToggle" aria-controls="aPass">${l.show}</button></div>
+        ${up ? `<div class="hint">${l.passwordHint}</div>` : ''}</div>
+      <div class="err" id="aErr" role="alert">${S.authErr}</div>
+      ${S.authOk ? `<p class="hint ok" style="font-size:14px">${S.authOk}</p>` : ''}
+      <button class="c3d go wide" id="aGo" type="submit">${up ? l.create : l.go}</button>
+    </form>`;
+  bindLang();
+  const f = document.getElementById('authForm');
+  f.querySelectorAll('[name=mode]').forEach(r => r.onchange = () => {S.authMode = r.value; S.authErr = ''; S.authOk = ''; S.lastUser = f.user.value; render();});
+  const pt = document.getElementById('pwToggle');
+  pt.onclick = () => {const p = f.pass; p.type = p.type === 'password' ? 'text' : 'password'; pt.textContent = p.type === 'password' ? l.show : l.hide;};
+  f.onsubmit = ev => {ev.preventDefault(); doAuth(f);};
+}
+async function doAuth(f){
+  const l = L(), up = S.authMode === 'up';
+  const user = f.user.value.trim().toLowerCase(), pass = f.pass.value;
+  const err = document.getElementById('aErr'), btn = document.getElementById('aGo');
+  S.lastUser = user; S.authOk = '';
+  if(!/^[a-z0-9_]{3,20}$/.test(user)) return err.textContent = l.errUser;
+  if(pass.length < 6) return err.textContent = l.errPass;
+  err.textContent = ''; btn.disabled = true; btn.textContent = l.busy;
+  try{
+    let r;
+    if(up){
+      const nick = (f.nick && f.nick.value.trim()) || user;
+      r = await rawFetch('/auth/v1/signup', {method:'POST', body:{email:emailOf(user), password:pass, data:{username:user, display_name:nick, role:'him'}}});
+      if(!r || !r.access_token){
+        S.authMode = 'in'; S.authErr = ''; S.authOk = l.errSetup; render(); return;
+      }
+    } else {
+      r = await rawFetch('/auth/v1/token?grant_type=password', {method:'POST', body:{email:emailOf(user), password:pass}});
+    }
+    setSession(r);
+    S.authErr = ''; S.authOk = ''; S.me = null; S.partner = null; S.her = null; S.msgs = []; S.tab = 'home';
+    render(); loadAll();
+  }catch(e){
+    S.authErr = authMessage(e);
+    err.innerHTML = S.authErr; btn.disabled = false; btn.textContent = up ? l.create : l.go;
+  }
+}
+
+function renderPair(){
+  const l = L(), notHim = S.me.role === 'her';
+  view.innerHTML = `${langBtn()}
+    <div class="stage">${stageImgs()}</div>
+    <form class="card gate" id="pairForm" novalidate>
+      <h1>${l.pairTitle}</h1>
+      ${notHim ? `<p class="warn">${l.notHim} <a href="index.html">${l.openHers}</a></p>` : ''}
+      <p class="lead" style="margin-bottom:10px">${l.pairLead}</p>
+      <input class="code" id="pCode" name="code" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" placeholder="••••••" aria-label="${l.pairLead}">
+      <div class="where"><i>${l.pairWhere}</i>${l.pairSteps.map(s => `<span>${s}</span>`).join('<i>→</i>')}</div>
+      <div class="err" id="pErr" role="alert">${S.pairErr}</div>
+      <button class="c3d pink wide" id="pGo" type="submit">${l.connect}</button>
+      <p class="hint">${l.pairHint}</p>
+      <p style="text-align:center;margin:12px 0 0"><button type="button" class="ghost" id="so">${l.signOut}</button></p>
+    </form>`;
+  bindLang();
+  const f = document.getElementById('pairForm');
+  f.code.oninput = () => {f.code.value = f.code.value.replace(/\D/g,'').slice(0,6);};
+  document.getElementById('so').onclick = signOut;
+  f.onsubmit = async ev => {
+    ev.preventDefault();
+    const code = f.code.value.trim(), err = document.getElementById('pErr'), btn = document.getElementById('pGo');
+    if(!/^\d{6}$/.test(code)) return err.textContent = l.errCode;
+    err.textContent = ''; btn.disabled = true; btn.textContent = l.busy;
+    try{
+      await api('/rest/v1/rpc/join_pair', {method:'POST', body:{code}});
+      S.pairErr = ''; S.tab = 'home';
+      toast('💞 ' + l.paired);
+      await loadAll();
+    }catch(e){
+      if(e.auth) return signOutLocal(l.expired);
+      err.textContent = e.net ? l.errNet : (/bad code/i.test(e.message) ? l.errBadCode : fill(l.errOther, {m:e.message}));
+      btn.disabled = false; btn.textContent = l.connect;
+    }
+  };
+}
+
+function renderTabs(){
+  const l = L();
+  const tabs = [['home','home'],['love','love'],['week','week'],['set','gear']];
+  document.getElementById('tabs').innerHTML = `<div class="tabs-in">${tabs.map(([k,ic]) =>
+    `<button class="tab ${S.tab===k?'on':''}" data-tab="${k}" aria-current="${S.tab===k?'page':'false'}"><b>${icon(ic)}</b>${l.tabs[k]}</button>`).join('')}</div>`;
+  document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {S.tab = b.dataset.tab; window.scrollTo(0,0); render();});
+}
+
+function noDataCard(){
+  const l = L();
+  return `<div class="room short"><img class="doll idle" src="img/xiaochun/pout.webp" alt=""></div>
+    <div class="card nodata"><h2>${l.noDataT}</h2><p>${l.noDataP}</p>
+    <p style="margin-top:12px"><button class="c3d" data-refresh>${icon('refresh')} ${l.retry}</button></p></div>`;
+}
+
+function renderHome(){
+  const l = L();
+  const name = esc(herName());
+  const hasData = !!(S.her && S.her.data);
+  const st = herStats();
+  const pct = Math.min(100, Math.round(st.li.cur*100/st.li.need));
+  const hud = `<div class="card hud">
+      <div class="ava"><img src="img/xiaochun-avatar.webp" alt=""></div>
+      <div style="min-width:0"><div class="hname"><span>${name}</span><span class="lv">${l.level}${st.li.lvl}</span></div>
+        <div class="xpline"><div class="xpbar" title="${l.xpTip}"><i style="width:${pct}%"></i></div><small class="num">${st.li.cur}/${st.li.need}</small></div></div>
+      <div class="chip" title="streak">${icon('flame')}${st.streak}<small>${l.streak}</small></div>
+      <button class="rbtn ${S.loading?'spin':''}" data-refresh aria-label="${l.retry}">${icon('refresh')}</button>
+    </div>`;
+  const hn = herNow();
+  const syncL = `<div class="syncline"><span>${fill(l.synced, {t:hasData ? rel(S.her.updated_at) : l.never})}</span>
+    ${sameClock() ? '' : `<span>🕒 ${fill(l.herTime, {t:pad(hn.getHours())+':'+pad(hn.getMinutes())})}</span>`}</div>`;
+  if(!hasData){view.innerHTML = hud + syncL + noDataCard(); bindHome(); return;}
+
+  const day = herToday(), k = keyOf(day), list = tasksFor(day), nm = hn.getHours()*60 + hn.getMinutes();
+  const dn = list.filter(t => isDone(t,k)).length;
+  const endOf = t => t.end ? mins(t.end) : mins(t.start) + 60;
+  const cur = list.find(t => mins(t.start) <= nm && nm < endOf(t));
+  const next = list.find(t => mins(t.start) > nm);
+  const missed = list.filter(t => endOf(t) <= nm && !isDone(t,k)).length;
+  let bubble, img = 'idle';
+  if(!list.length){bubble = l.noTasks; img = 'idle';}
+  else if(dn === list.length){bubble = '🎉 ' + l.allDone; img = 'happy';}
+  else if(cur){bubble = `<small>${l.nowDoing}</small><span class="live"></span>${esc(taskTitle(cur))} · ${timeLabel(cur)}`;}
+  else if(next){bubble = `<small>${l.freeNow}</small>${fill(l.nextUp, {t:next.start})} · ${esc(taskTitle(next))}`;}
+  else bubble = l.freeNow;
+  if(img !== 'happy' && missed > dn) img = 'pout';
+  else if(img !== 'happy' && dn > 0) img = 'blush';
+
+  const rows = list.map(t => {
+    const d = isDone(t,k), miss = !d && endOf(t) <= nm, now = t === cur;
+    return `<div class="trow ${d?'done':''} ${now?'now':''}" style="--cc:var(--c-${CATS.includes(t.cat)?t.cat:'study'})">
+      <div class="t-time num">${esc(t.start)}${t.end ? `<small>${esc(t.end)}</small>` : ''}</div>
+      <div><div class="t-title">${esc(taskTitle(t))}</div><div class="t-meta"><span class="cat">${l.cats[t.cat] || ''}</span>${d ? `<span class="num ok">+${+herDone()[t.id+'|'+k] || 0}</span>` : ''}</div></div>
+      <div class="tick ${d?'y':'n'} ${miss?'miss':''}" aria-label="${d?'done':'not done'}">${d ? '✓' : ''}</div></div>`;
+  }).join('');
+  view.innerHTML = hud + syncL + `
+    <div class="room" id="herRoom"><div class="bubble">${bubble}</div><img class="doll idle" id="herDoll" src="img/xiaochun/${img}.webp" alt="${name}"></div>
+    <div class="card today">
+      <div class="thead"><h2>${l.todayL} <span class="muted num" style="font-size:14px">${day.toLocaleDateString(locale(), {month:'numeric', day:'numeric', weekday:'short'})}</span></h2>
+        <span class="big">${dn}/${list.length}</span></div>
+      <div class="meter"><span>${l.weekPct}</span><div class="track"><i style="width:${st.wPct}%"></i></div><span class="num">${st.wPct}%</span></div>
+      ${list.length ? rows : `<div class="empty">${l.noTasks}</div>`}
+    </div>`;
+  bindHome();
+  const doll = document.getElementById('herDoll');
+  doll.onclick = () => {
+    doll.className = 'doll'; void doll.offsetWidth; doll.className = 'doll hop';
+    burst(document.getElementById('herRoom'), '💗', 4);
+    setTimeout(() => {doll.className = 'doll idle';}, 600);
+    toast(l.tapHer);
+  };
+}
+function bindHome(){
+  document.querySelectorAll('[data-refresh]').forEach(b => b.onclick = async () => {await loadAll(); if(S.online) toast(L().refreshed);});
+}
+
+/* ---------- send love ---------- */
+function renderLove(){
+  const l = L();
+  const hist = S.msgs.length ? S.msgs.map(m => {
+    const kd = KINDS.find(x => x.k === m.kind) || KINDS[4];
+    return `<div class="mrow"><div class="em">${esc(m.emoji || kd.emoji)}</div>
+      <div class="mb"><b>${esc(m.kind === 'note' ? m.body : (l.kinds[m.kind] || m.kind))}</b><small>${new Date(m.created_at).toLocaleString(locale(), {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'})}</small></div>
+      <div class="rd ${m.read_at?'y':''}">${m.read_at ? l.readY : l.readN}</div></div>`;
+  }).join('') : `<div class="empty">${l.noHistory}</div>`;
+  view.innerHTML = `
+    <h1 class="sec-title">${l.loveTitle}</h1><p class="sec-sub">${l.loveSub}</p>
+    <div class="room short" id="hisRoom"><div class="bubble">${l.bubbleLove}</div><img class="doll idle" id="hisDoll" src="img/anren/idle.webp" alt=""></div>
+    <div class="lovegrid">${KINDS.map(x => `<button class="c3d ${x.cls} ${x.k==='note'?'note':''}" data-kind="${x.k}"><b>${x.emoji}</b>${l.kinds[x.k]}</button>`).join('')}</div>
+    <div class="dayline" style="margin-top:22px"><h3>${l.history}</h3><button class="rbtn ${S.loading?'spin':''}" data-refresh aria-label="${l.retry}">${icon('refresh')}</button></div>
+    <div class="card hist">${hist}</div>`;
+  bindHome();
+  document.querySelectorAll('[data-kind]').forEach(b => b.onclick = () => {
+    const kind = b.dataset.kind;
+    if(kind === 'note') return openNote();
+    const herLang = herData().lang === 'en' ? 'en' : 'zh';
+    sendMsg(kind, T[herLang].bodies[kind], b);
+  });
+}
+let sending = false;
+async function sendMsg(kind, body, btn){
+  if(sending) return false;
+  const l = L(), kd = KINDS.find(x => x.k === kind);
+  sending = true;
+  document.querySelectorAll('[data-kind]').forEach(b => b.disabled = true);
+  try{
+    const r = await api('/rest/v1/messages', {method:'POST', prefer:'return=representation',
+      body:{from_id:uid(), to_id:S.partner.id, kind, emoji:kd.emoji, body}});
+    const row = Array.isArray(r) ? r[0] : r;
+    S.msgs = [row || {kind, emoji:kd.emoji, body, created_at:new Date().toISOString(), read_at:null}, ...S.msgs].slice(0,20);
+    S.online = true; saveCache();
+    showSent(kd);
+    return true;
+  }catch(e){
+    if(e.auth){signOutLocal(l.expired); return false;}
+    toast(e.net ? l.errNet : fill(l.errOther, {m:e.message}));
+    return false;
+  }finally{
+    sending = false;
+    document.querySelectorAll('[data-kind]').forEach(b => b.disabled = false);
+  }
+}
+let sentTimer = null;
+function showSent(kd){
+  const l = L(), el = document.getElementById('sent');
+  el.innerHTML = `<img src="img/anren/${kd.img}.webp" alt=""><div class="sentcard"><h3>${kd.emoji} ${l.sentT}</h3><p>${l.sentP}</p>
+    <button class="c3d go wide" id="sentOk">${l.ok}</button></div>`;
+  el.classList.add('show');
+  burst(el, kd.emoji, 8, 8);
+  const close = () => {clearTimeout(sentTimer); el.classList.remove('show'); if(S.tab === 'love') render();};
+  document.getElementById('sentOk').onclick = close;
+  el.onclick = ev => {if(ev.target === el) close();};
+  clearTimeout(sentTimer); sentTimer = setTimeout(close, 3500);
+  const doll = document.getElementById('hisDoll');
+  if(doll){doll.src = `img/anren/${kd.img}.webp`; doll.className = 'doll wig';}
+}
+const noteDlg = document.getElementById('noteDlg');
+function openNote(){
+  const l = L(), f = document.getElementById('noteForm');
+  f.innerHTML = `<h3>✉️ ${l.noteTitle}</h3>
+    <textarea id="nBody" name="body" rows="4" maxlength="300" placeholder="${l.notePh}"></textarea>
+    <div class="count num" id="nCount">0/300</div>
+    <div class="err" id="nErr"></div>
+    <div class="actions"><span class="spacer"></span><button type="button" class="ghost" id="nCancel">${l.cancel}</button>
+      <button type="submit" class="c3d red" id="nSend">${l.send}</button></div>`;
+  const ta = f.body;
+  ta.oninput = () => {document.getElementById('nCount').textContent = `${ta.value.length}/300`;};
+  document.getElementById('nCancel').onclick = () => noteDlg.close();
+  f.onsubmit = async ev => {
+    ev.preventDefault();
+    const body = ta.value.trim().slice(0,300);
+    if(!body) return document.getElementById('nErr').textContent = l.errEmpty;
+    const b = document.getElementById('nSend'); b.disabled = true; b.textContent = l.busy;
+    if(await sendMsg('note', body)) noteDlg.close();
+    else {b.disabled = false; b.textContent = l.send;}
+  };
+  noteDlg.showModal();
+  setTimeout(() => ta.focus(), 50);
+}
+
+/* ---------- her schedule ---------- */
+function renderWeek(){
+  const l = L();
+  if(!(S.her && S.her.data)){view.innerHTML = `<h1 class="sec-title">${l.schedTitle}</h1>` + noDataCard(); bindHome(); return;}
+  const t0 = herToday(), mon = addDays(mondayOf(t0), S.wk*7);
+  if(!S.sel || mondayOf(parseKey(S.sel)).getTime() !== mon.getTime()) S.sel = keyOf(S.wk === 0 ? t0 : mon);
+  const days = [...Array(7)].map((_,i) => addDays(mon,i));
+  const end = days[6];
+  const range = `${mon.toLocaleDateString(locale(), {month:'numeric', day:'numeric'})} – ${end.toLocaleDateString(locale(), {month:'numeric', day:'numeric'})}`;
+  const sel = parseKey(S.sel), list = tasksFor(sel);
+  view.innerHTML = `
+    <h1 class="sec-title">${l.schedTitle}</h1>
+    <div class="weeknav">
+      <button class="ghost" data-wk="-1" aria-label="${l.prevWeek}">‹</button>
+      <h2 class="num">${S.wk === 0 ? l.thisWeek + ' · ' : ''}${range}</h2>
+      ${S.wk !== 0 ? `<button class="ghost" data-wk="0">${l.thisWeek}</button>` : ''}
+      <button class="ghost" data-wk="1" aria-label="${l.nextWeek}">›</button>
+    </div>
+    <div class="daystrip">${days.map(d => {
+      const k = keyOf(d), ts = tasksFor(d), dn = ts.filter(t => isDone(t,k)).length;
+      return `<button class="dchip ${k===S.sel?'sel':''} ${k===keyOf(t0)?'today':''}" data-day="${k}">${l.daysShort[d.getDay()]}<b>${d.getDate()}</b><i>${ts.length ? `${dn}/${ts.length}` : ''}</i></button>`;
+    }).join('')}</div>
+    <div class="dayline"><h3>${sel.toLocaleDateString(locale(), {month:'long', day:'numeric', weekday:'long'})}</h3>
+      <button class="c3d go" id="addTask">${l.add}</button></div>
+    <div class="sheet">${list.length ? list.map(t => {
+      const d = isDone(t,S.sel);
+      return `<div class="trow tap ${d?'done':''}" data-task="${esc(t.id)}" role="button" tabindex="0" style="--cc:var(--c-${CATS.includes(t.cat)?t.cat:'study'})">
+        <div class="t-time num">${esc(t.start)}${t.end ? `<small>${esc(t.end)}</small>` : ''}</div>
+        <div><div class="t-title">${esc(taskTitle(t))}</div><div class="t-meta"><span class="cat">${l.cats[t.cat] || ''}</span><span>${l.diff[t.diff] || ''}</span>${t.date ? '' : `<span>🔁</span>`}</div></div>
+        <div class="tick ${d?'y':'edit'}">${d ? '✓' : '✎'}</div></div>`;
+    }).join('') : `<div class="empty">${l.dayEmpty}</div>`}</div>
+    <p class="hint" style="margin:12px 4px">${l.schedHint}</p>`;
+  document.querySelectorAll('[data-wk]').forEach(b => b.onclick = () => {const v = +b.dataset.wk; S.wk = v === 0 ? 0 : S.wk + v; S.sel = null; render();});
+  document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => {S.sel = b.dataset.day; render();});
+  document.getElementById('addTask').onclick = () => openTask(null, {date:S.sel});
+  document.querySelectorAll('[data-task]').forEach(r => {
+    const open = () => {const t = herTasks().find(x => x.id === r.dataset.task); if(t) openTask(t);};
+    r.onclick = open;
+    r.onkeydown = ev => {if(ev.key === 'Enter' || ev.key === ' '){ev.preventDefault(); open();}};
+  });
+}
+
+/* re-read her state, change only data.tasks, upsert with updated_by = me (CONTRACT.md) */
+async function writeTasks(mutate){
+  const pid = S.partner.id;
+  const rows = await api(`/rest/v1/app_state?user_id=eq.${pid}&select=*`);
+  if(!rows.length) throw Object.assign(new Error('no data'), {noData:true});
+  const row = rows[0], data = row.data || {};
+  data.tasks = Array.isArray(data.tasks) ? data.tasks : [];
+  const bad = mutate(data.tasks);
+  if(bad) throw Object.assign(new Error(bad), {user:true});
+  const now = new Date().toISOString();
+  await api('/rest/v1/app_state', {method:'POST', prefer:'resolution=merge-duplicates,return=minimal',
+    body:{user_id:pid, data, updated_at:now, updated_by:uid()}});
+  S.her = {...row, data, updated_at:now, updated_by:uid()};
+  S.online = true; saveCache();
+}
+
+const taskDlg = document.getElementById('taskDlg');
+function openTask(task, opts={}){
+  const l = L();
+  const t = task || {id:null, title:'', cat:'study', start:'09:00', end:'', repeat:[], date:opts.date || keyOf(herToday()), diff:2, notes:''};
+  const weekly = !t.date;
+  const dayOrder = [1,2,3,4,5,6,0];
+  const f = document.getElementById('taskForm');
+  f.innerHTML = `
+    <h3>${task ? l.editQuest : l.addQuest}</h3>
+    <div class="field"><label for="fTitle">${l.titleL}</label><input id="fTitle" name="title" maxlength="80" value="${esc(task ? taskTitle(t) : '')}"></div>
+    <div class="row">
+      <div class="field"><label for="fCat">${l.category}</label><select id="fCat" name="cat">${CATS.map(c => `<option value="${c}" ${t.cat===c?'selected':''}>${l.cats[c]}</option>`).join('')}</select></div>
+      <div class="field"><label for="fDiff">${l.difficulty}</label><select id="fDiff" name="diff">${[1,2,3].map(n => `<option value="${n}" ${+t.diff===n?'selected':''}>${l.diff[n]} +${DIFF_XP[n]}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><label>${l.when}</label>
+      <div class="seg" style="margin:0"><label><input type="radio" name="mode" value="weekly" ${weekly?'checked':''}><span>${l.weekly}</span></label>
+      <label><input type="radio" name="mode" value="once" ${!weekly?'checked':''}><span>${l.once}</span></label></div></div>
+    <div class="field" id="fWeekly"><label>${l.repeatOn}</label><div class="days">
+      ${dayOrder.map(d => `<label><input type="checkbox" name="rep" value="${d}" ${(t.repeat||[]).includes(d)?'checked':''}><span>${l.daysShort[d]}</span></label>`).join('')}</div></div>
+    <div class="field" id="fOnce"><label for="fDate">${l.date}</label><input type="date" id="fDate" name="date" value="${esc(t.date || opts.date || keyOf(herToday()))}"></div>
+    <div class="row">
+      <div class="field"><label for="fStart">${l.start}</label><input type="time" id="fStart" name="start" value="${esc(t.start)}"></div>
+      <div class="field"><label for="fEnd">${l.end}</label><input type="time" id="fEnd" name="end" value="${esc(t.end)}"></div>
+    </div>
+    <div class="field"><label for="fNotes">${l.notes}</label><textarea id="fNotes" name="notes" rows="2" maxlength="200">${esc(t.notes)}</textarea></div>
+    <div class="err" id="tErr" role="alert"></div>
+    <div class="actions">
+      ${task ? `<button type="button" class="ghost danger" id="tDel">${l.del}</button>` : ''}
+      <span class="spacer"></span>
+      <button type="button" class="ghost" id="tCancel">${l.cancel}</button>
+      <button type="submit" class="c3d blue" id="tSave">${l.save}</button>
+    </div>`;
+  const err = document.getElementById('tErr');
+  const syncMode = () => {const w = f.mode.value === 'weekly'; document.getElementById('fWeekly').hidden = !w; document.getElementById('fOnce').hidden = w;};
+  f.querySelectorAll('[name=mode]').forEach(r => r.onchange = syncMode);
+  syncMode();
+  document.getElementById('tCancel').onclick = () => taskDlg.close();
+  const fail = e => {
+    if(e.auth){taskDlg.close(); signOutLocal(l.expired); return;}
+    err.textContent = e.net ? l.errNet : e.noData ? l.noDataT : e.user ? e.message : fill(l.errOther, {m:e.message});
+  };
+  const busy = (b, on, txt) => {f.querySelectorAll('button').forEach(x => x.disabled = on); if(b) b.textContent = txt;};
+  const del = document.getElementById('tDel');
+  if(del) del.onclick = async () => {
+    if(!del.dataset.armed){del.dataset.armed = '1'; del.textContent = l.delConfirm; return;}
+    busy(del, true, l.saving);
+    try{
+      await writeTasks(tasks => {const i = tasks.findIndex(x => x.id === task.id); if(i >= 0) tasks.splice(i,1);});
+      taskDlg.close(); render(); toast('🗑 ' + l.deletedT);
+    }catch(e){busy(del, false, l.del); delete del.dataset.armed; fail(e);}
+  };
+  f.onsubmit = async ev => {
+    ev.preventDefault();
+    const title = f.title.value.trim(), mode = f.mode.value;
+    const rep = [...f.querySelectorAll('[name=rep]:checked')].map(x => +x.value);
+    const start = f.start.value, end = f.end.value;
+    if(!title) return err.textContent = l.errTitle;
+    if(mode === 'weekly' && !rep.length) return err.textContent = l.errDays;
+    if(mode === 'once' && !f.date.value) return err.textContent = l.errDate;
+    if(!start) return err.textContent = l.errStart;
+    if(end && mins(end) <= mins(start)) return err.textContent = l.errTime;
+    err.textContent = '';
+    const data = {cat:f.cat.value, diff:+f.diff.value, start, end, notes:f.notes.value.trim(),
+      repeat: mode === 'weekly' ? rep.sort((a,b) => a-b) : [], date: mode === 'once' ? f.date.value : null};
+    const sb = document.getElementById('tSave');
+    busy(sb, true, l.saving);
+    try{
+      await writeTasks(tasks => {
+        if(task){
+          const cur = tasks.find(x => x.id === task.id);
+          if(!cur) return l.gone;
+          if(title !== taskTitle(cur)){cur.title = title; delete cur.titleZh;}
+          Object.assign(cur, data);
+        } else {
+          tasks.push(Object.assign({id:'t'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), title}, data));
+        }
+      });
+      if(mode === 'once'){S.sel = data.date; S.wk = Math.round((mondayOf(parseKey(data.date)) - mondayOf(herToday())) / (7*864e5));}
+      taskDlg.close(); render(); toast('✅ ' + l.savedT);
+    }catch(e){busy(sb, false, l.save); fail(e);}
+  };
+  taskDlg.showModal();
+}
+
+/* ---------- settings ---------- */
+function renderSettings(){
+  const l = L();
+  view.innerHTML = `
+    <h1 class="sec-title">${l.tabs.set}</h1>
+    <div class="card grp"><h3>${l.language}</h3>
+      <div class="seg" style="margin:0"><label><input type="radio" name="lang" value="zh" ${prefs.lang==='zh'?'checked':''}><span>中文</span></label>
+      <label><input type="radio" name="lang" value="en" ${prefs.lang==='en'?'checked':''}><span>English</span></label></div></div>
+    <div class="card grp"><h3>${l.account}</h3>
+      <p>${fill(l.signedAs, {u:'<b>' + esc(S.me.username || '') + '</b>'})}<br>${fill(l.pairedWith, {h:'<b>' + esc(herName()) + '</b>'})}</p>
+      <div class="btnrow"><button class="ghost danger" id="unlink">${l.unlink}</button><button class="ghost" id="so">${l.signOut}</button></div>
+      <div class="err" id="sErr"></div></div>
+    <div class="card grp"><h3>${l.apps}</h3><p>${l.appsHint}</p>
+      <div class="links"><a href="index.html"><img src="icons/study-180.png" alt="">${l.appStudy}</a><a href="stress.html"><img src="icons/stress-180.png" alt="">${l.appStress}</a></div></div>`;
+  document.querySelectorAll('[name=lang]').forEach(r => r.onchange = () => {prefs.lang = r.value; writeJSON(PREFS, prefs); render();});
+  document.getElementById('so').onclick = signOut;
+  const un = document.getElementById('unlink');
+  un.onclick = async () => {
+    if(!un.dataset.armed){un.dataset.armed = '1'; un.textContent = l.unlinkConfirm; return;}
+    un.disabled = true; un.textContent = l.busy;
+    try{
+      await api('/rest/v1/rpc/unpair', {method:'POST', body:{}});
+      S.partner = null; S.her = null; S.msgs = []; S.tab = 'home';
+      toast(l.unlinked); await loadAll();
+    }catch(e){
+      if(e.auth) return signOutLocal(l.expired);
+      un.disabled = false; delete un.dataset.armed; un.textContent = l.unlink;
+      document.getElementById('sErr').textContent = e.net ? l.errNet : fill(l.errOther, {m:e.message});
+    }
+  };
+}
+
+/* ---------- sign out ---------- */
+function signOutLocal(msg){
+  S.session = null; S.me = null; S.partner = null; S.her = null; S.msgs = []; S.online = true; S.loading = false;
+  writeJSON(SESS, null); writeJSON(CACHE, null);
+  S.authErr = msg || ''; S.authOk = ''; S.authMode = 'in';
+  if(taskDlg.open) taskDlg.close();
+  if(noteDlg.open) noteDlg.close();
+  render();
+}
+async function signOut(){
+  const s = S.session;
+  if(s) rawFetch('/auth/v1/logout', {method:'POST', token:s.access_token}).catch(() => {});
+  signOutLocal('');
+}
+
+/* ---------- pull to refresh ---------- */
+(() => {
+  const ptr = document.getElementById('ptr');
+  ptr.innerHTML = icon('refresh');
+  let y0 = null, dy = 0;
+  addEventListener('touchstart', e => {
+    y0 = (window.scrollY <= 0 && S.partner && (S.tab === 'home' || S.tab === 'love') && !anyDialogOpen()) ? e.touches[0].clientY : null; dy = 0;
+  }, {passive:true});
+  addEventListener('touchmove', e => {
+    if(y0 == null) return;
+    dy = Math.max(0, e.touches[0].clientY - y0);
+    ptr.style.transform = `translate(-50%,${Math.min(dy, 110) - 70}px) rotate(${dy*2}deg)`;
+  }, {passive:true});
+  addEventListener('touchend', async () => {
+    if(y0 == null) return;
+    y0 = null;
+    if(dy > 80 && !S.loading){
+      ptr.classList.add('go'); ptr.style.transform = 'translate(-50%,20px)';
+      await loadAll();
+      if(S.online) toast(L().refreshed);
+      ptr.classList.remove('go');
+    }
+    ptr.style.transform = '';
+  });
+})();
+
+/* ---------- auto refresh every 60 s while visible ---------- */
+setInterval(() => {
+  if(document.visibilityState === 'visible' && S.session && !S.loading && !anyDialogOpen()) loadAll();
+  else if(S.partner && S.tab === 'home' && !anyDialogOpen()) render();
+}, 60000);
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible' && S.session && Date.now() - S.at > 15000 && !anyDialogOpen()) loadAll();
+});
+addEventListener('online', () => {if(S.session) loadAll();});
+addEventListener('storage', e => {   // signed out or switched account in another tab
+  if(e.key !== SESS) return;
+  const s = validSession(readJSON(SESS));
+  if(!s && S.session) signOutLocal('');
+  else if(s && (!S.session || s.user.id !== S.session.user.id)){S.session = s; S.me = null; loadAll();}
+  else if(s) S.session = s;
+});
+
+render();
+if(S.session) loadAll();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>

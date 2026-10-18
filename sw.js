@@ -1,7 +1,7 @@
 // Offline support: serve the latest copy from the network, fall back to the cache when offline.
 // Bump VERSION whenever files change so phones drop the old cache.
-const VERSION = 'v6';
-const FILES = ['./', './index.html', './stress.html', './study.webmanifest', './stress.webmanifest',
+const VERSION = 'v7';
+const FILES = ['./', './index.html', './stress.html', './partner.html', './study.webmanifest', './stress.webmanifest',
   './icons/study-180.png', './icons/study-192.png', './icons/study-512.png',
   './icons/stress-180.png', './icons/stress-192.png', './icons/stress-512.png',
   './img/anren/blush.webp',

@@ -353,6 +353,24 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 .expbox{margin:8px 0 12px}
 .expbox textarea{word-break:break-all;font-family:ui-monospace,Menlo,monospace}
 .expbox a{color:var(--blue);font-weight:800}
+/* account & pairing */
+.grp h5{margin:6px 0 4px;font:900 14px var(--f-body)}
+.pwrow{display:flex;gap:8px}
+.pwrow input{flex:1;min-width:0}
+.pwrow .ghost{flex:none;min-width:64px;min-height:44px}
+.accme{display:flex;align-items:center;gap:10px;margin:4px 0 12px;flex-wrap:wrap}
+.accme>div{flex:1;min-width:0}
+.accme .ghost{min-height:44px}
+.accname{font:900 18px var(--f-body);word-break:break-all}
+.accst{font-size:13px;font-weight:700;color:var(--pencil);display:flex;align-items:center;gap:6px}
+.accst .dot{width:9px;height:9px;border-radius:50%;background:var(--good);flex:none}
+.accst .dot.off{background:var(--pencil)}
+.accst .dot.busy{background:var(--sun)}
+.paircode{font:900 42px/1.1 var(--f-num);letter-spacing:.16em;text-indent:.16em;text-align:center;background:var(--sheet);color:var(--ink);border-radius:18px;padding:12px 0;margin:6px 0 4px;box-shadow:0 4px 0 var(--shade);user-select:all}
+.paired{display:flex;align-items:center;gap:10px;font-weight:800;margin:4px 0 2px}
+.paired .cav{width:44px;height:44px}
+.msgemo{font-size:52px;line-height:1.15;margin-top:4px}
+.celcard .from{font-size:12px;font-weight:800;color:var(--pencil);margin-top:8px}
 
 /* celebration: he jumps in with the reward */
 #celebrate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;pointer-events:none;opacity:0;transition:opacity .2s;overflow-y:auto;
@@ -480,7 +498,7 @@ const I18N = {
     expHint:'This is all your progress. Copy it and send it to yourself (e.g. a chat with yourself) to keep it safe.', dlLink:'Nothing happened? Tap here to download the file.',
     secYou:'You & him', secShow:'Display', replayGuide:'Show the guide again',
     guideTitle:'How it works', guideGo:'Got it!',
-    guide:['This is {c}, and the girl next to him is you, {h}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Rewards shows medals and stickers you unlock.','The gear opens settings: import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
+    guide:['This is {c}, and the girl next to him is you, {h}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Rewards shows medals and stickers you unlock.','The gear opens settings: sign in to your account (already have one? just sign in, no backup needed), import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
   },
   zh:{
     tabs:{home:'主页',week:'任务',ach:'奖励',stats:'统计'},
@@ -526,7 +544,7 @@ const I18N = {
     expHint:'这是你的全部进度。复制下来发给自己（比如微信「文件传输助手」）保存好。', dlLink:'没反应？点这里下载文件。',
     secYou:'你和他', secShow:'显示', replayGuide:'重新看一遍怎么玩',
     guideTitle:'怎么玩', guideGo:'知道啦！',
-    guide:['这是{c}，站在他旁边的女生就是你：{h}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
+    guide:['这是{c}，站在他旁边的女生就是你：{h}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：登录账号（已经有账号的话直接登录，不用粘贴备份）、导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
   }
 };
 
@@ -647,6 +665,7 @@ function load(){
 function save(){
   try{localStorage.setItem(STORE, JSON.stringify(state)); storageOK = true;}
   catch(e){storageOK = false;}
+  cloudDirty();
 }
 
 const L = () => I18N[state.lang] || I18N.en;
@@ -836,6 +855,7 @@ function importCardHTML(){
   const l = L();
   return `<div class="nowcard card solo"><div><h3>${esc(l.impTitle)}</h3><p>${esc(fill(l.impText,{c:coachName()}))}</p></div>
     <button class="c3d go big" data-imp="1">${esc(l.impBtn)}</button>
+    ${accSess() ? '' : `<button class="ghost" data-acc="1">${esc(accT().hasAcc)}</button>`}
     <button class="ghost" data-add="1">${esc(l.orAdd)}</button></div>`;
 }
 function renderHome(){
@@ -1087,6 +1107,7 @@ view.addEventListener('click', e => {
   const ad = e.target.closest('[data-add]');
   if(ad){openTask(null, {date:ad.dataset.add.length > 1 ? ad.dataset.add : keyOf(today())}); return;}
   if(e.target.closest('[data-imp]')){openProfile({focus:'pasteTxt'}); return;}
+  if(e.target.closest('[data-acc]')){openProfile({focus:'aUser'}); return;}
   if(e.target.closest('[data-rename]')){openProfile({focus:'pCoach'}); return;}
   const wk = e.target.closest('[data-wk]');
   if(wk){const n = +wk.dataset.wk; ui.weekOffset = n === 0 ? 0 : ui.weekOffset + n; ui.selDay = null; render(); return;}
@@ -1230,6 +1251,7 @@ function openProfile(opt={}){
       <div class="field"><button class="ghost" id="pGuide" style="width:100%;min-height:46px">? ${l.replayGuide}</button></div>`);
   document.getElementById('profBody').innerHTML = `
     <div class="dlghead"><h3>${l.profile}</h3><button class="ghost" id="pX">${l.close}</button></div>
+    <section class="grp" id="accGrp"></section>
     ${noTasks ? imp + you + rem : you + rem + imp}${show}
     <div class="actions"><button class="ghost danger" id="pReset">${l.reset}</button><span class="spacer"></span><button class="primary" id="pClose">${l.close}</button></div>`;
   document.getElementById('pUp').onclick = () => document.getElementById('avatarFile').click();
@@ -1257,7 +1279,8 @@ function openProfile(opt={}){
     else {rs.dataset.armed = '1'; rs.textContent = l.resetConfirm;}
   };
   document.getElementById("pClose").onclick = document.getElementById("pX").onclick = () => profDlg.close();
-  if(!profDlg.open) profDlg.showModal();
+  renderAcc();
+  if(!profDlg.open){profDlg.showModal(); if(accSess()) cloudTick();}
   const f = opt.focus && document.getElementById(opt.focus);
   if(f){f.focus(); f.scrollIntoView({block:'center'}); if(f.select) f.select();}
 }
@@ -1753,6 +1776,394 @@ function exportCalendar(){
     if(sb) sb.onclick = () => shareFile(f, open);
   }
 }
+
+/* ---------- account & cloud sync (plain fetch to Supabase, rules in supabase/CONTRACT.md) ----------
+   localStorage stays the source of truth; signed out, the app works exactly as before. */
+const SB_URL = 'https://uaxmcjuxkuepystatqyn.supabase.co', SB_KEY = 'sb_publishable_QxMM_jpZLHnA5CAijHwmyQ_9VVs2uR5';
+const ACC = {
+  en:{
+    title:'Account', signIn:'Sign in', signUp:'Sign up', user:'Username', userPh:'e.g. xiaochun', userHint:'Lowercase letters, numbers or _, 3–20 characters',
+    pw:'Password', pwHint:'At least 6 characters. Remember it: you need it on a new phone.', show:'Show', hide:'Hide',
+    signInGo:'Sign in', signUpGo:'Create account', wait:'One moment…',
+    why:'Sign in so your progress is saved online and you can connect with {c}.',
+    errUser:'Usernames use lowercase letters, numbers or _, 3–20 characters.', errPw:'The password needs at least 6 characters.',
+    errWrong:'Wrong username or password. Try again.', errTaken:'That username is taken. Pick another one.',
+    errNet:'Can\'t reach the server, keep using offline.', errMany:'Too many tries. Wait a few minutes and try again.',
+    errOther:'Something went wrong. Try again later.', errSetup:'Sign-up is not open yet (the server is still being set up). Try again later.', created:'Account created; sign-in will work once setup is finished.',
+    synced:'Synced · {t}', syncing:'Syncing…', offline:'Offline. It syncs by itself when you\'re back online.',
+    justNow:'just now', minAgo:'{m} min ago', hrAgo:'{h} h ago', syncNow:'Sync now', signOut:'Sign out',
+    connectT:'Connect with him', connect:'Connect with {c}', pairWhy:'Once connected, {c} can see your progress, fix your schedule and send you kisses and rewards.',
+    codeHint:'Ask {c} to open his page (partner.html) and type in these 6 numbers. Valid for {m} more min.', newCode:'Get a new code',
+    paired:'Connected with {p}', unlink:'Unlink', unlinkSure:'Tap again to unlink', joined:'You\'re connected with {p}!',
+    needNet:'Go online to connect with him.', hisAcc:'This is his account. Use it in partner.html; nothing syncs here.',
+    welcome:'Signed in. Your progress is saved online.', hisEdit:'{c} updated your schedule', outDone:'Signed out. Your progress stays on this phone.',
+    hasAcc:'Already have an account? Sign in instead',
+    kinds:{kiss:'A kiss from {c}', hug:'A hug from {c}', gift:'A gift from {c}', reward:'A reward from {c}', note:'A note from {c}'},
+    emo:{kiss:'😘', hug:'🤗', gift:'🎁', reward:'🏆', note:'💌'}, gotIt:'Got it 💗'
+  },
+  zh:{
+    title:'账号', signIn:'登录', signUp:'注册', user:'用户名', userPh:'比如 xiaochun', userHint:'小写字母、数字或 _，3–20 位',
+    pw:'密码', pwHint:'至少 6 位。记住它，换手机时要用。', show:'显示', hide:'隐藏',
+    signInGo:'登录', signUpGo:'注册账号', wait:'请稍等…',
+    why:'登录后，换手机也不会丢进度，还能和{c}连在一起。',
+    errUser:'用户名只能用小写字母、数字或 _，3–20 位。', errPw:'密码至少要 6 位。',
+    errWrong:'用户名或密码不对，再试一次。', errTaken:'这个用户名已经有人用了，换一个吧。',
+    errNet:'连不上服务器，先离线使用。', errMany:'试的次数太多了，等几分钟再试。',
+    errOther:'出错了，请稍后再试。', errSetup:'注册暂时用不了（服务器还在设置中），请稍后再试。', created:'账号已创建，请稍后再登录。',
+    synced:'已同步 · {t}', syncing:'同步中…', offline:'离线中，联网后会自动同步。',
+    justNow:'刚刚', minAgo:'{m} 分钟前', hrAgo:'{h} 小时前', syncNow:'立即同步', signOut:'退出登录',
+    connectT:'和他连接', connect:'和{c}连接', pairWhy:'连接后，{c}能看到你的进度、帮你改课表，还能给你送亲亲和奖励。',
+    codeHint:'让{c}打开他的页面 partner.html，输入这 6 位数字。还有 {m} 分钟有效。', newCode:'换一个数字',
+    paired:'已和 {p} 连接', unlink:'解除连接', unlinkSure:'再点一次确认解除', joined:'和 {p} 连上啦！',
+    needNet:'联网后就能和他连接。', hisAcc:'这是男生的账号，请在 partner.html 里使用，这里不会同步。',
+    welcome:'登录成功，进度已经保存到网上。', hisEdit:'{c} 更新了你的课表', outDone:'已退出登录，进度还留在这台手机上。',
+    hasAcc:'已经有账号？直接登录就行',
+    kinds:{kiss:'{c}的亲亲', hug:'{c}的抱抱', gift:'{c}送你的礼物', reward:'{c}给你的奖励', note:'{c}给你的留言'},
+    emo:{kiss:'😘', hug:'🤗', gift:'🎁', reward:'🏆', note:'💌'}, gotIt:'收到啦 💗'
+  }
+};
+const accT = () => ACC[state.lang] || ACC.en;
+const lsGet = k => {try{return localStorage.getItem(k);}catch(e){return null;}};
+const lsSet = (k,v) => {try{v == null ? localStorage.removeItem(k) : localStorage.setItem(k, String(v));}catch(e){}};
+const lsJSON = k => {try{return JSON.parse(lsGet(k) || 'null');}catch(e){return null;}};
+const accSess = () => {const s = lsJSON('sq.session'); return s && s.access_token && s.user && s.user.id ? s : null;};
+const sessExp = s => {const e = +s.expires_at || 0; return e > 1e12 ? e : e*1000;};   // Supabase gives seconds
+const freshAcct = () => ({me:null, partner:null, st:'', at:+lsGet('sq.syncAt') || 0, code:'', codeAt:0, mode:'in', u:'', p:'', eye:false, unlink:false});
+let acct = Object.assign(freshAcct(), lsJSON('sq.acct') || {});
+
+class SbErr extends Error{constructor(status, code, msg){super(msg || code || 'error'); this.status = status; this.code = code || '';}}
+async function sbRaw(path, {method='GET', body, headers={}, token, keepalive}={}){
+  const h = Object.assign({apikey:SB_KEY, 'Content-Type':'application/json'}, headers);
+  if(token) h.Authorization = 'Bearer ' + token;
+  const ctl = window.AbortController ? new AbortController() : null, tm = ctl && setTimeout(() => ctl.abort(), 15000);
+  const b = body === undefined ? undefined : JSON.stringify(body);
+  let r;
+  try{r = await fetch(SB_URL + path, {method, headers:h, body:b, signal:ctl ? ctl.signal : undefined, keepalive:!!keepalive && (b || '').length < 60000, cache:'no-store'});}
+  catch(e){throw new SbErr(0, 'net', 'network');}
+  finally{clearTimeout(tm);}
+  const txt = await r.text().catch(() => '');
+  let j = null; try{j = txt ? JSON.parse(txt) : null;}catch(e){}
+  if(!r.ok) throw new SbErr(r.status, j && (j.error_code || j.code || j.error), j && (j.msg || j.message || j.error_description || j.error) || txt);
+  return j;
+}
+function keepSess(j, old){
+  const s = {access_token:j.access_token, refresh_token:j.refresh_token,
+    expires_at:+j.expires_at || Math.floor(Date.now()/1000) + (+j.expires_in || 3600),
+    user:{id:(j.user && j.user.id) || old.user.id, username:(old && old.user && old.user.username) || ''}};
+  lsSet('sq.session', JSON.stringify(s));
+  return s;
+}
+let refreshing = null;
+async function accToken(force){
+  const s = accSess();
+  if(!s) throw new SbErr(401, 'nosess', 'signed out');
+  if(!force && sessExp(s) - Date.now() > 60000) return s.access_token;
+  if(!refreshing) refreshing = sbRaw('/auth/v1/token?grant_type=refresh_token', {method:'POST', body:{refresh_token:s.refresh_token}})
+    .then(j => keepSess(j, s))
+    .catch(e => {
+      const now = accSess();
+      if(now && now.refresh_token !== s.refresh_token) return now;   // another tab refreshed it already
+      if(e.status === 400 || e.status === 401) dropSess();            // refresh token is dead: signed out on this phone
+      throw e;
+    })
+    .finally(() => {refreshing = null;});
+  return (await refreshing).access_token;
+}
+// signed-in request; one retry with a fresh token if the server says the token expired
+async function sbAuth(path, opt={}){
+  try{return await sbRaw(path, Object.assign({}, opt, {token:await accToken()}));}
+  catch(e){if(e.status !== 401 || e.code === 'nosess') throw e; return sbRaw(path, Object.assign({}, opt, {token:await accToken(true)}));}
+}
+function dropSess(){
+  ['sq.session','sq.lastPush','sq.dirty','sq.acct','sq.syncAt'].forEach(k => lsSet(k, null));
+  const mode = acct.mode; acct = freshAcct(); acct.mode = mode; msgQ = [];
+  renderAcc();
+}
+const isHis = () => !!(acct.me && acct.me.role === 'him');
+
+/* status line */
+function agoTxt(t){
+  const a = accT(), s = (Date.now() - t)/1000;
+  return s < 60 ? a.justNow : s < 3600 ? fill(a.minAgo, {m:Math.floor(s/60)}) : s < 86400 ? fill(a.hrAgo, {h:Math.floor(s/3600)})
+    : new Date(t).toLocaleString(locale(), {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'});
+}
+function stHTML(){
+  const a = accT();
+  if(acct.st === 'off') return `<i class="dot off"></i>${esc(a.offline)}`;
+  if(acct.st === 'sync' || !acct.at) return `<i class="dot busy"></i>${esc(a.syncing)}`;
+  return `<i class="dot"></i>${esc(fill(a.synced, {t:agoTxt(acct.at)}))}`;
+}
+function setSt(st){
+  acct.st = st;
+  if(st === 'ok'){acct.at = Date.now(); lsSet('sq.syncAt', acct.at);}
+  const el = document.getElementById('accSt'); if(el) el.innerHTML = stHTML();
+}
+
+/* profiles: me + the person I'm paired with */
+async function loadProfiles(){
+  const s = accSess(), rows = await sbAuth('/rest/v1/profiles?select=id,username,display_name,role,partner_id,pair_code,pair_code_at') || [];
+  const had = acct.partner && acct.partner.id;
+  acct.me = rows.find(r => r.id === s.user.id) || null;
+  acct.partner = acct.me && acct.me.partner_id ? rows.find(r => r.id === acct.me.partner_id) || {id:acct.me.partner_id} : null;
+  // a code made earlier (here or before a reload) that is still valid
+  if(acct.me && acct.me.pair_code && !acct.partner){
+    const at = Date.parse(acct.me.pair_code_at) || 0;
+    if(Date.now() - at < 30*60000){acct.code = acct.me.pair_code; acct.codeAt = at;}
+  }
+  if(acct.partner){acct.code = '';}
+  lsSet('sq.acct', JSON.stringify({me:acct.me, partner:acct.partner}));
+  if(acct.partner && !had && acct.codeWatch){acct.codeWatch = false; toast('', esc(fill(accT().joined, {p:partnerName()})));}
+}
+const partnerName = () => (acct.partner && (acct.partner.display_name || acct.partner.username)) || coachName();
+
+/* sync: push after save (debounced), pull his schedule edits, first-sign-in rules */
+let pushTimer = 0, syncing = null, syncAgain = false;
+function cloudDirty(){
+  if(!accSess()) return;
+  lsSet('sq.dirty', '1');
+  clearTimeout(pushTimer); pushTimer = setTimeout(() => cloudSync(), 3000);
+}
+const hasLocal = () => state.tasks.length > 0 || Object.keys(state.done).length > 0;
+function cloudSync(opt={}){
+  if(!accSess()) return Promise.resolve();
+  if(syncing){syncAgain = true; return syncing;}
+  syncing = (async () => {
+    try{
+      if(acct.st !== 'ok') setSt('sync');
+      if(opt.prof || !acct.me) await loadProfiles();
+      if(!isHis() && await pullState() !== 'wait' && lsGet('sq.dirty')) await pushState(opt.keepalive);
+      setSt('ok');
+    }catch(e){if(accSess()) setSt('off');}
+    if(profDlg.open) renderAcc();
+  })().finally(() => {syncing = null; if(syncAgain){syncAgain = false; cloudSync();}});
+  return syncing;
+}
+async function pullState(){
+  const me = accSess().user.id;
+  const rows = await sbAuth(`/rest/v1/app_state?user_id=eq.${me}&select=updated_at,updated_by`);
+  const row = rows && rows[0], last = lsGet('sq.lastPush');
+  if(!row){if(hasLocal()) lsSet('sq.dirty', '1'); return;}          // nothing online yet: push what's here
+  const theirs = row.updated_by && row.updated_by !== me;
+  if(last && !(theirs && Date.parse(row.updated_at) !== Date.parse(last))) return;   // nothing new from him
+  if(taskDlg.open) return 'wait';                                     // she's editing a task: merge on the next round
+  const full = await sbAuth(`/rest/v1/app_state?user_id=eq.${me}&select=data,updated_at`);
+  const d = full && full[0] && full[0].data;
+  if(!d || !Array.isArray(d.tasks)) return;
+  if(!last && !hasLocal()){
+    // new phone: take the whole online copy (the photo stays on the phone)
+    const ava = state.profile.avatar;
+    state = migrate(Object.assign(freshState(), d)); state.profile.avatar = ava;
+  } else if(!last){
+    // first sign-in with progress on this phone: keep both
+    if(d.tasks.length) state.tasks = d.tasks;
+    for(const k of ['name','herName','nicks','coach']) if(!String(state.profile[k] || '').trim() && d.profile && d.profile[k]) state.profile[k] = d.profile[k];
+  } else state.tasks = d.tasks;                                       // he edited her schedule
+  state.done = Object.assign({}, d.done || {}, state.done);
+  state.badges = Object.assign({}, d.badges || {}, state.badges);
+  lsSet('sq.lastPush', row.updated_at);
+  save();
+  if(last && theirs) toast('', esc(fill(accT().hisEdit, {c:coachName()})));
+  if(profDlg.open) openProfile(); else render();
+}
+async function pushState(keepalive){
+  const me = accSess().user.id, data = JSON.parse(JSON.stringify(state)), at = new Date().toISOString();
+  if(data.profile) delete data.profile.avatar;
+  lsSet('sq.dirty', null);
+  try{
+    await sbAuth('/rest/v1/app_state', {method:'POST', keepalive, headers:{Prefer:'resolution=merge-duplicates,return=minimal'},
+      body:{user_id:me, data, updated_at:at, updated_by:me}});
+  }catch(e){lsSet('sq.dirty', '1'); throw e;}
+  lsSet('sq.lastPush', at);
+}
+
+/* messages from him: kisses, hugs, gifts, rewards, notes */
+let msgQ = [], msgTimer = 0;
+const msgSeen = new Set(), msgAck = new Set();
+function markRead(id){
+  msgAck.add(id);
+  sbAuth(`/rest/v1/messages?id=eq.${id}`, {method:'PATCH', headers:{Prefer:'return=minimal'}, body:{read_at:new Date().toISOString()}})
+    .then(() => msgAck.delete(id), () => {});
+}
+async function pollMsgs(){
+  if(!accSess() || isHis()) return;
+  try{
+    msgAck.forEach(markRead);
+    const rows = await sbAuth(`/rest/v1/messages?to_id=eq.${accSess().user.id}&read_at=is.null&order=created_at.asc&select=id,kind,emoji,body,created_at`) || [];
+    for(const m of rows) if(!msgSeen.has(m.id)){msgSeen.add(m.id); msgQ.push(m);}
+    nextMsg();
+  }catch(e){if(accSess()) setSt('off');}
+}
+function nextMsg(){
+  clearTimeout(msgTimer);
+  if(!msgQ.length || document.hidden) return;
+  const el = document.getElementById('celebrate');
+  if(el.classList.contains('show') || taskDlg.open || profDlg.open){msgTimer = setTimeout(nextMsg, 2500); return;}
+  const m = msgQ.shift(), a = accT(), k = a.kinds[m.kind] ? m.kind : 'note', c = coachName();
+  const pose = {kiss:'kiss', hug:'love', gift:'happy', reward:'happy', note:'remind'}[k];
+  el.innerHTML = `<img class="celchar" src="${charSrc(pose)}" alt=""><div class="celcard"><div class="ribbon">${esc(fill(a.kinds[k], {c}))}</div>
+    <div class="msgemo">${esc(m.emoji || a.emo[k])}</div>${m.body ? `<p>${esc(m.body)}</p>` : ''}
+    <div class="from">${esc(c)} · ${esc(agoTxt(Date.parse(m.created_at) || Date.now()))}</div>
+    <button class="c3d pink" id="msgOk" style="width:100%;margin-top:12px;font-size:17px;min-height:48px">${esc(a.gotIt)}</button></div>`;
+  el.classList.remove('show','guide'); void el.offsetWidth; el.classList.add('show');
+  clearTimeout(celTimer); el.scrollTop = 0;
+  const done = () => {el.classList.remove('show'); el.onclick = null; markRead(m.id); msgTimer = setTimeout(nextMsg, 500);};
+  el.onclick = e => {if(e.target === el) done();};
+  document.getElementById('msgOk').onclick = done;
+  thump();
+  if(k !== 'note') confetti(k === 'kiss' || k === 'hug' ? 40 : 90);
+  herReact(k === 'kiss' ? 'kiss' : k === 'hug' ? 'blush' : 'happy', 'hop', 4500);
+}
+
+/* pair code: she makes it, he types it into partner.html */
+let pairTimer = 0;
+const codeLeft = () => acct.code ? Math.ceil((acct.codeAt + 30*60000 - Date.now())/60000) : 0;
+function watchPair(){
+  clearTimeout(pairTimer);
+  if(!profDlg.open || !accSess() || acct.partner || codeLeft() <= 0) return;
+  pairTimer = setTimeout(() => loadProfiles().then(() => {
+    renderAcc();
+    if(acct.partner) cloudSync(); else watchPair();
+  }, () => watchPair()), 5000);
+}
+profDlg.addEventListener('close', () => clearTimeout(pairTimer));
+
+/* the account section in settings */
+function accHTML(){
+  const a = accT(), s = accSess(), c = coachName();
+  if(!s){
+    const up = acct.mode === 'up';
+    return `<h4>${esc(a.title)}</h4><div class="hint">${esc(fill(a.why, {c}))}</div>
+      <form id="accForm" novalidate>
+        <div class="seg" style="margin-bottom:12px"><label><input type="radio" name="am" value="in" ${up ? '' : 'checked'}><span>${esc(a.signIn)}</span></label>
+          <label><input type="radio" name="am" value="up" ${up ? 'checked' : ''}><span>${esc(a.signUp)}</span></label></div>
+        <div class="field"><label for="aUser">${esc(a.user)}</label><input id="aUser" name="username" maxlength="20" value="${esc(acct.u)}" placeholder="${esc(a.userPh)}"
+          autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"><div class="hint">${esc(a.userHint)}</div></div>
+        <div class="field"><label for="aPw">${esc(a.pw)}</label><div class="pwrow"><input id="aPw" name="password" type="${acct.eye ? 'text' : 'password'}" value="${esc(acct.p)}"
+          autocomplete="${up ? 'new-password' : 'current-password'}" autocapitalize="none" autocorrect="off" spellcheck="false">
+          <button type="button" class="ghost" id="aEye" aria-pressed="${acct.eye}">${esc(acct.eye ? a.hide : a.show)}</button></div>
+          ${up ? `<div class="hint">${esc(a.pwHint)}</div>` : ''}</div>
+        <div class="err" id="aErr" role="alert"></div>
+        <div class="btnrow" style="margin-bottom:12px"><button type="submit" class="c3d go" id="aGo" style="flex:1;font-size:17px">${esc(up ? a.signUpGo : a.signInGo)}</button></div>
+      </form>`;
+  }
+  const name = (acct.me && acct.me.username) || s.user.username || '';
+  let pair;
+  if(isHis()) pair = `<div class="hint" style="margin-bottom:12px">${esc(a.hisAcc)}</div>`;
+  else if(acct.partner) pair = `<div class="paired">${coachAvatar('love')}<span>${esc(fill(a.paired, {p:partnerName()}))}</span></div>
+      <div class="btnrow" style="margin-bottom:12px"><button class="ghost danger" id="aUnpair">${esc(acct.unlink ? a.unlinkSure : a.unlink)}</button></div>`;
+  else if(!acct.me) pair = `<div class="hint" style="margin-bottom:12px">${esc(a.needNet)}</div>`;
+  else if(codeLeft() > 0) pair = `<div class="paircode num" aria-live="polite">${esc(acct.code)}</div>
+      <div class="hint" style="margin:0 0 6px">${esc(fill(a.codeHint, {c, m:codeLeft()}))}</div>
+      <div class="btnrow" style="margin-bottom:12px"><button class="ghost" id="aCode">${esc(a.newCode)}</button></div>`;
+  else pair = `<div class="hint" style="margin:0 0 6px">${esc(fill(a.pairWhy, {c}))}</div>
+      <div class="btnrow" style="margin-bottom:12px"><button class="c3d pink" id="aCode" style="flex:1">💞 ${esc(fill(a.connect, {c}))}</button></div>`;
+  return `<h4>${esc(a.title)}</h4>
+    <div class="accme"><div><div class="accname">${esc(name)}</div><div class="accst" id="accSt">${stHTML()}</div></div>
+      <button class="ghost" id="aSync">${esc(a.syncNow)}</button></div>
+    ${isHis() ? '' : `<h5>${esc(a.connectT)}</h5>`}${pair}
+    <div class="btnrow" style="margin-bottom:12px"><button class="ghost" id="aOut">${esc(a.signOut)}</button></div>`;
+}
+function renderAcc(){
+  const g = document.getElementById('accGrp');
+  if(!g) return;
+  const a = accT(), f0 = document.activeElement && document.activeElement.id;
+  g.innerHTML = accHTML();
+  const $ = id => document.getElementById(id);
+  const form = $('accForm');
+  if(form){
+    const keep = () => {acct.u = $('aUser').value; acct.p = $('aPw').value;};
+    form.querySelectorAll('[name=am]').forEach(r => r.onchange = () => {keep(); acct.mode = r.value; renderAcc(); $('aUser').focus();});
+    $('aUser').oninput = $('aPw').oninput = keep;
+    $('aEye').onclick = () => {keep(); acct.eye = !acct.eye; renderAcc(); $('aPw').focus();};
+    form.onsubmit = accSubmit;
+    if(f0 && $(f0)) $(f0).focus();
+    return;
+  }
+  $('aSync').onclick = () => {setSt('sync'); cloudTick();};
+  $('aOut').onclick = accSignOut;
+  const cb = $('aCode');
+  if(cb) cb.onclick = async () => {
+    cb.disabled = true;
+    try{
+      const code = await sbAuth('/rest/v1/rpc/create_pair_code', {method:'POST', body:{}});
+      acct.code = String(code).replace(/\D/g, ''); acct.codeAt = Date.now(); acct.codeWatch = true;
+      renderAcc(); watchPair();
+    }catch(e){cb.disabled = false; toast('', esc(accErr(e)));}
+  };
+  const ub = $('aUnpair');
+  if(ub) ub.onclick = async () => {
+    if(!acct.unlink){acct.unlink = true; ub.textContent = a.unlinkSure; return;}
+    ub.disabled = true;
+    try{await sbAuth('/rest/v1/rpc/unpair', {method:'POST', body:{}}); acct.unlink = false; await loadProfiles();}
+    catch(e){toast('', esc(accErr(e)));}
+    renderAcc();
+  };
+  if(acct.code && !acct.partner) watchPair();
+}
+function accErr(e){
+  const a = accT(), m = String((e && e.code) || '') + ' ' + String((e && e.message) || '');
+  if(!e || !e.status) return a.errNet;
+  if(/already.registered|user_already_exists|email_exists/i.test(m)) return a.errTaken;
+  if(/invalid_credentials|invalid login/i.test(m)) return a.errWrong;
+  if(/email_not_confirmed|not confirmed/i.test(m)) return a.created;
+  if(/email_send_rate|email_provider|signup_disabled/i.test(m)) return a.errSetup;
+  if(e.status === 429) return a.errMany;
+  if(/weak_password/i.test(m)) return a.errPw;
+  return a.errOther;
+}
+async function accSubmit(ev){
+  ev.preventDefault();
+  const a = accT(), u = document.getElementById('aUser').value.trim().toLowerCase(), p = document.getElementById('aPw').value;
+  const err = document.getElementById('aErr'), go = document.getElementById('aGo'), up = acct.mode === 'up';
+  acct.u = u; acct.p = p;
+  if(!/^[a-z0-9_]{3,20}$/.test(u)){err.textContent = a.errUser; return;}
+  if(p.length < 6){err.textContent = a.errPw; return;}
+  err.textContent = ''; go.disabled = true; go.textContent = a.wait;
+  const email = u + '@study-quest.app';
+  try{
+    const j = up
+      ? await sbRaw('/auth/v1/signup', {method:'POST', body:{email, password:p, data:{username:u, display_name:String(state.profile.name || '').trim() || u, role:'her'}}})
+      : await sbRaw('/auth/v1/token?grant_type=password', {method:'POST', body:{email, password:p}});
+    if(!j || !j.access_token){
+      // sign-up worked but email confirmation is still on in the dashboard
+      acct.mode = 'in'; renderAcc(); document.getElementById('aErr').textContent = a.created; return;
+    }
+    ['sq.lastPush','sq.dirty','sq.syncAt'].forEach(k => lsSet(k, null));
+    keepSess(j, {user:{id:j.user.id, username:u}});
+    const mode = acct.mode; acct = freshAcct(); acct.mode = mode;
+    renderAcc();
+    await cloudSync({prof:true});
+    if(acct.st === 'ok') toast('', esc(a.welcome));
+    pollMsgs();
+  }catch(e){
+    const er = document.getElementById('aErr');
+    if(er){er.textContent = accErr(e); go.disabled = false; go.textContent = up ? a.signUpGo : a.signInGo;}
+  }
+}
+async function accSignOut(){
+  const s = accSess(); if(!s) return;
+  const ob = document.getElementById('aOut'); if(ob) ob.disabled = true;
+  // last push first, but never wait long
+  if(lsGet('sq.dirty')) await Promise.race([cloudSync(), new Promise(r => setTimeout(r, 4000))]);
+  sbRaw('/auth/v1/logout', {method:'POST', token:s.access_token}).catch(() => {});
+  dropSess(); toast('', esc(accT().outDone));
+}
+
+/* when to sync: on open, every 60 s while visible, when coming back, when the network returns; push on hide */
+function cloudTick(){
+  if(!accSess() || document.hidden) return;
+  cloudSync({prof:true}).then(pollMsgs);
+}
+function cloudFlush(){
+  if(!accSess() || !lsGet('sq.dirty')) return;
+  clearTimeout(pushTimer); cloudSync({keepalive:true});
+}
+document.addEventListener('visibilitychange', () => {if(document.hidden) cloudFlush(); else {cloudTick(); nextMsg();}});
+addEventListener('pagehide', cloudFlush);
+addEventListener('online', cloudTick);
+setInterval(cloudTick, 60000);
+setInterval(() => {const el = document.getElementById('accSt'); if(el && acct.st === 'ok') el.innerHTML = stHTML();}, 20000);
+if(accSess()) setTimeout(cloudTick, 800);
 
 /* refresh "now" info every 30s; check reminders every 20s */
 setInterval(() => {
