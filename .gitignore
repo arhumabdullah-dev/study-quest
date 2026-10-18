@@ -1,0 +1,7 @@
+# personal data: her schedule backup, his photos — never publish
+private/
+*.bak
+.DS_Store
+Thumbs.db
+# other image experiments, not part of the site
+output/

@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>解压室</title>
+<link rel="manifest" href="stress.webmanifest">
+<link rel="icon" type="image/png" href="icons/stress-192.png">
+<link rel="apple-touch-icon" href="icons/stress-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="解压室">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#efe8df">
+<style>
+/* Toy box / sticker look: flat colours, 2px ink outlines, hard offset shadows, keycap buttons. */
+:root{
+  --bg:#efe8df;--surface:#fffcf7;--surface2:#f6efe6;--text:#241b20;--muted:#6b5e65;
+  --line:#241b20;--drop:#241b20;--rule:#cfc3b7;--dot:rgba(36,27,32,.09);
+  --love:#e83a68;--love-soft:#ffd2de;--rage:#e5481c;--rage-soft:#ffd6c4;
+  --sun:#ffc93a;--on-sun:#241b20;--on-accent:#ffffff;
+  --scrim:rgba(36,27,32,.55);--claude:#c4623d;--toast-bg:#241b20;--toast-fg:#fffcf7;
+  --focus:#2f6bff;
+  --m:var(--text);--m-soft:var(--surface2);
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1d191b;--surface:#2b2528;--surface2:#352e32;--text:#f4ece5;--muted:#b4a7ae;
+  --line:#0b0809;--drop:#000000;--rule:#4a4044;--dot:rgba(255,255,255,.06);
+  --love:#ff6d92;--love-soft:#4a2432;--rage:#ff7446;--rage-soft:#4b2a1e;
+  --sun:#f2bd33;--on-sun:#1d191b;--on-accent:#1a1416;
+  --scrim:rgba(0,0,0,.65);--claude:#e28a63;--toast-bg:#f4ece5;--toast-fg:#1d191b;
+  --focus:#7da2ff;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#1d191b;--surface:#2b2528;--surface2:#352e32;--text:#f4ece5;--muted:#b4a7ae;
+  --line:#0b0809;--drop:#000000;--rule:#4a4044;--dot:rgba(255,255,255,.06);
+  --love:#ff6d92;--love-soft:#4a2432;--rage:#ff7446;--rage-soft:#4b2a1e;
+  --sun:#f2bd33;--on-sun:#1d191b;--on-accent:#1a1416;
+  --scrim:rgba(0,0,0,.65);--claude:#e28a63;--toast-bg:#f4ece5;--toast-fg:#1d191b;
+  --focus:#7da2ff;
+  color-scheme:dark;
+}
+body[data-mode="couple"]{--m:var(--love);--m-soft:var(--love-soft)}
+body[data-mode="enemy"]{--m:var(--rage);--m-soft:var(--rage-soft)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font:15px/1.45 var(--sans);min-height:100vh;min-height:100dvh}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none;padding:0}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.fun{font-family:var(--sans);font-weight:800;letter-spacing:.01em}
+.app{max-width:480px;margin:0 auto;overflow-x:clip;
+  padding:max(10px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+
+/* shared tactile pieces */
+.round,.tool,.food,.chip,.chipbtn,.rowbtns button,.bigbtn,.ghostbtn,.mode{
+  border:2px solid var(--line);transition:transform .08s ease,box-shadow .08s ease}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.top h1{flex:1;margin:0;font-size:20px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.round{width:44px;height:44px;border-radius:12px;background:var(--surface);box-shadow:0 3px 0 var(--drop);display:grid;place-items:center;font-size:18px;flex:none}
+.round:active{transform:translateY(2px);box-shadow:0 1px 0 var(--drop)}
+.top .spacer{width:44px;flex:none}
+
+/* home */
+.hero{padding:22px 0 6px}
+.hero h1{display:inline-block;margin:0;font-size:40px;line-height:1.1;padding:4px 16px 6px;background:var(--sun);color:var(--on-sun);
+  border:2px solid var(--line);border-radius:10px;box-shadow:4px 4px 0 var(--drop);transform:rotate(-2deg)}
+.hero p{margin:14px 0 0;color:var(--muted);font-size:15px}
+.modes{display:flex;flex-direction:column;gap:16px;margin-top:20px}
+.mode{display:flex;align-items:stretch;text-align:left;background:var(--surface);border-radius:18px;overflow:hidden;box-shadow:4px 4px 0 var(--drop);min-height:132px}
+.mode:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--drop)}
+.mode .pic{width:104px;flex:none;display:grid;place-items:end center;overflow:hidden;border-right:2px solid var(--line);padding-top:6px}
+.mode.couple .pic{background:var(--love-soft)}
+.mode.enemy .pic{background:var(--rage-soft)}
+.mode .pic svg{width:100%;height:auto;display:block}
+.mode .txt{flex:1;min-width:0;padding:14px 12px 14px 14px;display:flex;flex-direction:column;justify-content:center}
+.mode .tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;padding:2px 8px;border-radius:6px;color:var(--on-accent);margin-bottom:6px}
+.mode.couple .tag{background:var(--love)}
+.mode.enemy .tag{background:var(--rage)}
+.mode h2{margin:0;font-size:22px;line-height:1.2}
+.mode p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.mode .go{flex:none;align-self:center;margin-right:12px;width:32px;height:32px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:18px;font-weight:800;color:var(--on-accent)}
+.mode.couple .go{background:var(--love)}
+.mode.enemy .go{background:var(--rage)}
+.note{margin:22px 0 0;font-size:12px;color:var(--muted);padding:10px 12px;border:2px dashed var(--rule);border-radius:12px}
+.homefoot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:18px;font-size:13px}
+.homefoot a{color:var(--muted);text-decoration:none;min-height:44px;display:inline-flex;align-items:center;padding:0 4px}
+.homefoot a:active{color:var(--text)}
+.homefoot .pair{display:flex;gap:8px}
+.chipbtn{background:var(--surface);border-radius:999px;padding:0 14px;min-height:44px;box-shadow:0 3px 0 var(--drop);font-size:13px;font-weight:600}
+.chipbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--drop)}
+
+/* builder */
+.preview{position:sticky;top:0;z-index:2;background:var(--bg);padding:2px 0 10px;margin-bottom:2px}
+.preview .box{background-color:var(--m-soft);background-image:radial-gradient(var(--dot) 1.3px,transparent 1.6px);background-size:14px 14px;
+  border:2px solid var(--line);border-radius:18px;height:min(230px,30vh);display:grid;place-items:center;overflow:hidden}
+.preview svg{height:100%;width:auto}
+.sec{padding:12px 0;border-top:2px dashed var(--rule)}
+.sec h3{margin:0 0 8px;font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.sec h3::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--m);border:2px solid var(--line);flex:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 15px;border-radius:999px;background:var(--surface);font-size:15px;box-shadow:0 3px 0 var(--drop)}
+.chip:active{transform:translateY(2px);box-shadow:0 1px 0 var(--drop)}
+.chip.on{background:var(--m);color:var(--on-accent);font-weight:700;transform:translateY(2px);box-shadow:0 1px 0 var(--drop)}
+.sw{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);box-shadow:inset 0 0 0 3px var(--surface)}
+.sw.on{outline:3px solid var(--m);outline-offset:2px}
+.sw:focus-visible{outline-color:var(--focus)}
+.namein{width:100%;font:inherit;font-size:16px;min-height:46px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--text)}
+.namein::placeholder{color:var(--muted)}
+.namein:focus{outline:none;box-shadow:3px 3px 0 var(--m)}
+.bigbtn{display:block;width:100%;min-height:54px;padding:12px;border-radius:16px;background:var(--m);color:var(--on-accent);font-size:18px;font-weight:800;box-shadow:0 5px 0 var(--drop);margin:8px 0 6px}
+.bigbtn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--drop)}
+.bigbtn.dock{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));z-index:2;margin-top:14px}
+
+/* play */
+.meter{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;font-weight:700}
+.meter .bar{flex:1;height:16px;background:var(--surface);border:2px solid var(--line);border-radius:999px;overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--m);border-right:2px solid var(--line);transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.meter b{min-width:30px;text-align:right;font-variant-numeric:tabular-nums;font-size:15px}
+.stage{position:relative;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  background-color:var(--m-soft);background-image:radial-gradient(var(--dot) 1.3px,transparent 1.6px);background-size:14px 14px;
+  border:2px solid var(--line);border-radius:20px;overflow:hidden;padding:8px 8px 0}
+.bubble{position:relative;max-width:92%;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:7px 12px;box-shadow:3px 3px 0 var(--drop);
+  font-size:15px;line-height:1.35;text-align:center;min-height:38px;margin-bottom:10px;animation:pop .3s ease}
+.bubble::before,.bubble::after{content:"";position:absolute;left:50%;border:solid transparent;border-bottom:0}
+.bubble::before{bottom:-11px;margin-left:-9px;border-width:10px 9px 0;border-top-color:var(--line)}
+.bubble::after{bottom:-7px;margin-left:-6px;border-width:7px 6px 0;border-top-color:var(--surface)}
+@keyframes pop{from{transform:scale(.85);opacity:.4}}
+.figwrap{position:relative;height:clamp(190px,58vh - 120px,330px);
+  height:clamp(190px,calc(100dvh - 392px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),340px);
+  aspect-ratio:3/4;max-width:100%;touch-action:none;user-select:none;-webkit-user-select:none}
+body[data-mode="couple"] .figwrap{height:clamp(180px,calc(100dvh - 470px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),320px)}
+.fig{position:absolute;inset:0;transform-origin:50% 92%}
+.fig svg{width:100%;height:100%;display:block}
+.real{position:relative;width:100%;height:100%}
+.real img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;display:block;pointer-events:none;filter:drop-shadow(0 6px 5px rgba(60,40,10,.18))}
+.real .mk{position:absolute;font-size:22px;line-height:1;pointer-events:none;transform-origin:50% 50%}
+.real .acc3{position:absolute;left:50%;top:-1%;font-size:44px;line-height:1;transform:translateX(-50%) rotate(-8deg);pointer-events:none}
+.mode .pic img,.modal .mini img{height:100%;width:auto;display:block}
+.claude .dot img{width:100%;height:auto;transform:scale(1.9) translateY(19%)}
+.claude .dot{overflow:hidden}
+.fig canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.figwrap.drawing canvas{pointer-events:auto;cursor:crosshair}
+.fig.idle{animation:breathe 3s ease-in-out infinite}
+.fig.recoil{animation:recoil .45s ease}
+.fig.kick{animation:kick .9s cubic-bezier(.2,.7,.3,1)}
+.fig.slap{animation:slapA .4s ease}
+.fig.wiggle{animation:wiggle .4s ease 3}
+.fig.squish{animation:squish .5s ease}
+.fig.bounce{animation:bounce .5s ease 2}
+.fig.shiver{animation:shiver .08s linear 8}
+@keyframes breathe{50%{transform:scale(1.015,.985)}}
+@keyframes recoil{20%{transform:scale(1.08,.88) translateX(-8px)}50%{transform:scale(.95,1.06) translateX(6px) rotate(3deg)}80%{transform:rotate(-1deg)}}
+@keyframes kick{25%{transform:translate(120%,-40%) rotate(160deg)}45%{transform:translate(160%,-10%) rotate(300deg);opacity:.2}46%{transform:translate(-160%,-10%) rotate(-60deg);opacity:.2}75%{transform:translate(-10%,0) rotate(-6deg);opacity:1}90%{transform:translate(4%,0) rotate(3deg)}}
+@keyframes slapA{30%{transform:rotate(-12deg) translateX(-14px)}60%{transform:rotate(5deg)}}
+@keyframes wiggle{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+@keyframes squish{30%{transform:scale(1.18,.82)}60%{transform:scale(.92,1.08)}}
+@keyframes bounce{50%{transform:translateY(-14px)}}
+@keyframes shiver{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.shake{animation:shk .3s ease}
+@keyframes shk{25%{transform:translate(-5px,3px)}50%{transform:translate(5px,-3px)}75%{transform:translate(-3px,2px)}}
+.fx{position:absolute;pointer-events:none;font-size:34px;transform:translate(-50%,-50%);animation:fxUp 1s ease-out forwards;z-index:3}
+@keyframes fxUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}100%{opacity:0;transform:translate(-50%,-160%) scale(1)}}
+.hairbit{position:absolute;width:20px;height:5px;border-radius:3px;pointer-events:none;animation:fall 1.2s ease-in forwards;z-index:3}
+@keyframes fall{to{transform:translateY(220px) rotate(260deg);opacity:0}}
+.hint{font-size:12px;color:var(--muted);text-align:center;margin:6px 0 0;min-height:17px;line-height:17px}
+
+.tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px}
+.tool{background:var(--surface);border-radius:14px;min-height:56px;padding:5px 2px 4px;box-shadow:0 4px 0 var(--drop);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:12px;font-weight:600;line-height:1.2;overflow-wrap:anywhere}
+.tool .e{font-size:24px;line-height:1.1}
+body[data-mode="couple"] .tools{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+body[data-mode="couple"] .tool{font-size:11px;min-height:52px;padding:4px 1px 3px;border-radius:12px}
+body[data-mode="couple"] .tool .e{font-size:21px}
+.tool:active{transform:translateY(3px);box-shadow:0 1px 0 var(--drop)}
+.tool.on{background:var(--m);color:var(--on-accent);font-weight:800;transform:translateY(3px);box-shadow:0 1px 0 var(--drop)}
+.foods{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin:6px -2px 0;scrollbar-width:none;overscroll-behavior-x:contain}
+.foods::-webkit-scrollbar{display:none}
+.food{flex:none;width:50px;height:50px;border-radius:50%;background:var(--surface);box-shadow:0 3px 0 var(--drop);font-size:26px;line-height:1}
+.food:active{transform:translateY(2px);box-shadow:0 1px 0 var(--drop)}
+.rowbtns{display:flex;gap:8px;margin-top:12px}
+.rowbtns button{flex:1;min-height:44px;padding:0 10px;border-radius:12px;background:var(--surface2);box-shadow:0 3px 0 var(--drop);font-weight:700;font-size:14px}
+.rowbtns button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--drop)}
+
+/* overlay */
+.overlay{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;z-index:20;animation:fade .25s ease;
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+@keyframes fade{from{opacity:0}}
+.modal{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:20px 18px;width:min(380px,100%);max-height:100%;overflow-y:auto;text-align:center;
+  box-shadow:6px 6px 0 var(--drop);animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.modal h2{display:inline-block;margin:0 0 8px;font-size:26px;line-height:1.2;color:var(--text);padding:0 4px;box-shadow:inset 0 -10px 0 var(--m-soft)}
+.modal p{margin:6px 0;color:var(--text)}
+.modal .mini{height:150px;margin:4px auto 6px;width:132px;border:2px solid var(--line);border-radius:14px;background:var(--m-soft);overflow:hidden;display:grid;place-items:end center}
+.modal .mini svg{height:100%;width:auto}
+.modal .bigbtn{margin-top:14px}
+.ghostbtn{display:block;width:100%;min-height:48px;padding:10px;border-radius:14px;background:var(--surface2);font-weight:700;margin-top:10px;box-shadow:0 3px 0 var(--drop)}
+.ghostbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--drop)}
+.breath{width:150px;height:150px;margin:28px auto;border-radius:50%;background:var(--m-soft);border:2px solid var(--line);box-shadow:0 0 0 10px var(--surface2);
+  display:grid;place-items:center;font-size:18px;font-weight:700;transition:transform 4s ease-in-out}
+.breath.in{transform:scale(1.4)}
+.count{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.claude{display:flex;gap:10px;align-items:center;text-align:left;background:var(--surface2);border:2px dashed var(--rule);border-radius:14px;padding:10px 12px;margin-top:10px}
+.claude .dot{width:36px;height:36px;border-radius:50%;flex:none;background:var(--claude);border:2px solid var(--line);display:grid;place-items:center;color:var(--on-accent);font-size:16px}
+.claude small{display:block;font-weight:700;color:var(--claude)}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);max-width:calc(100% - 32px);background:var(--toast-bg);color:var(--toast-fg);
+  padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;z-index:30;opacity:0;transition:opacity .25s;pointer-events:none}
+#toast.show{opacity:1}
+@media (max-height:640px){.hero{padding-top:10px}.hero h1{font-size:34px}.modes{margin-top:14px;gap:12px}.mode{min-height:116px}}
+@media (prefers-reduced-motion:reduce){
+  .fig,.fx,.hairbit,.bubble,.modal,.overlay,.shake{animation:none!important}
+  .meter .bar i,.breath{transition:none}
+  .breath.in{transform:none;box-shadow:0 0 0 18px var(--m-soft)}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div id="toast"></div>
+
+<script>
+const KEY = 'stressRoom.v1';
+
+const SKINS = ['#ffe3d1','#f6c9a8','#e3a77f','#c5865c','#8d5a3b'];
+const HAIRC = ['#2b2420','#5a3a22','#a0522d','#d8b26e','#9a9a9a','#e86a9a'];
+const COLORS = ['#2f3e66','#3a7d5c','#c94f4f','#f59ab5','#6c8cff','#f2b134','#7b5aa6','#4a4a4a'];
+const HAIRS = ['short','spiky','long','curly','combover','bald'];
+const GLASSES = ['none','round','square','sun'];
+const FACIAL = ['none','mustache','beard','stubble'];
+const BODIES = ['slim','normal','chubby'];
+const OUTFITS = ['suit','tshirt','hoodie','dress','pajama'];
+const ACCS = ['none','bow','crown','catears','flower','beanie'];
+const LIPS = [null,'#e63946','#ff7aa2','#ff8a65','#9c2c5c'];
+const SHADOWS = [null,'#ff9ec4','#b28dff','#f6c453','#7fb6ff'];
+const FOODS = ['🍰','🍔','🍗','🍜','🧋','🍩','🍕','🍦','🍓','🥟'];
+
+const T = {
+  zh:{
+    appTitle:'解压室', appSub:'压力好大？来这里释放一下吧～',
+    couple:'情侣模式', coupleDesc:'把安仁喂得胖胖的、亲他一脸口红、戴小配饰、抱抱',
+    enemy:'仇人模式', enemyDesc:'捏一个讨厌的人，拳打脚踢剪头发，统统解气！',
+    note:'所有角色都是卡通捏脸，不使用真人照片。安全解压，不伤害任何人。',
+    studyLink:'← 学习闯关', lang:'English',
+    build:'捏脸', name:'名字（会写在胸牌上）', skin:'肤色', hair:'发型', hairColor:'发色', glasses:'眼镜', facial:'胡子',
+    body:'身材', outfit:'衣服', color:'衣服颜色', start:'完成，开始玩！',
+    hairs:{short:'短发',spiky:'刺猬头',long:'长发',curly:'卷发',combover:'地中海',bald:'光头'},
+    glassesN:{none:'无',round:'圆框',square:'方框',sun:'墨镜'},
+    facialN:{none:'无',mustache:'八字胡',beard:'络腮胡',stubble:'胡茬'},
+    bodies:{slim:'瘦',normal:'标准',chubby:'胖'},
+    outfits:{suit:'西装',tshirt:'T恤',hoodie:'卫衣',dress:'裙子',pajama:'睡衣'},
+    stress:'压力', love:'甜蜜', reset:'重来', save:'保存图片',
+    tools:{punch:'拳头',kick:'飞踢',slap:'巴掌',snip:'剪头发',marker:'涂鸦',pie:'奶油派',water:'泼水',tickle:'挠痒'},
+    ctools:{lip:'口红',blush:'腮红',shadow:'眼影',lashes:'睫毛',outfit:'换装',acc:'配饰',hug:'抱抱',kiss:'亲亲',squish:'捏脸蛋',diet:'减肥'},
+    tapHint:'选一个工具，然后点他！', drawHint:'用手指在他身上随便画～', feedHint:'点食物喂他，把他喂胖！点他捏脸蛋',
+    endTitle:'压力清零！', breathe:'跟我做 30 秒放松呼吸', breathTitle:'放松呼吸', doneTitle:'辛苦了', again:'再来一局', home:'回首页',
+    inhale:'吸气……', exhale:'呼气……', left:'秒',
+    breatheDone:'做得很好。压力是真实的，但你比它更强大。今天也辛苦了，记得对自己好一点 💛',
+    loveFull:'甜度满分！', loveFullSub:'保存一张图片发给 ta 吧～', keep:'继续玩', saved:'图片已保存！',
+    defEnemy:'老板', defCouple:'安仁', him:'安仁', sound:'声音'
+  },
+  en:{
+    appTitle:'Stress Room', appSub:'Stressed out? Let it all out here~',
+    couple:'Couple mode', coupleDesc:'Feed Anren chubby, cover him in lipstick kisses, accessories, hugs',
+    enemy:'Enemy mode', enemyDesc:'Build someone who annoys you, then punch, kick and cut their hair. Feel better!',
+    note:'Every character is a cartoon you build, no real photos. Safe stress relief that hurts no one.',
+    studyLink:'← Study Quest', lang:'中文',
+    build:'Build', name:'Name (goes on the name tag)', skin:'Skin', hair:'Hair', hairColor:'Hair color', glasses:'Glasses', facial:'Facial hair',
+    body:'Body', outfit:'Outfit', color:'Outfit color', start:'Done, let\'s play!',
+    hairs:{short:'Short',spiky:'Spiky',long:'Long',curly:'Curly',combover:'Comb-over',bald:'Bald'},
+    glassesN:{none:'None',round:'Round',square:'Square',sun:'Shades'},
+    facialN:{none:'None',mustache:'Mustache',beard:'Beard',stubble:'Stubble'},
+    bodies:{slim:'Slim',normal:'Normal',chubby:'Chubby'},
+    outfits:{suit:'Suit',tshirt:'T-shirt',hoodie:'Hoodie',dress:'Dress',pajama:'Pajamas'},
+    stress:'Stress', love:'Sweet', reset:'Reset', save:'Save picture',
+    tools:{punch:'Punch',kick:'Kick',slap:'Slap',snip:'Haircut',marker:'Doodle',pie:'Cream pie',water:'Water',tickle:'Tickle'},
+    ctools:{lip:'Lipstick',blush:'Blush',shadow:'Shadow',lashes:'Lashes',outfit:'Outfit',acc:'Accessory',hug:'Hug',kiss:'Kiss',squish:'Squish',diet:'Diet'},
+    tapHint:'Pick a tool, then tap him!', drawHint:'Draw all over him with your finger~', feedHint:'Tap food to feed him chubby! Tap him to squish',
+    endTitle:'Stress cleared!', breathe:'30-second calm breathing', breathTitle:'Calm breathing', doneTitle:'Nice work', again:'Play again', home:'Home',
+    inhale:'Breathe in…', exhale:'Breathe out…', left:'s',
+    breatheDone:'Well done. Stress is real, but you\'re stronger than it. You worked hard today. Be kind to yourself 💛',
+    loveFull:'Max sweetness!', loveFullSub:'Save a picture and send it to them~', keep:'Keep playing', saved:'Picture saved!',
+    defEnemy:'Boss', defCouple:'Anren', him:'Anren', sound:'Sound'
+  }
+};
+
+const LINES = {
+  zh:{
+    enemy:{
+      idle:['这个方案明天早上之前给我。','你这个月的 KPI 呢？','年轻人要多吃苦。','周末加个班没问题吧？','我这是为你好。','这点小事都做不好？'],
+      punch:['哎哟！','你敢打我？！','别打脸！别打脸！','我……我给你涨工资！','疼疼疼！'],
+      kick:['啊啊啊——飞起来了！','我的老腰！','救命啊——！'],
+      slap:['啪！你……你……','脸好烫……','这一巴掌我记住了……'],
+      snip:['我的头发！！','我留了十年的发型！','别剪了，就剩这几根了！','咔嚓咔嚓……我的头发呀！'],
+      bald:['已经秃了……还剪？😭','一根都没有了还剪什么！'],
+      marker:['你在我脸上画什么？！','这让我怎么开会！','擦不掉了啊！'],
+      pie:['唔……奶油进鼻子了！','还……还挺甜的……','我什么都看不见了！'],
+      water:['好冷好冷！！','我的西装！','阿嚏——！'],
+      tickle:['哈哈哈哈别挠了！','哈哈我错了我错了！','痒死了哈哈哈！'],
+      sorry:['对不起……以前是我太过分了。','我错了，以后不让你加班了……','你辛苦了，今天早点下班吧。']
+    },
+    couple:{
+      idle:['今天想我了吗？','嘿嘿，看什么呢～','我在这里陪你哦','你今天好可爱～'],
+      feed:['啊——好吃！','再来一口～','你喂的最好吃！','嗯嗯嗯！好幸福～'],
+      fat:['我是不是又胖了……都怪你！😤','肚子圆滚滚了啦～','再喂我就变成球了！'],
+      full:['吃不下啦！要撑爆了🫃'],
+      lip:['好看吗？好看吗？','这个颜色适合我吗～'],
+      blush:['脸红红的～','害羞了啦～'],
+      shadow:['眼妆完成！✨','是不是超有气质～'],
+      lashes:['眨眨眼～','睫毛长长的！'],
+      outfit:['这件怎么样～','换装成功！✨','我穿什么都好看吧～'],
+      acc:['可爱吧～','戴上这个是不是更好看了！'],
+      hug:['抱紧一点～','最喜欢你了！','好暖和……不想松开'],
+      kiss:['mua～😘','再亲一下！','脸上都是你的唇印啦～'],
+      squish:['唔唔唔……脸要被捏扁了','不要捏我的脸啦～','哼，又捏我！'],
+      diet:['好吧……我去跑步🏃','少吃一口，就一口！','瘦了一点点！'],
+      thin:['已经很瘦了啦～']
+    }
+  },
+  en:{
+    enemy:{
+      idle:['I need that report by tomorrow morning.','Where are your KPIs this month?','Young people should work harder.','Overtime this weekend, okay?','I\'m doing this for your own good.','Can\'t you do anything right?'],
+      punch:['Ouch!','How dare you?!','Not the face! Not the face!','I— I\'ll give you a raise!','Ow ow ow!'],
+      kick:['Aaaah — I\'m flying!','My back!','Heeelp—!'],
+      slap:['SMACK! You… you…','My face is burning…','I\'ll remember that slap…'],
+      snip:['My hair!!','I grew this for ten years!','Stop! I only have a few left!','Snip snip… my hair!'],
+      bald:['I\'m already bald… 😭','There\'s nothing left to cut!'],
+      marker:['What are you drawing on my face?!','How do I go to the meeting now!','It won\'t wash off!'],
+      pie:['Mmph… cream up my nose!','It\'s… kind of sweet…','I can\'t see anything!'],
+      water:['So cold!!','My suit!','Ah-choo—!'],
+      tickle:['Hahaha stop it!','Haha okay I\'m sorry!','It tickles hahaha!'],
+      sorry:['I\'m sorry… I was too harsh before.','I was wrong. No more overtime for you…','You worked hard. Go home early today.']
+    },
+    couple:{
+      idle:['Did you miss me today?','Hehe, what are you looking at~','I\'m right here with you','You look cute today~'],
+      feed:['Ahh — yummy!','One more bite~','Food from you tastes best!','Mmm! So happy~'],
+      fat:['Did I get chubbier… your fault! 😤','My tummy is so round~','One more and I\'ll be a ball!'],
+      full:['I can\'t eat anymore! 🫃'],
+      lip:['Do I look good?','Does this color suit me~'],
+      blush:['Rosy cheeks~','So shy~'],
+      shadow:['Eye makeup done! ✨','So elegant, right~'],
+      lashes:['Blink blink~','Long lashes!'],
+      outfit:['How\'s this one~','Outfit change! ✨','I look good in everything, right~'],
+      acc:['Cute, right~','Even better with this!'],
+      hug:['Hold me tighter~','I love you most!','So warm… don\'t let go'],
+      kiss:['Mwah~ 😘','Another one!','My face is full of your kisses~'],
+      squish:['Mmmph… you\'re squishing my face','Don\'t pinch my cheeks~','Hmph, again!'],
+      diet:['Fine… I\'ll go jogging 🏃','Just one less bite!','A tiny bit slimmer!'],
+      thin:['I\'m already slim~']
+    }
+  }
+};
+
+const ENEMY_TOOLS = [['punch','👊',6],['kick','🦶',10],['slap','👋',6],['snip','✂️',5],['marker','🖊️',2],['pie','🥧',9],['water','🪣',8],['tickle','🪶',4]];
+const COUPLE_TOOLS = [['hug','🤗'],['kiss','😘'],['squish','🤏'],['acc','🎀'],['diet','🏃']];
+const ACC_EMOJI = {bow:'🎀',crown:'👑',catears:'🐱',flower:'🌸',beanie:'🧢'};
+// couple mode shows the real 3D 安仁: one picture per mood, lipstick kisses and an accessory on top
+const POSE = {eat:'eat',love:'blush',kiss:'kiss',hurt:'hurt',sorry:'hungry',shock:'hurt'};
+function anrenHTML(st){
+  const fat = st.fat || 0, e = st.expr;
+  const pose = POSE[e] || (fat >= 3 ? 'chubby' : 'idle');
+  const marks = (st.kisses || []).map(k => `<span class="mk" style="left:${(k.x/300*100 - 4).toFixed(1)}%;top:${(k.y/400*100 - 12).toFixed(1)}%;transform:rotate(${k.r}deg)">💋</span>`).join('');
+  const acc = ACC_EMOJI[st.acc] ? `<span class="acc3">${ACC_EMOJI[st.acc]}</span>` : '';
+  return `<div class="real"><img src="img/anren/${pose}.webp" alt="">${marks}${acc}</div>`;
+}
+const figHTML = (m, st) => m === 'couple' ? anrenHTML(st) : charSVG(store.chars[m], st, {name:charName(m)});
+
+/* ---------- storage ---------- */
+function defaults(){
+  return {
+    lang:'zh', sound:true,
+    chars:{
+      enemy:{name:'',skin:1,hair:'combover',hairColor:0,glasses:'square',facial:'mustache',body:'chubby',outfit:'suit',color:0},
+      couple:{name:'',skin:0,hair:'long',hairColor:1,glasses:'none',facial:'none',body:'normal',outfit:'hoodie',color:3}
+    },
+    look:{fat:0,lip:0,blush:false,shadow:0,lashes:false,acc:0,kisses:[]}
+  };
+}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if(s && s.chars){
+      const d = defaults();
+      return {...d, ...s, chars:{enemy:{...d.chars.enemy,...s.chars.enemy}, couple:{...d.chars.couple,...s.chars.couple}}, look:{...d.look,...(s.look||{})}};
+    }
+  }catch(e){}
+  return defaults();
+}
+let store = load();
+function save(){try{localStorage.setItem(KEY, JSON.stringify(store));}catch(e){}}
+
+let screen = 'home', mode = null, tool = 'punch', ps = null, strokes = [], busy = 0;
+const tx = () => T[store.lang];
+const lines = () => LINES[store.lang][mode];
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const charName = m => (store.chars[m].name || '').trim() || (m === 'enemy' ? tx().defEnemy : tx().defCouple);
+
+function shade(hex, amt){
+  const n = parseInt(hex.slice(1),16);
+  const f = c => Math.max(0, Math.min(255, Math.round(c + (amt < 0 ? c*amt : (255-c)*amt))));
+  return '#' + [f(n>>16), f((n>>8)&255), f(n&255)].map(v => v.toString(16).padStart(2,'0')).join('');
+}
+
+/* ---------- character drawing ---------- */
+function hairUnits(c){return c.hair === 'bald' ? 0 : c.hair === 'combover' ? 3 : 7;}
+
+function hairSVG(c, s, cx, cy, rx, ry, hc){
+  const cut = new Set(s.cut || []);
+  const P = (a,e) => `${(cx+(rx+e)*Math.cos(a)).toFixed(1)} ${(cy+(ry+e)*Math.sin(a)).toFixed(1)}`;
+  const sideTufts = `<path d="M${cx-rx+4} ${cy-14} q-8 18 2 36" stroke="${hc}" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M${cx+rx-4} ${cy-14} q8 18 -2 36" stroke="${hc}" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+  if(c.hair === 'bald') return sideTufts + `<ellipse cx="${cx-22}" cy="${cy-ry+22}" rx="16" ry="8" fill="#fff" opacity=".35" transform="rotate(-20 ${cx-22} ${cy-ry+22})"/>`;
+  if(c.hair === 'combover'){
+    let o = sideTufts + `<ellipse cx="${cx-22}" cy="${cy-ry+22}" rx="16" ry="8" fill="#fff" opacity=".3" transform="rotate(-20 ${cx-22} ${cy-ry+22})"/>`;
+    for(let i=0;i<3;i++) if(!cut.has(i))
+      o += `<path d="M${cx-rx+8} ${cy-26-i*9} Q${cx-10} ${cy-ry-16+i*7} ${cx+rx-10} ${cy-34-i*8}" stroke="${hc}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    return o;
+  }
+  const N = 7, Tk = {short:12,spiky:10,long:16,curly:8}[c.hair];
+  let o = '';
+  for(let i=0;i<N;i++){
+    if(cut.has(i)) continue;
+    const a0 = Math.PI*(1 + i/N) - .05, a1 = Math.PI*(1 + (i+1)/N) + .05, mid = (a0+a1)/2;
+    let outer = [];
+    if(c.hair === 'spiky') outer = [P(a0,Tk), P(mid,Tk+26), P(a1,Tk)];
+    else for(let k=0;k<=4;k++) outer.push(P(a0+(a1-a0)*k/4, Tk));
+    const inner = [];
+    for(let k=4;k>=0;k--) inner.push(P(a0+(a1-a0)*k/4, -12));
+    o += `<path d="M${outer.concat(inner).join(' L')} Z" fill="${hc}"/>`;
+    if(c.hair === 'curly'){
+      const [x,y] = P(mid,Tk).split(' ');
+      o += `<circle cx="${x}" cy="${y}" r="17" fill="${hc}"/>`;
+    }
+  }
+  return o;
+}
+
+function faceSVG(c, s, cx, cy, rx, ry, hc){
+  const ink = '#2d2238', ex = 25, ey = cy + 4, my = cy + 40;
+  const brow = c.hair === 'bald' ? '#5a4a40' : hc;
+  const st = (w=4, col=ink) => `stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+  const both = f => f(cx-ex, -1) + f(cx+ex, 1);
+  const open = r => both(x => `<circle cx="${x}" cy="${ey}" r="${r}" fill="${ink}"/><circle cx="${x+2.5}" cy="${ey-2.5}" r="${r/3}" fill="#fff"/>`);
+  const mouthCol = s.lip ? s.lip : ink, mw = s.lip ? 6 : 4;
+  let eyes = '', brows = '', mouth = '';
+  switch(s.expr){
+    case 'smug':
+      eyes = both(x => `<ellipse cx="${x}" cy="${ey+1}" rx="7" ry="4.5" fill="${ink}"/><path d="M${x-10} ${ey-3} h20" ${st(4)}/>`);
+      brows = `<path d="M${cx-ex-12} ${ey-15} q12 -3 22 0" ${st(5,brow)}/><path d="M${cx+ex-12} ${ey-22} q12 -8 22 -2" ${st(5,brow)}/>`;
+      mouth = `<path d="M${cx-12} ${my} q16 6 24 -8" ${st(mw,mouthCol)}/>`; break;
+    case 'hurt':
+      eyes = `<path d="M${cx-ex-8} ${ey-7} l14 7 -14 7" ${st()}/><path d="M${cx+ex+8} ${ey-7} l-14 7 14 7" ${st()}/>`;
+      brows = `<path d="M${cx-ex-10} ${ey-14} L${cx-ex+10} ${ey-20}" ${st(5,brow)}/><path d="M${cx+ex+10} ${ey-14} L${cx+ex-10} ${ey-20}" ${st(5,brow)}/>`;
+      mouth = `<path d="M${cx-16} ${my+2} q4 -7 8 0 t8 0 t8 0 t8 0" ${st(mw,mouthCol)}/>`; break;
+    case 'dizzy':
+      eyes = both(x => `<path d="M${x} ${ey} m-9 0 a9 9 0 1 0 18 0 a6 6 0 1 0 -12 0 a3 3 0 1 0 6 0" ${st(3)}/>`);
+      mouth = `<ellipse cx="${cx}" cy="${my+2}" rx="8" ry="10" fill="${ink}"/>`; break;
+    case 'cry':
+      eyes = both(x => `<path d="M${x-9} ${ey-2} q9 9 18 0" ${st()}/><path d="M${x} ${ey+6} q-6 16 0 30 q6 -14 0 -30z" fill="#7cc7ff"/>`);
+      brows = `<path d="M${cx-ex-10} ${ey-12} L${cx-ex+10} ${ey-19}" ${st(5,brow)}/><path d="M${cx+ex+10} ${ey-12} L${cx+ex-10} ${ey-19}" ${st(5,brow)}/>`;
+      mouth = `<path d="M${cx-16} ${my+8} q16 -20 32 0 z" fill="${ink}"/>`; break;
+    case 'laugh':
+      eyes = both(x => `<path d="M${x-9} ${ey+3} q9 -12 18 0" ${st()}/>`);
+      mouth = `<path d="M${cx-18} ${my-6} q18 30 36 0 z" fill="${ink}"/><path d="M${cx-8} ${my+6} q8 5 16 0" stroke="#ff7aa2" stroke-width="5" fill="none" stroke-linecap="round"/>`; break;
+    case 'shock':
+      eyes = both(x => `<circle cx="${x}" cy="${ey}" r="10" fill="#fff" stroke="${ink}" stroke-width="3"/><circle cx="${x}" cy="${ey}" r="3.5" fill="${ink}"/>`);
+      brows = `<path d="M${cx-ex-10} ${ey-20} q10 -8 20 0" ${st(5,brow)}/><path d="M${cx+ex-10} ${ey-20} q10 -8 20 0" ${st(5,brow)}/>`;
+      mouth = `<ellipse cx="${cx}" cy="${my+2}" rx="9" ry="11" fill="${ink}"/>`; break;
+    case 'sorry':
+      eyes = both(x => `<circle cx="${x}" cy="${ey+4}" r="6" fill="${ink}"/><circle cx="${x+2}" cy="${ey+2}" r="2" fill="#fff"/>`);
+      brows = `<path d="M${cx-ex-10} ${ey-10} L${cx-ex+10} ${ey-17}" ${st(5,brow)}/><path d="M${cx+ex+10} ${ey-10} L${cx+ex-10} ${ey-17}" ${st(5,brow)}/>`;
+      mouth = `<path d="M${cx-10} ${my+4} q10 -7 20 0" ${st(mw,mouthCol)}/>`; break;
+    case 'happy':
+      eyes = both(x => `<path d="M${x-9} ${ey+3} q9 -12 18 0" ${st()}/>`);
+      mouth = `<path d="M${cx-14} ${my-4} q14 18 28 0" ${st(mw,mouthCol)}/>`; break;
+    case 'love':
+      eyes = both(x => `<path d="M${x} ${ey+9} l-10 -10 a6 6 0 0 1 10 -8 a6 6 0 0 1 10 8 z" fill="#ff4d7d"/>`);
+      mouth = `<path d="M${cx-14} ${my-4} q14 18 28 0" ${st(mw,mouthCol)}/>`; break;
+    case 'eat':
+      eyes = both(x => `<path d="M${x-9} ${ey+3} q9 -12 18 0" ${st()}/>`);
+      mouth = `<ellipse cx="${cx}" cy="${my}" rx="12" ry="9" fill="${s.lip||ink}"/><ellipse cx="${cx}" cy="${my+3}" rx="6" ry="3" fill="#ff7aa2"/>`; break;
+    default:
+      eyes = open(7);
+      mouth = `<path d="M${cx-12} ${my-2} q12 11 24 0" ${st(mw,mouthCol)}/>`;
+  }
+  if(!brows && s.expr !== 'dizzy') brows = `<path d="M${cx-ex-10} ${ey-16} q10 -6 20 0" ${st(5,brow)}/><path d="M${cx+ex-10} ${ey-16} q10 -6 20 0" ${st(5,brow)}/>`;
+  let o = '';
+  if(s.shadow) o += both(x => `<ellipse cx="${x}" cy="${ey-6}" rx="14" ry="8" fill="${s.shadow}" opacity=".55"/>`);
+  if(s.blush || s.expr === 'love') o += both((x,d) => `<ellipse cx="${cx+d*44}" cy="${cy+26}" rx="13" ry="7" fill="#ff7aa2" opacity="${s.blush?.55:.3}"/>`);
+  o += eyes + brows;
+  if(s.lashes) o += both((x,d) => `<path d="M${x-8} ${ey-7} l-4 -5 M${x} ${ey-9} l0 -6 M${x+8} ${ey-7} l4 -5" ${st(2.5)}/>`);
+  o += `<path d="M${cx-4} ${cy+20} q4 6 8 0" ${st(3,shade(SKINS[c.skin],-.35))}/>`;
+  const fh = c.hair === 'bald' ? '#4a3b33' : hc;
+  if(c.facial === 'beard') o += `<path d="M${cx-rx+10} ${cy+8} Q${cx-rx+16} ${cy+ry+12} ${cx} ${cy+ry+16} Q${cx+rx-16} ${cy+ry+12} ${cx+rx-10} ${cy+8} Q${cx+rx-24} ${cy+56} ${cx} ${cy+57} Q${cx-rx+24} ${cy+56} ${cx-rx+10} ${cy+8}Z" fill="${fh}"/>`;
+  if(c.facial === 'stubble') for(let i=0;i<22;i++){
+    const a = Math.PI*(.15 + .7*i/21), r = .86;
+    o += `<circle cx="${(cx+rx*r*Math.cos(a)).toFixed(1)}" cy="${(cy+ry*r*Math.sin(a)).toFixed(1)}" r="1.6" fill="${fh}" opacity=".5"/>`;
+  }
+  o += mouth;
+  if(c.facial === 'mustache') o += `<path d="M${cx-24} ${my-6} q12 -12 24 -4 q12 -8 24 4 q-12 8 -24 2 q-12 6 -24 -2z" fill="${fh}"/>`;
+  if(c.glasses === 'round') o += both(x => `<circle cx="${x}" cy="${ey}" r="15" fill="rgba(255,255,255,.18)" stroke="#333" stroke-width="3.5"/>`) + `<path d="M${cx-10} ${ey-2} q10 -6 20 0" stroke="#333" stroke-width="3" fill="none"/>`;
+  if(c.glasses === 'square') o += both(x => `<rect x="${x-16}" y="${ey-12}" width="32" height="24" rx="5" fill="rgba(255,255,255,.18)" stroke="#333" stroke-width="3.5"/>`) + `<path d="M${cx-9} ${ey-2} h18" stroke="#333" stroke-width="3"/>`;
+  if(c.glasses === 'sun') o += both(x => `<rect x="${x-17}" y="${ey-12}" width="34" height="23" rx="9" fill="#1f1f2a"/><path d="M${x-10} ${ey-6} l8 0" stroke="#fff" stroke-width="2.5" opacity=".6" stroke-linecap="round"/>`) + `<path d="M${cx-9} ${ey-4} h18" stroke="#1f1f2a" stroke-width="4"/>`;
+  return o;
+}
+
+function damageSVG(s, cx, cy){
+  let o = '';
+  for(const b of s.bruises || []) o += `<g opacity=".72"><ellipse cx="${b.x}" cy="${b.y}" rx="12" ry="10" fill="#8e5ac8"/><ellipse cx="${b.x+1}" cy="${b.y}" rx="6" ry="5" fill="#5b8bd6"/></g>`;
+  for(const k of s.kisses || []) o += `<text x="${k.x}" y="${k.y}" font-size="20" text-anchor="middle" transform="rotate(${k.r} ${k.x} ${k.y})">💋</text>`;
+  if(s.slap){
+    const x = cx + s.slap*40, y = cy + 22, f = s.slap;
+    o += `<g fill="#ff3b3b" opacity=".45"><ellipse cx="${x}" cy="${y+6}" rx="11" ry="12"/>` +
+      [-9,-3,3,9].map((dx,i) => `<ellipse cx="${x+dx}" cy="${y-12+Math.abs(i-1.5)*2}" rx="3.5" ry="9" transform="rotate(${dx*f*1.5} ${x+dx} ${y-12})"/>`).join('') +
+      `<ellipse cx="${x-f*14}" cy="${y+4}" rx="3.5" ry="8" transform="rotate(${-50*f} ${x-f*14} ${y+4})"/></g>`;
+  }
+  if(s.pie) o += `<g><path d="M${cx-60} ${cy-6} q8 -26 32 -14 q14 -22 34 -6 q20 -14 32 8 q22 2 18 26 q10 22 -12 34 q2 22 -22 20 q-12 16 -32 2 q-20 12 -30 -8 q-22 -2 -18 -26 q-14 -20 -2 -36z" fill="#fffaf2" stroke="#f0d9bd" stroke-width="2"/>
+      <ellipse cx="${cx-30}" cy="${cy+62}" rx="5" ry="9" fill="#fffaf2"/><ellipse cx="${cx+22}" cy="${cy+66}" rx="4" ry="11" fill="#fffaf2"/>
+      <ellipse cx="${cx-10}" cy="${cy-18}" rx="20" ry="7" fill="#ffb3c7" opacity=".7"/>
+      <circle cx="${cx+6}" cy="${cy-30}" r="9" fill="#e63946"/><path d="M${cx+6} ${cy-38} q4 -10 12 -12" stroke="#3a7d5c" stroke-width="3" fill="none"/>
+      <circle cx="${cx-22}" cy="${cy+8}" r="5" fill="#2d2238"/><circle cx="${cx+22}" cy="${cy+8}" r="5" fill="#2d2238"/></g>`;
+  if(s.wet){
+    for(const [dx,dy] of [[-70,-30],[66,-10],[-50,60],[58,70],[0,-90],[-80,30]])
+      o += `<path d="M${cx+dx} ${cy+dy} q6 10 0 13 q-6 -3 0 -13z" fill="#5ab4ff" opacity=".85"/>`;
+  }
+  return o;
+}
+
+function accSVG(acc, cx, cy, rx, ry, hc, cl){
+  switch(acc){
+    case 'bow': return `<g transform="translate(${cx+rx-26} ${cy-ry+18}) rotate(20)"><path d="M0 0 L-22 -14 L-22 14 Z M0 0 L22 -14 L22 14 Z" fill="#ff5c8a"/><circle r="7" fill="#ff86a8"/></g>`;
+    case 'crown': return `<path d="M${cx-34} ${cy-ry+4} L${cx-38} ${cy-ry-34} L${cx-16} ${cy-ry-14} L${cx} ${cy-ry-42} L${cx+16} ${cy-ry-14} L${cx+38} ${cy-ry-34} L${cx+34} ${cy-ry+4} Z" fill="#ffc83d" stroke="#e0a412" stroke-width="3"/><circle cx="${cx}" cy="${cy-ry-6}" r="5" fill="#ff5c8a"/>`;
+    case 'catears': return `<path d="M${cx-58} ${cy-ry+40} L${cx-56} ${cy-ry-24} L${cx-18} ${cy-ry+6} Z M${cx+58} ${cy-ry+40} L${cx+56} ${cy-ry-24} L${cx+18} ${cy-ry+6} Z" fill="${hc}"/><path d="M${cx-50} ${cy-ry+26} L${cx-50} ${cy-ry-8} L${cx-28} ${cy-ry+10} Z M${cx+50} ${cy-ry+26} L${cx+50} ${cy-ry-8} L${cx+28} ${cy-ry+10} Z" fill="#ffb3c7"/>`;
+    case 'flower': return `<text x="${cx+rx-46}" y="${cy-ry+40}" font-size="38">🌸</text>`;
+    case 'beanie': return `<path d="M${cx-rx-2} ${cy-18} Q${cx-rx} ${cy-ry-30} ${cx} ${cy-ry-30} Q${cx+rx} ${cy-ry-30} ${cx+rx+2} ${cy-18} Z" fill="${cl}"/><rect x="${cx-rx-6}" y="${cy-30}" width="${rx*2+12}" height="18" rx="9" fill="${shade(cl,-.2)}"/><circle cx="${cx}" cy="${cy-ry-32}" r="13" fill="#fff"/>`;
+  }
+  return '';
+}
+
+function charSVG(c, s, opts={}){
+  const cx = 150, cy = 122, fat = s.fat || 0;
+  const rx = 70 + fat*3, ry = 76 + fat;
+  const skin = SKINS[c.skin], hc = HAIRC[c.hairColor], cl = COLORS[c.color];
+  const bw = {slim:94,normal:110,chubby:134}[c.body] + fat*14;
+  const L = cx - bw/2, R = cx + bw/2;
+  const top = cl, dark = shade(skin,-.15);
+  const legC = c.outfit === 'suit' ? shade(cl,-.25) : c.outfit === 'dress' ? skin : c.outfit === 'pajama' ? cl : '#3e5079';
+  const sleeve = {suit:78,tshirt:28,hoodie:78,dress:24,pajama:78}[c.outfit];
+  let g = opts.bg ? `<rect width="300" height="400" fill="${opts.bg}"/>` : '';
+  g += `<ellipse cx="${cx}" cy="374" rx="${bw/2+32}" ry="10" fill="rgba(60,30,50,.12)"/>`;
+  if(s.wet) g += `<ellipse cx="${cx}" cy="374" rx="${bw/2+56}" ry="14" fill="#7cc7ff" opacity=".45"/>`;
+  if(c.hair === 'long' && (s.cut || []).length < 3)
+    g += `<path d="M${cx-rx-4} ${cy-10} Q${cx-rx-16} ${cy+118} ${cx-rx+24} ${cy+128} L${cx+rx-24} ${cy+128} Q${cx+rx+16} ${cy+118} ${cx+rx+4} ${cy-10} Z" fill="${shade(hc,-.1)}"/>`;
+  // legs & shoes
+  g += `<rect x="${cx-30}" y="300" width="24" height="64" rx="11" fill="${legC}"/><rect x="${cx+6}" y="300" width="24" height="64" rx="11" fill="${legC}"/>`;
+  g += `<ellipse cx="${cx-19}" cy="365" rx="18" ry="9" fill="#3b2b2b"/><ellipse cx="${cx+19}" cy="365" rx="18" ry="9" fill="#3b2b2b"/>`;
+  // arms
+  const arm = (side) => {
+    const x = side < 0 ? L - 14 : R - 10, px = side < 0 ? L + 6 : R - 6;
+    return `<g transform="rotate(${side*-14} ${px} 210)"><rect x="${x}" y="206" width="24" height="80" rx="12" fill="${skin}"/>
+      <rect x="${x}" y="206" width="24" height="${sleeve}" rx="12" fill="${c.outfit==='suit'?top:shade(top,-.06)}"/>
+      <circle cx="${x+12}" cy="290" r="13" fill="${skin}"/></g>`;
+  };
+  g += arm(-1) + arm(1);
+  if(c.outfit === 'hoodie') g += `<ellipse cx="${cx}" cy="200" rx="48" ry="17" fill="${shade(cl,-.18)}"/>`;
+  g += `<rect x="${cx-14}" y="184" width="28" height="24" fill="${dark}"/>`;
+  // torso
+  if(c.outfit === 'dress'){
+    g += `<rect x="${L}" y="196" width="${bw}" height="92" rx="34" fill="${top}"/>`;
+    g += `<path d="M${L+4} 262 L${L-22} 330 Q${cx} 344 ${R+22} 330 L${R-4} 262 Z" fill="${top}"/><path d="M${L-10} 318 Q${cx} 332 ${R+10} 318" stroke="#fff" stroke-width="4" fill="none" opacity=".6"/>`;
+  } else {
+    g += `<rect x="${L}" y="196" width="${bw}" height="124" rx="${36+fat*3}" fill="${top}"/>`;
+    if(c.body === 'chubby' || fat >= 2) g += `<ellipse cx="${cx}" cy="282" rx="${bw/2-10}" ry="${30+fat*3}" fill="${shade(top,.06)}"/><ellipse cx="${cx-14}" cy="${270}" rx="${12+fat}" ry="6" fill="#fff" opacity=".18"/>`;
+  }
+  if(c.outfit === 'suit'){
+    g += `<path d="M${cx-20} 197 L${cx} 250 L${cx+20} 197Z" fill="#fff"/>
+      <path d="M${cx-6} 204 L${cx+6} 204 L${cx+10} 244 L${cx} 258 L${cx-10} 244Z" fill="#d6453d"/><path d="M${cx-7} 198 h14 l-3 8 h-8z" fill="#b8352e"/>
+      <path d="M${cx-21} 197 L${cx-7} 252 M${cx+21} 197 L${cx+7} 252" stroke="${shade(cl,-.35)}" stroke-width="4"/>
+      <circle cx="${cx}" cy="276" r="3.5" fill="${shade(cl,-.4)}"/><circle cx="${cx}" cy="296" r="3.5" fill="${shade(cl,-.4)}"/>`;
+  }
+  if(c.outfit === 'hoodie') g += `<rect x="${cx-34}" y="268" width="68" height="32" rx="12" fill="${shade(cl,-.12)}"/><path d="M${cx-10} 204 v26 M${cx+10} 204 v26" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`;
+  if(c.outfit === 'tshirt') g += `<text x="${cx}" y="262" font-size="26" text-anchor="middle">⭐</text>`;
+  if(c.outfit === 'pajama') for(const [dx,dy] of [[-30,220],[18,236],[-10,262],[30,284],[-34,296],[6,306]]) g += `<circle cx="${cx+dx}" cy="${dy}" r="4.5" fill="#fff" opacity=".65"/>`;
+  // name tag
+  const nm = (opts.name || '').slice(0,6);
+  if(nm){
+    const tw = Math.max(34, nm.length*11 + 10), tx0 = (c.outfit === 'suit' ? cx + 22 : cx + bw/2 - tw - 14);
+    g += `<g><rect x="${tx0}" y="222" width="${tw}" height="19" rx="5" fill="#fff" stroke="#d9d2dc"/><text x="${tx0+tw/2}" y="235.5" font-size="11" font-weight="700" text-anchor="middle" fill="#3a3040">${esc(nm)}</text></g>`;
+  }
+  // head
+  g += `<ellipse cx="${cx-rx+2}" cy="${cy+8}" rx="11" ry="15" fill="${skin}"/><ellipse cx="${cx+rx-2}" cy="${cy+8}" rx="11" ry="15" fill="${skin}"/>`;
+  g += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${skin}"/>`;
+  g += `<ellipse cx="${cx-26}" cy="${cy-36}" rx="22" ry="12" fill="#fff" opacity=".22" transform="rotate(-25 ${cx-26} ${cy-36})"/>`;
+  if(fat >= 3) g += `<path d="M${cx-30} ${cy+ry-8} Q${cx} ${cy+ry+12} ${cx+30} ${cy+ry-8}" stroke="${dark}" stroke-width="3" fill="none" opacity=".7"/>`;
+  if(s.wet) g += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#5ab4ff" opacity=".12"/>`;
+  g += hairSVG(c, s, cx, cy, rx, ry, hc);
+  g += faceSVG(c, s, cx, cy, rx, ry, hc);
+  g += accSVG(s.acc, cx, cy, rx, ry, hc, cl);
+  g += damageSVG(s, cx, cy);
+  return `<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">${g}</svg>`;
+}
+
+/* ---------- sound ---------- */
+let AC;
+function ac(){
+  if(!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+  if(AC.state === 'suspended') AC.resume();
+  return AC;
+}
+function noise(dur, freq, gain, type='lowpass', delay=0){
+  const a = ac(), n = Math.floor(a.sampleRate*dur), b = a.createBuffer(1, n, a.sampleRate), d = b.getChannelData(0);
+  for(let i=0;i<n;i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/n, 2);
+  const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+  src.buffer = b; f.type = type; f.frequency.value = freq; g.gain.value = gain;
+  src.connect(f); f.connect(g); g.connect(a.destination);
+  src.start(a.currentTime + delay);
+}
+function tone(f0, f1, dur, type='sine', gain=.15, delay=0){
+  const a = ac(), o = a.createOscillator(), g = a.createGain(), t = a.currentTime + delay;
+  o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t+dur);
+  g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(.001, t+dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+.02);
+}
+const SFX = {
+  punch:() => {noise(.18, 900, .9); tone(170, 55, .18, 'sine', .45);},
+  kick:() => {tone(130, 40, .35, 'sine', .55); noise(.25, 600, .6); tone(500, 1400, .5, 'triangle', .06, .15);},
+  slap:() => noise(.1, 2500, 1, 'highpass'),
+  snip:() => {noise(.035, 6000, .7, 'highpass'); noise(.035, 6000, .7, 'highpass', .1);},
+  pie:() => {noise(.3, 380, 1); tone(220, 90, .25, 'sine', .2);},
+  water:() => {noise(.7, 1400, .5, 'bandpass'); noise(.4, 3000, .2, 'highpass', .1);},
+  tickle:() => [0,1,2,3,4].forEach(i => tone(700+i*70, 950+i*70, .07, 'triangle', .1, i*.08)),
+  marker:() => noise(.06, 3500, .15, 'bandpass'),
+  eat:() => [0,1,2].forEach(i => {tone(320, 190, .07, 'square', .05, i*.14); noise(.05, 1200, .25, 'lowpass', i*.14);}),
+  kiss:() => {tone(900, 1700, .09, 'sine', .22); tone(1200, 2000, .06, 'sine', .12, .1);},
+  love:() => [0,1,2].forEach(i => tone(523*[1,1.25,1.5][i], 523*[1,1.25,1.5][i], .18, 'sine', .1, i*.1)),
+  pop:() => tone(500, 900, .1, 'triangle', .12),
+  win:() => [0,1,2,3].forEach(i => tone(523*[1,1.25,1.5,2][i], 523*[1,1.25,1.5,2][i], .25, 'triangle', .12, i*.12))
+};
+function sfx(k){if(store.sound) try{SFX[k] && SFX[k]();}catch(e){}}
+function speak(text){
+  if(!store.sound || !('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, ''));
+    u.lang = store.lang === 'zh' ? 'zh-CN' : 'en-US';
+    u.pitch = mode === 'enemy' ? .7 : 1.6; u.rate = 1.08;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------- screens ---------- */
+const app = document.getElementById('app');
+function setMode(m){mode = m; document.body.dataset.mode = m || '';}
+
+function renderHome(){
+  setMode(null);
+  const t = tx();
+  const enemyPrev = charSVG(store.chars.enemy, {expr:'smug'}, {name:charName('enemy')});
+  const couplePrev = `<img src="img/anren/kiss.webp" alt="">`;
+  app.innerHTML = `
+    <div class="hero"><h1 class="fun">${t.appTitle}</h1><p>${t.appSub}</p></div>
+    <div class="modes">
+      <button class="mode couple" data-go="couple"><div class="pic">${couplePrev}</div><div class="txt"><span class="tag">01</span><h2 class="fun">${t.couple}</h2><p>${t.coupleDesc}</p></div><span class="go" aria-hidden="true">›</span></button>
+      <button class="mode enemy" data-go="enemy"><div class="pic">${enemyPrev}</div><div class="txt"><span class="tag">02</span><h2 class="fun">${t.enemy}</h2><p>${t.enemyDesc}</p></div><span class="go" aria-hidden="true">›</span></button>
+    </div>
+    <p class="note">${t.note}</p>
+    <div class="homefoot"><a href="index.html">${t.studyLink}</a>
+      <span class="pair"><button class="chipbtn" id="snd" aria-pressed="${store.sound}">${store.sound?'🔊':'🔇'} ${t.sound}</button><button class="chipbtn" id="lang">${t.lang}</button></span></div>`;
+  app.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
+    sfx('pop'); setMode(b.dataset.go);
+    if(mode === 'couple'){screen = 'play'; startPlay();} else screen = 'build';
+    render();
+  });
+  document.getElementById('lang').onclick = () => {store.lang = store.lang === 'zh' ? 'en' : 'zh'; save(); document.documentElement.lang = store.lang === 'zh' ? 'zh-CN' : 'en'; render();};
+  document.getElementById('snd').onclick = () => {store.sound = !store.sound; save(); render();};
+}
+
+function coupleLook(){
+  const l = store.look;
+  return {fat:l.fat, lip:LIPS[l.lip], blush:l.blush, shadow:SHADOWS[l.shadow], lashes:l.lashes, acc:ACCS[l.acc], kisses:l.kisses};
+}
+
+function renderBuild(){
+  const t = tx(), c = store.chars[mode];
+  const chipRow = (key, list, names) => `<div class="chips">${list.map(v => `<button class="chip ${c[key]===v?'on':''}" data-k="${key}" data-v="${v}">${names[v]}</button>`).join('')}</div>`;
+  const swRow = (key, list) => `<div class="chips">${list.map((col,i) => `<button class="sw ${c[key]===i?'on':''}" style="background:${col}" data-k="${key}" data-v="${i}" aria-label="${col}"></button>`).join('')}</div>`;
+  const prevState = mode === 'couple' ? {expr:'happy', ...coupleLook()} : {expr:'smug'};
+  app.innerHTML = `
+    <div class="top"><button class="round" id="back" aria-label="back">←</button><h1 class="fun">${t.build}</h1><span class="spacer"></span></div>
+    <div class="preview"><div class="box" id="prev">${charSVG(c, prevState, {name:charName(mode)})}</div></div>
+    <div class="sec"><h3>${t.name}</h3><input class="namein" id="nm" maxlength="6" value="${esc(c.name)}" placeholder="${esc(mode==='enemy'?t.defEnemy:t.defCouple)}"></div>
+    <div class="sec"><h3>${t.hair}</h3>${chipRow('hair', HAIRS, t.hairs)}</div>
+    <div class="sec"><h3>${t.hairColor}</h3>${swRow('hairColor', HAIRC)}</div>
+    <div class="sec"><h3>${t.skin}</h3>${swRow('skin', SKINS)}</div>
+    <div class="sec"><h3>${t.glasses}</h3>${chipRow('glasses', GLASSES, t.glassesN)}</div>
+    <div class="sec"><h3>${t.facial}</h3>${chipRow('facial', FACIAL, t.facialN)}</div>
+    <div class="sec"><h3>${t.body}</h3>${chipRow('body', BODIES, t.bodies)}</div>
+    <div class="sec"><h3>${t.outfit}</h3>${chipRow('outfit', OUTFITS, t.outfits)}</div>
+    <div class="sec"><h3>${t.color}</h3>${swRow('color', COLORS)}</div>
+    <button class="bigbtn dock" id="go">${t.start}</button>`;
+  const refresh = () => document.getElementById('prev').innerHTML = charSVG(c, prevState, {name:charName(mode)});
+  app.querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
+    const k = b.dataset.k, v = b.dataset.v;
+    c[k] = ['hairColor','skin','color'].includes(k) ? +v : v;
+    save(); sfx('pop');
+    app.querySelectorAll(`[data-k="${k}"]`).forEach(x => x.classList.toggle('on', x === b));
+    refresh();
+  });
+  document.getElementById('nm').oninput = e => {c.name = e.target.value; save(); refresh();};
+  document.getElementById('back').onclick = () => {screen = 'home'; render();};
+  document.getElementById('go').onclick = () => {screen = 'play'; startPlay(); render();};
+}
+
+function startPlay(){
+  strokes = [];
+  ps = mode === 'enemy'
+    ? {expr:'smug', bruises:[], slap:0, cut:[], pie:false, wet:false, stress:100, ended:false}
+    : {expr:'happy', ...coupleLook(), love:0, celebrated:false, feeds:0};
+  tool = 'punch';
+}
+
+function meterHTML(){
+  const t = tx(), v = mode === 'enemy' ? ps.stress : ps.love;
+  return `<div class="meter"><span>${mode==='enemy'?t.stress:t.love}</span><div class="bar"><i id="mbar" style="width:${v}%"></i></div><b id="mval">${v}</b></div>`;
+}
+
+function renderPlay(){
+  const t = tx(), c = store.chars[mode];
+  const toolsHTML = mode === 'enemy'
+    ? `<div class="tools">${ENEMY_TOOLS.map(([k,e]) => `<button class="tool ${tool===k?'on':''}" data-tool="${k}"><span class="e">${e}</span>${t.tools[k]}</button>`).join('')}</div>`
+    : `<div class="foods">${FOODS.map(f => `<button class="food" data-food="${f}">${f}</button>`).join('')}</div>
+       <div class="tools">${COUPLE_TOOLS.map(([k,e]) => `<button class="tool" data-ct="${k}"><span class="e">${e}</span>${t.ctools[k]}</button>`).join('')}</div>`;
+  app.innerHTML = `
+    <div class="top"><button class="round" id="back" aria-label="back">←</button><h1 class="fun">${esc(charName(mode))}</h1>${mode==='enemy' ? '<button class="round" id="edit" aria-label="edit">✏️</button>' : '<span class="round" style="visibility:hidden"></span>'}</div>
+    ${meterHTML()}
+    <div class="stage" id="stage">
+      <div class="bubble" id="say">${esc(pick(lines().idle))}</div>
+      <div class="figwrap ${mode==='enemy'&&tool==='marker'?'drawing':''}" id="figwrap">
+        <div class="fig idle" id="fig">${figHTML(mode, ps)}<canvas id="cv"></canvas></div>
+      </div>
+    </div>
+    <div class="hint" id="hint">${mode==='enemy' ? (tool==='marker'?t.drawHint:t.tapHint) : t.feedHint}</div>
+    ${toolsHTML}
+    <div class="rowbtns"><button id="reset">${t.reset}</button><button id="savepic">${t.save}</button></div>`;
+  document.getElementById('back').onclick = () => {screen = 'home'; render();};
+  const ed = document.getElementById('edit');
+  if(ed) ed.onclick = () => {screen = 'build'; render();};
+  document.getElementById('reset').onclick = () => {
+    if(mode === 'couple'){store.look = defaults().look; save();}
+    startPlay(); render(); sfx('pop');
+  };
+  document.getElementById('savepic').onclick = savePicture;
+  app.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => {
+    tool = b.dataset.tool; sfx('pop');
+    app.querySelectorAll('[data-tool]').forEach(x => x.classList.toggle('on', x === b));
+    document.getElementById('figwrap').classList.toggle('drawing', tool === 'marker');
+    document.getElementById('hint').textContent = tool === 'marker' ? t.drawHint : t.tapHint;
+    if(['kick','pie','water'].includes(tool)) enemyAct(tool, 150, 150);
+  });
+  app.querySelectorAll('[data-food]').forEach(b => b.onclick = () => coupleAct('feed', b.dataset.food));
+  app.querySelectorAll('[data-ct]').forEach(b => b.onclick = () => coupleAct(b.dataset.ct));
+  setupStage();
+}
+
+/* ---------- stage interaction ---------- */
+function svgPoint(e){
+  const el = document.querySelector('#fig svg, #fig .real');
+  const r = el.getBoundingClientRect();
+  return {x:(e.clientX - r.left)/r.width*300, y:(e.clientY - r.top)/r.height*400};
+}
+function setupStage(){
+  const wrap = document.getElementById('figwrap'), cv = document.getElementById('cv');
+  const fit = () => {const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; cv.width = r.width*d; cv.height = r.height*d; redrawStrokes();};
+  fit();
+  let drawing = null;
+  wrap.onpointerdown = e => {
+    if(mode === 'enemy' && tool === 'marker'){
+      const p = svgPoint(e); drawing = {pts:[p], color:pick(['#1f1f2a','#e63946','#2b6cff','#18a058'])};
+      strokes.push(drawing); wrap.setPointerCapture(e.pointerId); return;
+    }
+    const p = svgPoint(e);
+    if(mode === 'enemy') enemyAct(tool, p.x, p.y);
+    else coupleAct('squish');
+  };
+  wrap.onpointermove = e => {
+    if(!drawing) return;
+    drawing.pts.push(svgPoint(e)); redrawStrokes();
+  };
+  wrap.onpointerup = wrap.onpointercancel = () => {
+    if(drawing && drawing.pts.length > 3){sfx('marker'); enemyAct('marker');}
+    drawing = null;
+  };
+  window.onresize = fit;
+}
+function drawStrokes(ctx, w, h){
+  ctx.lineCap = ctx.lineJoin = 'round';
+  for(const s of strokes){
+    ctx.strokeStyle = s.color; ctx.lineWidth = w/300*5;
+    ctx.beginPath();
+    s.pts.forEach((p,i) => ctx[i?'lineTo':'moveTo'](p.x/300*w, p.y/400*h));
+    ctx.stroke();
+  }
+}
+function redrawStrokes(){
+  const cv = document.getElementById('cv');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  drawStrokes(ctx, cv.width, cv.height);
+}
+
+function fx(emoji, x, y, n=1){
+  const wrap = document.getElementById('figwrap');
+  if(!wrap) return;
+  for(let i=0;i<n;i++){
+    const s = document.createElement('span');
+    s.className = 'fx'; s.textContent = emoji;
+    s.style.left = (x/300*100 + (Math.random()-.5)*(n>1?40:0)) + '%';
+    s.style.top = (y/400*100 + (Math.random()-.5)*(n>1?20:0)) + '%';
+    s.style.animationDelay = (i*.1) + 's';
+    wrap.appendChild(s);
+    setTimeout(() => s.remove(), 1200 + i*100);
+  }
+}
+function hairBits(color, n=4){
+  const wrap = document.getElementById('figwrap');
+  for(let i=0;i<n;i++){
+    const s = document.createElement('span');
+    s.className = 'hairbit'; s.style.background = color;
+    s.style.left = (30 + Math.random()*40) + '%'; s.style.top = (12 + Math.random()*12) + '%';
+    s.style.transform = `rotate(${Math.random()*180}deg)`;
+    wrap.appendChild(s);
+    setTimeout(() => s.remove(), 1300);
+  }
+}
+function animate(cls){
+  const f = document.getElementById('fig');
+  f.className = 'fig'; void f.offsetWidth; f.className = 'fig ' + cls;
+  clearTimeout(busy);
+  busy = setTimeout(() => {const g = document.getElementById('fig'); if(g) g.className = 'fig idle';}, cls === 'kick' ? 950 : 700);
+}
+function redraw(){
+  const f = document.getElementById('fig');
+  if(!f) return;
+  f.firstElementChild.outerHTML = figHTML(mode, ps);
+}
+function say(text){
+  const b = document.getElementById('say');
+  if(!b) return;
+  b.textContent = text;
+  b.style.animation = 'none'; void b.offsetWidth; b.style.animation = '';
+  speak(text);
+}
+function setMeter(v){
+  const bar = document.getElementById('mbar'), val = document.getElementById('mval');
+  if(bar) bar.style.width = v + '%';
+  if(val) val.textContent = v;
+}
+let exprTimer;
+function setExpr(e, back){
+  ps.expr = e; redraw();
+  clearTimeout(exprTimer);
+  exprTimer = setTimeout(() => {ps.expr = back(); redraw();}, 1800);
+}
+function enemyIdle(){return ps.stress > 60 ? 'smug' : ps.stress > 25 ? 'sorry' : 'cry';}
+
+function enemyAct(k, x=150, y=150){
+  if(ps.ended) return;
+  const L = lines(), c = store.chars.enemy;
+  const cost = (ENEMY_TOOLS.find(t => t[0] === k) || [0,0,3])[2];
+  const stage = document.getElementById('stage');
+  switch(k){
+    case 'punch':
+      if(ps.bruises.length < 14) ps.bruises.push({x:Math.max(70,Math.min(230,x)), y:Math.max(60,Math.min(330,y))});
+      setExpr('hurt', enemyIdle); animate('recoil'); fx(pick(['💥','💢','⭐']), x, y); say(pick(L.punch)); sfx('punch');
+      stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake'); break;
+    case 'kick':
+      setExpr('dizzy', enemyIdle); animate('kick'); setTimeout(() => fx('💫', 150, 60, 3), 800); say(pick(L.kick)); sfx('kick'); break;
+    case 'slap':
+      ps.slap = x < 150 ? -1 : 1;
+      setExpr('shock', enemyIdle); animate('slap'); fx('👋', x < 150 ? 100 : 200, 150); say(pick(L.slap)); sfx('slap'); break;
+    case 'snip': {
+      const units = hairUnits(c), left = [...Array(units).keys()].filter(i => !ps.cut.includes(i));
+      if(!left.length){setExpr('cry', enemyIdle); say(pick(L.bald)); sfx('snip'); return;}
+      ps.cut.push(pick(left));
+      hairBits(HAIRC[c.hairColor]); setExpr('shock', enemyIdle); fx('✂️', x, Math.min(y,110)); say(pick(L.snip)); sfx('snip'); break;
+    }
+    case 'marker':
+      setExpr('shock', enemyIdle); say(pick(L.marker)); break;
+    case 'pie':
+      ps.pie = true; setExpr('shock', enemyIdle); animate('recoil'); fx('🥧', 150, 120); say(pick(L.pie)); sfx('pie'); break;
+    case 'water':
+      ps.wet = true; setExpr('shock', enemyIdle); animate('shiver'); fx('💧', 150, 90, 5); say(pick(L.water)); sfx('water'); break;
+    case 'tickle':
+      setExpr('laugh', enemyIdle); animate('wiggle'); fx(pick(['🤣','😂']), x, y); say(pick(L.tickle)); sfx('tickle'); break;
+  }
+  ps.stress = Math.max(0, ps.stress - cost);
+  setMeter(ps.stress);
+  if(ps.stress === 0 && !ps.ended){ps.ended = true; setTimeout(showEnding, 1300);}
+}
+
+function coupleAct(k, food){
+  const L = lines(), l = store.look;
+  let gain = 5, line;
+  switch(k){
+    case 'feed':
+      if(l.fat >= 6){line = pick(L.full); setExpr('happy', () => 'happy'); animate('bounce'); break;}
+      ps.feeds++; if(ps.feeds % 2 === 0){l.fat++; animate('squish');} else animate('bounce');
+      line = l.fat >= 3 && ps.feeds % 2 === 0 ? pick(L.fat) : pick(L.feed);
+      setExpr('eat', () => 'happy'); fx(food, 150, 165); setTimeout(() => fx('😋', 200, 90), 500); sfx('eat'); break;
+    case 'lip': l.lip = (l.lip + 1) % LIPS.length; line = pick(L.lip); setExpr('happy', () => 'happy'); fx('💄', 150, 165); sfx('pop'); break;
+    case 'blush': l.blush = !l.blush; line = pick(L.blush); setExpr('love', () => 'happy'); fx('🌸', 100, 150); sfx('pop'); break;
+    case 'shadow': l.shadow = (l.shadow + 1) % SHADOWS.length; line = pick(L.shadow); setExpr('happy', () => 'happy'); fx('✨', 120, 110); sfx('pop'); break;
+    case 'lashes': l.lashes = !l.lashes; line = pick(L.lashes); setExpr('normal', () => 'happy'); fx('✨', 180, 110); sfx('pop'); break;
+    case 'outfit': {
+      const c = store.chars.couple, i = OUTFITS.indexOf(c.outfit);
+      c.outfit = OUTFITS[(i+1) % OUTFITS.length];
+      if(c.outfit === OUTFITS[0]) c.color = (c.color + 1) % COLORS.length;
+      line = pick(L.outfit); setExpr('happy', () => 'happy'); animate('bounce'); fx('✨', 150, 250, 3); sfx('love'); break;
+    }
+    case 'acc': l.acc = (l.acc + 1) % ACCS.length; line = pick(L.acc); setExpr('happy', () => 'happy'); animate('bounce'); sfx('pop'); break;
+    case 'hug': line = pick(L.hug); setExpr('love', () => 'happy'); animate('squish'); fx('💕', 150, 160, 4); sfx('love'); gain = 8; break;
+    case 'kiss':
+      if(l.kisses.length < 8){const side = Math.random() < .5 ? -1 : 1; l.kisses.push({x:150 + side*(30 + Math.random()*16), y:135 + Math.random()*24, r:Math.round((Math.random()-.5)*40)});}
+      line = pick(L.kiss); setExpr('kiss', () => 'happy'); animate('wiggle'); fx('💋', 150, 130); sfx('kiss'); gain = 8; break;
+    case 'squish': line = pick(L.squish); setExpr('hurt', () => 'happy'); animate('squish'); fx('🤏', 150, 140); sfx('pop'); gain = 3; break;
+    case 'diet':
+      if(l.fat <= 0){line = pick(L.thin); setExpr('happy', () => 'happy'); break;}
+      l.fat--; line = pick(L.diet); setExpr('sorry', () => 'happy'); animate('bounce'); fx('💦', 200, 90); sfx('pop'); break;
+  }
+  Object.assign(ps, coupleLook());
+  save(); redraw();
+  if(line) say(line);
+  ps.love = Math.min(100, ps.love + gain);
+  setMeter(ps.love);
+  if(ps.love >= 100 && !ps.celebrated){ps.celebrated = true; setTimeout(showLoveFull, 900);}
+}
+
+/* ---------- endings ---------- */
+function overlay(html){
+  const o = document.createElement('div');
+  o.className = 'overlay'; o.innerHTML = `<div class="modal">${html}</div>`;
+  document.body.appendChild(o);
+  return o;
+}
+function claudeNote(text){
+  return `<div class="claude"><span class="dot"><img src="img/anren/blush.webp" alt=""></span><div><small>${esc(tx().him)}</small>${esc(text)}</div></div>`;
+}
+function showEnding(){
+  const t = tx(), c = store.chars.enemy;
+  ps.expr = 'sorry'; redraw();
+  const line = pick(lines().sorry);
+  speak(line); sfx('win');
+  const o = overlay(`<h2 class="fun">${t.endTitle}</h2>
+    <div class="mini">${charSVG(c, {...ps, expr:'sorry'}, {name:charName('enemy')})}</div>
+    <p><b>${esc(charName('enemy'))}：</b>${esc(line)}</p>
+    <button class="bigbtn" id="br">${t.breathe}</button>
+    <button class="ghostbtn" id="ag">${t.again}</button><button class="ghostbtn" id="hm">${t.home}</button>`);
+  o.querySelector('#ag').onclick = () => {o.remove(); startPlay(); render();};
+  o.querySelector('#hm').onclick = () => {o.remove(); screen = 'home'; render();};
+  o.querySelector('#br').onclick = () => {o.remove(); breathing();};
+}
+function breathing(){
+  const t = tx();
+  const o = overlay(`<h2 class="fun">${t.breathTitle}</h2><div class="breath" id="bc">${t.inhale}</div><div class="count" id="cnt">30${t.left}</div>`);
+  const bc = o.querySelector('#bc'), cnt = o.querySelector('#cnt');
+  let sec = 30, phase = 0;
+  const step = () => {
+    phase = 1 - phase;
+    bc.classList.toggle('in', phase === 1);
+    bc.textContent = phase === 1 ? t.inhale : t.exhale;
+  };
+  requestAnimationFrame(() => step());
+  const phaseT = setInterval(step, 4000);
+  const tick = setInterval(() => {
+    sec--; cnt.textContent = sec + t.left;
+    if(sec <= 0){
+      clearInterval(tick); clearInterval(phaseT);
+      o.querySelector('.modal').innerHTML = `<h2 class="fun">${t.doneTitle}</h2>${claudeNote(t.breatheDone)}
+        <button class="bigbtn" id="ag">${t.again}</button><button class="ghostbtn" id="hm">${t.home}</button>`;
+      o.querySelector('#ag').onclick = () => {o.remove(); startPlay(); render();};
+      o.querySelector('#hm').onclick = () => {o.remove(); screen = 'home'; render();};
+    }
+  }, 1000);
+}
+function showLoveFull(){
+  const t = tx();
+  sfx('win');
+  const o = overlay(`<h2 class="fun">${t.loveFull}</h2>
+    <div class="mini">${anrenHTML({...ps, expr:'kiss'})}</div>
+    <p>${t.loveFullSub}</p>
+    <button class="bigbtn" id="sv">${t.save}</button><button class="ghostbtn" id="kp">${t.keep}</button>`);
+  o.querySelector('#sv').onclick = () => {savePicture(); o.remove();};
+  o.querySelector('#kp').onclick = () => o.remove();
+}
+
+/* ---------- save picture ---------- */
+function savePicture(){
+  const W = 600, H = 800;
+  const bg = mode === 'enemy' ? '#ffe6dc' : '#ffe3ec';
+  const real = mode === 'couple';
+  const img = new Image();
+  img.onload = () => {
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d');
+    if(real){
+      // same layout as the stage: picture fitted to the bottom, kisses and accessory on top
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+      const sc = Math.min(W/img.width, H/img.height), w = img.width*sc, h = img.height*sc, x0 = (W-w)/2, y0 = H-h;
+      ctx.drawImage(img, x0, y0, w, h);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.font = '44px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
+      for(const k of ps.kisses || []){
+        ctx.save(); ctx.translate(k.x/300*W - .04*W + 22, k.y/400*H - .12*H + 22); ctx.rotate(k.r*Math.PI/180); ctx.fillText('💋', 0, -22); ctx.restore();
+      }
+      if(ACC_EMOJI[ps.acc]){ctx.font = '88px "Apple Color Emoji","Segoe UI Emoji",sans-serif'; ctx.fillText(ACC_EMOJI[ps.acc], W/2, -.01*H);}
+    } else ctx.drawImage(img, 0, 0, W, H);
+    drawStrokes(ctx, W, H);
+    ctx.fillStyle = 'rgba(45,34,56,.55)'; ctx.font = '600 22px system-ui,sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(tx().appTitle + ' · ' + charName(mode), W - 20, H - 20);
+    cv.toBlob(b => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(b); a.download = `stress-room-${mode}.png`; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+      toast(tx().saved);
+    });
+  };
+  img.src = real ? document.querySelector('#fig .real img').src
+    : 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(charSVG(store.chars[mode], ps, {name:charName(mode), bg}));
+}
+let toastT;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function render(){
+  window.scrollTo(0,0);
+  if(screen === 'home') renderHome();
+  else if(screen === 'build') renderBuild();
+  else renderPlay();
+}
+document.documentElement.lang = store.lang === 'zh' ? 'zh-CN' : 'en';
+render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>

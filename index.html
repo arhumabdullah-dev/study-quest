@@ -1,0 +1,1543 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>学习闯关</title>
+<link rel="manifest" href="study.webmanifest">
+<link rel="icon" type="image/png" href="icons/study-192.png">
+<link rel="apple-touch-icon" href="icons/study-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="学习闯关">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#bfe6ff">
+<style>
+/* A little game room: 安仁 stands in the middle of a sky-blue room on a warm floor,
+   chunky "candy" buttons with a pressed-down edge, one task card at the bottom. */
+:root{
+  --sky1:#aee0ff; --sky2:#e6f6ff; --floor1:#ffe3bd; --floor2:#ffcf94;
+  --sheet:#ffffff; --paper:#eef8ff; --ink:#25304b; --pencil:#7781a0; --rule:#e2e8f3; --shade:rgba(37,48,75,.16);
+  --sun:#ffc21f; --sun-e:#e59a00; --go:#36c66b; --go-e:#1f9a4d; --pink:#ff6f9f; --pink-e:#de4b7f;
+  --red:#ff5d50; --red-e:#d23b2f; --blue:#3b8cff; --blue-e:#2367d4; --on:#ffffff; --on-sun:#4a2c00;
+  --blue-ink:#ffffff; --seal:#ff5d50; --hl:#ffe36e; --hl-soft:#fff0a8; --good:#1f9a4d; --danger:#e23d31;
+  --bubble:#ffffff; --bubble-ink:#25304b; --locked:#d5dbe7;
+  --c-english:#3b8cff; --c-class:#8b5cf6; --c-study:#14a895; --c-sport:#ff8a2a; --c-rest:#8a94a6; --c-life:#ff5f9e;
+  --f-body:ui-rounded,"SF Pro Rounded","PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,"Segoe UI",sans-serif;
+  --f-num:ui-rounded,"SF Pro Rounded",-apple-system,"Segoe UI",sans-serif;
+  --navh:78px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --sky1:#18214a; --sky2:#2a3470; --floor1:#3d3166; --floor2:#2b2350;
+    --sheet:#232b4d; --paper:#1b2244; --ink:#eef1ff; --pencil:#a6aed0; --rule:#38426e; --shade:rgba(0,0,0,.35);
+    --sun:#ffc21f; --sun-e:#c98400; --go:#36c66b; --go-e:#1b7d3f; --pink:#ff6f9f; --pink-e:#b93a68;
+    --red:#ff6a5e; --red-e:#b8352b; --blue:#5b9dff; --blue-e:#2e5fb8; --on:#ffffff; --on-sun:#3b2300;
+    --blue-ink:#ffffff; --seal:#ff6a5e; --hl:#e8c547; --hl-soft:rgba(232,197,71,.3); --good:#5ad48a; --danger:#ff6a5e;
+    --bubble:#ffffff; --bubble-ink:#25304b; --locked:#3a4470;
+    --c-english:#6ea8ff; --c-class:#a88bf0; --c-study:#3cc2ad; --c-sport:#ffa055; --c-rest:#a2acb9; --c-life:#ff86b6;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --sky1:#18214a; --sky2:#2a3470; --floor1:#3d3166; --floor2:#2b2350;
+  --sheet:#232b4d; --paper:#1b2244; --ink:#eef1ff; --pencil:#a6aed0; --rule:#38426e; --shade:rgba(0,0,0,.35);
+  --sun:#ffc21f; --sun-e:#c98400; --go:#36c66b; --go-e:#1b7d3f; --pink:#ff6f9f; --pink-e:#b93a68;
+  --red:#ff6a5e; --red-e:#b8352b; --blue:#5b9dff; --blue-e:#2e5fb8; --on:#ffffff; --on-sun:#3b2300;
+  --blue-ink:#ffffff; --seal:#ff6a5e; --hl:#e8c547; --hl-soft:rgba(232,197,71,.3); --good:#5ad48a; --danger:#ff6a5e;
+  --bubble:#ffffff; --bubble-ink:#25304b; --locked:#3a4470;
+  --c-english:#6ea8ff; --c-class:#a88bf0; --c-study:#3cc2ad; --c-sport:#ffa055; --c-rest:#a2acb9; --c-life:#ff86b6;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--sky2);background-image:linear-gradient(180deg,var(--sky1),var(--sky2) 70%);background-attachment:fixed;
+  color:var(--ink);font:15px/1.45 var(--f-body);min-height:100vh;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:2px solid var(--rule);border-radius:14px;padding:10px 12px;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);outline:0}
+.wrap{max-width:560px;margin:0 auto;padding-top:max(10px,env(safe-area-inset-top));padding-bottom:calc(var(--navh) + 24px + env(safe-area-inset-bottom));
+  padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+body.wide .wrap{max-width:1100px}
+body.home .wrap{padding-bottom:calc(var(--navh) + 8px + env(safe-area-inset-bottom))}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--pencil)}
+.hint{font-size:12px;color:var(--pencil);margin-top:6px}
+.spacer{flex:1}
+.icon{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* chunky candy buttons: colour + a darker edge that the button sinks into when pressed */
+.c3d{--b:var(--sun);--e:var(--sun-e);--t:var(--on-sun);background:var(--b);color:var(--t);border:0;border-radius:16px;box-shadow:0 5px 0 var(--e);
+  font-weight:800;padding:11px 18px;transition:transform .08s,box-shadow .08s}
+.c3d:active{transform:translateY(4px);box-shadow:0 1px 0 var(--e)}
+.c3d.go{--b:var(--go);--e:var(--go-e);--t:var(--on)}
+.c3d.pink{--b:var(--pink);--e:var(--pink-e);--t:var(--on)}
+.c3d.red{--b:var(--red);--e:var(--red-e);--t:var(--on)}
+.c3d.blue{--b:var(--blue);--e:var(--blue-e);--t:var(--on)}
+.primary{background:var(--blue);color:var(--on);border:0;border-radius:14px;box-shadow:0 4px 0 var(--blue-e);padding:10px 16px;font-weight:800}
+.primary:active{transform:translateY(3px);box-shadow:0 1px 0 var(--blue-e)}
+.ghost{background:var(--sheet);border:2px solid var(--rule);border-radius:14px;padding:9px 14px;font-weight:700}
+.ghost:active{transform:translateY(1px)}
+.ghost:disabled{opacity:.4;cursor:default}
+.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 40%,var(--rule))}
+.card{background:var(--sheet);border-radius:24px;box-shadow:0 6px 0 var(--shade)}
+
+/* HUD: her photo, level, XP, streak */
+.hud{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--sheet);border-radius:22px;padding:8px 10px 8px 8px;box-shadow:0 5px 0 var(--shade)}
+.ava{width:50px;height:50px;border-radius:50%;border:3px solid var(--sun);padding:0;overflow:hidden;background:var(--sun);display:grid;place-items:center;font:800 22px var(--f-body);color:var(--on-sun)}
+.ava img{width:100%;height:100%;object-fit:cover;display:block}
+.hname{display:flex;align-items:center;gap:6px;font-weight:800;font-size:16px;min-width:0}
+.hname span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lv{flex:none;background:var(--blue);color:var(--on);font:800 12px/1 var(--f-num);padding:4px 7px;border-radius:999px}
+.xpbar{position:relative;height:16px;margin-top:5px;background:var(--paper);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 0 var(--shade)}
+.xpbar i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(180deg,#ffe066,var(--sun));transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.xpbar span{position:absolute;inset:0;display:grid;place-items:center;font:800 10px/1 var(--f-num);color:var(--ink)}
+.chip{display:flex;align-items:center;gap:3px;background:var(--paper);border-radius:999px;padding:6px 9px;font:800 15px var(--f-num)}
+.chip svg{width:18px;height:18px}
+.gear{width:44px;height:44px;border-radius:50%;border:0;background:var(--paper);display:grid;place-items:center;color:var(--ink);padding:0}
+
+/* home: the room */
+.home{display:flex;flex-direction:column;gap:10px;margin-top:10px;
+  min-height:calc(100vh - var(--navh) - 100px - max(10px,env(safe-area-inset-top)) - env(safe-area-inset-bottom));
+  min-height:calc(100dvh - var(--navh) - 100px - max(10px,env(safe-area-inset-top)) - env(safe-area-inset-bottom))}
+.meters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.meter{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--ink)}
+.meter .track{flex:1}
+.track{height:12px;background:color-mix(in srgb,var(--sheet) 70%,transparent);border-radius:999px;overflow:hidden}
+.track i{display:block;height:100%;border-radius:999px;background:var(--cc,var(--blue));transition:width .5s}
+.room{position:relative;flex:1;min-height:330px;display:grid;grid-template-columns:62px minmax(0,1fr) 62px;align-items:end;
+  border-radius:28px;overflow:hidden;
+  background:radial-gradient(120% 34% at 50% 100%,var(--floor2) 0 55%,transparent 56%),radial-gradient(150% 40% at 50% 104%,var(--floor1) 0 60%,transparent 61%)}
+.bubble{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:3;width:max-content;max-width:min(78%,340px);background:var(--bubble);color:var(--bubble-ink);
+  border-radius:20px;padding:10px 14px;font-weight:700;font-size:15px;line-height:1.35;text-align:center;box-shadow:0 4px 0 var(--shade);animation:pop .3s cubic-bezier(.3,1.5,.5,1)}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-9px;border:9px solid transparent;border-bottom:0;border-top-color:var(--bubble)}
+@keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
+.side{display:flex;flex-direction:column;gap:14px;align-items:center;padding-bottom:18px;z-index:2}
+.rbtn{width:58px;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;padding:0;font-size:12px;font-weight:800;color:var(--ink)}
+.rbtn b{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:27px;background:var(--sheet);box-shadow:0 5px 0 var(--shade);transition:transform .08s,box-shadow .08s}
+.rbtn:active b{transform:translateY(4px);box-shadow:0 1px 0 var(--shade)}
+.rbtn.hit b{background:var(--red);box-shadow:0 5px 0 var(--red-e)}
+.rbtn.hit span{color:var(--red)}
+.rbtn.love b{background:var(--pink);box-shadow:0 5px 0 var(--pink-e)}
+.charwrap{position:relative;align-self:end;display:flex;justify-content:center;padding-top:76px}
+.pet{position:relative;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;display:flex;justify-content:center}
+.pet img{display:block;height:min(46vh,410px);height:min(44dvh,410px);max-width:100%;object-fit:contain;transform-origin:50% 100%;pointer-events:none;
+  filter:drop-shadow(0 8px 6px rgba(60,40,10,.18))}
+.pet.idle img{animation:bob 2.8s ease-in-out infinite}
+.pet.hit img{animation:squash .5s ease}
+.pet.eat img{animation:chew .3s ease 4}
+.pet.love img{animation:wiggle .45s ease 3}
+.pet.angry img{animation:shake .4s ease 2}
+.pet.hop img{animation:hop .5s cubic-bezier(.3,1.4,.5,1)}
+@keyframes bob{50%{transform:translateY(-6px) scale(1.01,.995)}}
+@keyframes squash{25%{transform:scale(1.12,.8)}55%{transform:scale(.95,1.06) rotate(-3deg)}80%{transform:scale(1.02,.98) rotate(1deg)}}
+@keyframes chew{50%{transform:scale(1.03,.97)}}
+@keyframes wiggle{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes hop{40%{transform:translateY(-22px)}}
+#petfx{position:absolute;inset:0;pointer-events:none}
+.fxe{position:absolute;font-size:34px;pointer-events:none;animation:floatUp 1.3s ease-out forwards}
+@keyframes floatUp{0%{opacity:0;transform:translateY(20px) scale(.6)}20%{opacity:1;transform:translateY(0) scale(1.15)}100%{opacity:0;transform:translateY(-110px)}}
+.foods{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:4;display:flex;gap:6px;background:var(--sheet);border-radius:999px;padding:7px;box-shadow:0 5px 0 var(--shade);animation:pop .25s ease}
+.foods button{font-size:26px;width:46px;height:46px;border-radius:50%;border:0;background:var(--paper);padding:0}
+.foods button:active{transform:scale(.9)}
+
+/* the one task card */
+.nowcard{padding:14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center}
+.nowcard .lab{font-size:12px;font-weight:800;color:var(--pencil);display:flex;align-items:center;gap:6px}
+.nowcard .lab i{width:9px;height:9px;border-radius:50%;background:var(--cc,var(--blue))}
+.nowcard .lab .live{background:var(--red);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+.nowcard h3{margin:2px 0 0;font-size:20px;line-height:1.2;font-weight:900;overflow-wrap:anywhere}
+.nowcard .tm{font:700 13px var(--f-num);color:var(--pencil)}
+.nowcard .big{font-size:18px;padding:14px 20px;border-radius:18px;min-width:96px}
+.nowfoot{grid-column:1/-1;display:flex;align-items:center;gap:8px;border-top:2px dashed var(--rule);padding-top:10px;margin-top:4px}
+.pips{display:flex;gap:4px;flex-wrap:wrap;flex:1;min-width:0}
+.pips i{width:12px;height:12px;border-radius:50%;background:var(--rule)}
+.pips i.on{background:var(--go)}
+.linkbtn{border:0;background:none;color:var(--blue);font-weight:800;padding:6px 2px;flex:none}
+
+/* bottom nav: four big round buttons */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--sheet);border-radius:26px 26px 0 0;box-shadow:0 -4px 0 var(--shade);
+  padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.tabs-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;font-size:12px;font-weight:800;color:var(--pencil);min-height:56px}
+.tab b{width:46px;height:40px;border-radius:16px;display:grid;place-items:center;transition:transform .15s}
+.tab.on{color:var(--ink)}
+.tab.on b{background:var(--sun);color:var(--on-sun);box-shadow:0 4px 0 var(--sun-e);transform:translateY(-2px)}
+#addBtn{position:fixed;z-index:31;right:max(16px,calc(50vw - 264px),env(safe-area-inset-right));bottom:calc(var(--navh) + 22px + env(safe-area-inset-bottom));
+  width:60px;height:60px;border-radius:50%;font:800 34px/1 var(--f-body);display:grid;place-items:center;padding:0}
+
+/* section titles */
+.sec-title{font:900 19px var(--f-body);margin:22px 4px 10px;display:flex;align-items:baseline;gap:8px}
+.sec-title small{font:700 12px var(--f-num);color:var(--pencil)}
+
+/* task lists */
+.status{display:flex;align-items:center;gap:8px;font-size:14px;margin:0 0 10px;min-height:22px}
+.sheet{background:var(--sheet);border-radius:24px;padding:4px 14px;box-shadow:0 6px 0 var(--shade)}
+.trow{display:grid;grid-template-columns:50px minmax(0,1fr) 50px;gap:10px;align-items:center;padding:12px 0;border-bottom:2px solid var(--rule)}
+.trow:last-child{border-bottom:0}
+.t-time{font:800 14px/1.2 var(--f-num)}
+.t-time small{display:block;color:var(--pencil);font-size:11px;font-weight:700}
+.t-body{min-width:0;cursor:pointer}
+.t-title{font-weight:800;font-size:16px;overflow-wrap:anywhere}
+.t-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--pencil);margin-top:1px;font-weight:600}
+.cat{color:var(--cc);font-weight:800;display:inline-flex;align-items:center;gap:5px}
+.cat::before{content:"";width:9px;height:9px;background:var(--cc);border-radius:50%}
+.trow.now{background:var(--hl-soft);margin:0 -14px;padding-left:14px;padding-right:14px}
+.trow.done .t-title{color:var(--pencil);text-decoration:line-through}
+.stamp{width:48px;height:48px;border-radius:50%;border:3px dashed var(--rule);background:none;color:var(--pencil);font-size:12px;font-weight:800;padding:0}
+.stamp:active{transform:scale(.92)}
+.stamp:disabled{opacity:.35;cursor:not-allowed}
+.seal{width:48px;height:48px;border-radius:50%;border:0;background:var(--go);color:var(--on);box-shadow:0 4px 0 var(--go-e);display:grid;place-items:center;font:900 13px var(--f-body);padding:0}
+.seal.fresh{animation:stampIn .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes stampIn{from{transform:scale(2) rotate(-30deg);opacity:0}}
+.empty{padding:26px 6px;text-align:center;color:var(--pencil);font-size:14px;font-weight:600}
+
+/* week */
+.weeknav{display:flex;align-items:center;gap:6px;margin-top:16px}
+.weeknav h2{flex:1;margin:0 4px;font:900 19px var(--f-body)}
+.weeknav .ghost{padding:8px 12px;min-height:44px}
+.daystrip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:12px 0 14px}
+.dchip{border:0;background:var(--sheet);border-radius:16px;padding:7px 0 5px;text-align:center;font-size:11px;font-weight:700;color:var(--pencil);min-width:0;box-shadow:0 3px 0 var(--shade)}
+.dchip b{display:block;font:900 18px var(--f-num);color:var(--ink)}
+.dchip i{display:block;font-style:normal;font-size:10px;min-height:15px;font-family:var(--f-num)}
+.dchip i.clear{color:var(--good);font-weight:900}
+.dchip.today b{color:var(--red)}
+.dchip.sel{background:var(--sun);color:var(--on-sun);box-shadow:0 4px 0 var(--sun-e)}
+.dchip.sel b,.dchip.sel i{color:var(--on-sun)}
+.dayline{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 8px}
+.dayline h3{margin:0;font:900 17px var(--f-body)}
+.gridwrap{overflow-x:auto;border-radius:20px;background:var(--sheet);margin-top:12px;box-shadow:0 6px 0 var(--shade)}
+.wgrid{display:grid;grid-template-columns:52px repeat(7,minmax(104px,1fr));min-width:780px}
+.whead{position:sticky;top:0;z-index:2;background:var(--sheet);border-bottom:2px solid var(--rule);padding:8px 4px;text-align:center;font-size:12px;color:var(--pencil)}
+.whead b{display:block;font:800 15px var(--f-num);color:var(--ink)}
+.whead.today b{color:var(--red)}
+.tcol{position:relative;border-right:1px solid var(--rule)}
+.tcol div{position:absolute;right:6px;font:11px var(--f-num);color:var(--pencil);transform:translateY(-50%)}
+.dcol{position:relative;border-right:1px solid var(--rule);cursor:copy}
+.dcol:last-child{border-right:0}
+.dcol.today{background:color-mix(in srgb,var(--hl) 12%,transparent)}
+.hline{position:absolute;left:0;right:0;border-top:1px dashed var(--rule);pointer-events:none}
+.blk{position:absolute;border-radius:8px;padding:2px 5px;font-size:11px;line-height:1.25;overflow:hidden;cursor:pointer;
+  background:color-mix(in srgb,var(--cc) 16%,var(--sheet));border-left:4px solid var(--cc)}
+.blk b{display:block;font-weight:700}
+.blk .num{color:var(--pencil)}
+.blk.done{opacity:.55}
+.blk.done b::before{content:"✓ ";color:var(--good)}
+.nowline{position:absolute;left:0;right:0;border-top:2px solid var(--red);z-index:3;pointer-events:none}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:12px}
+
+/* rewards */
+.ladder{list-style:none;margin:0;padding:6px 14px}
+.ladder li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:2px solid var(--rule)}
+.ladder li:last-child{border-bottom:0}
+.ladder .lvn{font:800 12px var(--f-num);color:var(--pencil);width:62px;flex:none}
+.ladder b{font-weight:800;flex:1}
+.ladder li.past b{color:var(--pencil)}
+.ladder li.on b{color:var(--ink)}
+.ladder .here{font-size:12px;font-weight:900;background:var(--sun);color:var(--on-sun);border-radius:999px;padding:3px 9px}
+.stickers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:520px){.stickers{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.stk{position:relative;background:var(--sheet);border-radius:20px;padding:6px;box-shadow:0 5px 0 var(--shade);text-align:center}
+.stk img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:14px;display:block;max-width:100%}
+.stk.locked img{filter:grayscale(1) brightness(1.15) blur(3px);opacity:.35}
+.stk .lockt{position:absolute;inset:0;display:grid;place-items:center;font:900 15px var(--f-body);color:var(--ink)}
+.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 10px;background:var(--sheet);border-radius:24px;padding:16px 10px;box-shadow:0 6px 0 var(--shade)}
+@media (min-width:520px){.badges{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.badge{text-align:center;min-width:0}
+.medal{width:64px;height:64px;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;font:900 17px/1 var(--f-body);color:var(--on-sun);
+  background:radial-gradient(circle at 35% 30%,#fff1a8,var(--sun) 55%,var(--sun-e));box-shadow:0 4px 0 var(--sun-e),inset 0 0 0 4px rgba(255,255,255,.45)}
+.badge.locked .medal{background:var(--locked);color:var(--pencil);box-shadow:none}
+.badge b{display:block;font-size:13px;font-weight:800}
+.badge p{margin:2px 0 0;font-size:11px;color:var(--pencil);line-height:1.35}
+
+/* stats */
+.report{background:var(--sheet);border-radius:24px;padding:6px 16px;box-shadow:0 6px 0 var(--shade)}
+.rrow{display:flex;align-items:baseline;gap:8px;padding:10px 0;font-weight:700}
+.rrow .lead{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-4px)}
+.rrow b{font:900 20px var(--f-num)}
+.chartcard{background:var(--sheet);border-radius:24px;padding:16px 12px 10px;box-shadow:0 6px 0 var(--shade)}
+.cols{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;align-items:end;height:150px;padding:0 2px}
+.col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;min-width:0}
+.col .bar{width:70%;max-width:30px;background:var(--blue);border-radius:8px 8px 3px 3px;min-height:3px}
+.col .bar.full{background:var(--go)}
+.col .bar.zero{background:var(--rule)}
+.col span{font-size:11px;color:var(--pencil);font-weight:700}
+.col small{font:700 10px var(--f-num);color:var(--pencil)}
+.axis{border-top:2px solid var(--rule);margin:0 2px}
+.bars{display:flex;flex-direction:column;gap:12px}
+.barrow{display:grid;grid-template-columns:64px minmax(0,1fr) 88px;gap:10px;align-items:center;font-size:13px}
+.barrow .track{background:color-mix(in srgb,var(--cc,var(--blue)) 16%,var(--sheet))}
+.barrow .v{text-align:right;color:var(--pencil);font:700 12px var(--f-num)}
+
+/* dialogs (bottom sheets) */
+dialog{border:0;padding:0;background:var(--sheet);color:var(--ink);width:100vw;max-width:560px;max-height:92vh;margin:auto auto 0;border-radius:26px 26px 0 0;overflow:auto;overscroll-behavior:contain}
+dialog::backdrop{background:rgba(20,26,50,.5)}
+.dlg{padding:20px max(16px,env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.dlg h3{margin:0 0 14px;font:900 20px var(--f-body)}
+.field{margin-bottom:14px}
+.field>label{display:block;font-size:13px;font-weight:800;color:var(--pencil);margin-bottom:5px}
+.row{display:flex;gap:12px}
+.row>*{flex:1;min-width:0}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.days label{position:relative}
+.days input,.seg input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;padding:0;opacity:0;pointer-events:none}
+.days span{display:block;text-align:center;padding:9px 0;border-radius:12px;background:var(--paper);font-size:12px;font-weight:700;cursor:pointer;user-select:none}
+.days input:checked+span{background:var(--sun);color:var(--on-sun)}
+.days input:focus-visible+span,.seg input:focus-visible+span{outline:3px solid var(--blue)}
+.seg{display:flex;background:var(--paper);border-radius:14px;padding:4px;gap:4px}
+.seg label{flex:1;position:relative}
+.seg span{display:block;text-align:center;padding:8px 4px;font-size:14px;font-weight:700;cursor:pointer;user-select:none;border-radius:10px}
+.seg input:checked+span{background:var(--sheet);box-shadow:0 2px 0 var(--shade)}
+.actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.ctx{display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--paper);padding:10px 12px;border-radius:16px;margin-bottom:14px;font-size:14px;font-weight:700;flex-wrap:wrap}
+.err{color:var(--danger);font-size:13px;font-weight:700;min-height:1em}
+.prof-av{display:flex;gap:16px;align-items:center;margin:4px 0 14px}
+.prof-av .ava{width:64px;height:64px}
+.switch{display:flex;align-items:center;gap:10px;font-size:14px;flex-wrap:wrap;font-weight:600}
+.switch input{width:auto}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+
+/* celebration: he jumps in with the reward */
+#celebrate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .2s;
+  background:rgba(20,26,50,.45);padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+#celebrate.show{opacity:1;pointer-events:auto}
+.celchar{height:min(34vh,280px);display:block;margin-bottom:-26px;position:relative;z-index:1;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
+#celebrate.show .celchar{animation:jumpIn .5s cubic-bezier(.3,1.5,.5,1)}
+@keyframes jumpIn{from{transform:translateY(60px) scale(.6);opacity:0}}
+.celcard{position:relative;width:min(360px,100%);background:var(--sheet);border-radius:26px;padding:30px 18px 16px;text-align:center;box-shadow:0 7px 0 var(--shade)}
+.ribbon{position:absolute;left:50%;top:-18px;transform:translateX(-50%);background:var(--red);color:var(--on);font:900 18px var(--f-body);padding:7px 22px;border-radius:14px;box-shadow:0 4px 0 var(--red-e);white-space:nowrap}
+#celebrate.show .ribbon{animation:stampIn .4s .15s cubic-bezier(.3,1.6,.5,1) backwards}
+.celcard .xp{font:900 22px var(--f-num);color:var(--sun-e)}
+.celcard p{margin:6px 0 0;font-weight:700}
+.reward{display:flex;gap:10px;align-items:center;text-align:left;margin-top:12px;padding:10px 12px;background:var(--paper);border-radius:18px;font-weight:700}
+.reward .who2{font-size:12px;font-weight:800;color:var(--pencil)}
+.reward .re{font-size:24px;vertical-align:-4px}
+#toasts{position:fixed;left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right));bottom:calc(var(--navh) + 24px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
+.toast{background:var(--sheet);border-radius:18px;padding:9px 14px;display:flex;gap:10px;align-items:center;font-size:14px;font-weight:700;animation:rise .3s ease;max-width:380px;box-shadow:0 5px 0 var(--shade)}
+.toast .mini{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font:900 11px var(--f-body);flex:none;color:var(--on-sun);background:radial-gradient(circle at 35% 30%,#fff1a8,var(--sun) 55%,var(--sun-e))}
+@keyframes rise{from{transform:translateY(12px);opacity:0}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:55}
+.warn{background:var(--sheet);color:var(--danger);border-radius:16px;padding:8px 12px;margin-bottom:10px;font-size:13px;font-weight:700}
+
+/* coach pop-up */
+.cav{width:52px;height:52px;flex:none;border-radius:50%;overflow:hidden;background:var(--paper)}
+.cav img{width:100%;height:auto;display:block;transform:scale(1.9) translateY(19%)}
+#coach{position:fixed;top:calc(10px + env(safe-area-inset-top));left:0;right:0;z-index:58;display:flex;justify-content:center;transform:translateY(-170%);transition:transform .4s cubic-bezier(.2,1.2,.4,1);
+  padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+#coach.show{transform:none}
+.coachbox{position:relative;width:min(440px,100%);display:flex;gap:12px;align-items:flex-start;background:var(--sheet);padding:14px;border-radius:24px;box-shadow:0 6px 0 var(--shade),0 14px 30px rgba(0,0,0,.18)}
+.coachbox .who2{font-size:12px;font-weight:800;color:var(--pencil)}
+.coachbox .msg{margin:2px 0 10px;font-weight:700}
+.coachbox .btns{display:flex;gap:6px;flex-wrap:wrap}
+.coachbox .btns button{padding:8px 14px;font-size:14px}
+
+@media (max-height:700px){.pet img{height:min(38vh,330px);height:min(36dvh,330px)}.charwrap{padding-top:66px}.room{min-height:290px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div class="wrap">
+  <div id="warn"></div>
+  <header id="hero"></header>
+  <main id="view"></main>
+</div>
+<nav class="tabs" id="tabs"></nav>
+<div id="celebrate"></div>
+<div id="coach"></div>
+<div id="toasts"></div>
+
+<dialog id="taskDlg"><form class="dlg" id="taskForm" method="dialog"></form></dialog>
+<dialog id="profDlg"><div class="dlg" id="profBody"></div></dialog>
+<input type="file" id="avatarFile" accept="image/*" hidden>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+
+<script>
+const STORE = 'studyQuest.v1';
+// bump when seedTasks() gains new days, so saved data on a phone picks them up
+const SEED_VER = 3;
+const CATS = ['english','class','study','sport','rest','life'];
+const CAT_EMOJI = {english:'📘',class:'🎓',study:'📚',sport:'🏸',rest:'😴',life:'🛁'};
+const DIFF_XP = {1:10,2:20,3:30};
+
+const ICONS = {
+  home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  week:'<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4M8 14l2 2 4-4"/>',
+  ach:'<rect x="3" y="9" width="18" height="12" rx="2"/><path d="M12 9v12M3 13h18M12 9c-2-4-7-5-7-2s5 2 7 2c2 0 7 1 7-2s-5-2-7 2"/>',
+  stats:'<path d="M5 20V12M12 20V5M19 20v-7"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  flame:'<path d="M12 22c4 0 7-3 7-7 0-5-5-7-5-12-3 2-5 5-5 8-1-1-2-2-2-4-2 2-2 5-2 8 0 4 3 7 7 7z" fill="#ff7a1a" stroke="#ff7a1a"/><path d="M12 22c-2 0-3-1.5-3-3.5S12 14 12 14s3 2.5 3 4.5-1 3.5-3 3.5z" fill="#ffd23f" stroke="none"/>'
+};
+const icon = k => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>`;
+
+const I18N = {
+  en:{
+    tabs:{home:'Home',week:'Tasks',ach:'Rewards',stats:'Stats'},
+    cats:{english:'English',class:'Class',study:'Study',sport:'Sport',rest:'Rest',life:'Self-care'},
+    diff:{1:'Easy',2:'Normal',3:'Hard'},
+    level:'Lv.', xp:'XP', toNext:'to next level', streakL:'day streak', doneL:'done', clearedL:'days cleared',
+    profile:'Settings', now:'Now', next:'Next', minsLeft:'left', startsIn:'starts in',
+    allDone:'Every task today is done!', freeDay:'Nothing scheduled today.',
+    laterDone:'Nothing else scheduled today.', nextDay:'Next up',
+    stamp:'Done', sealTxt:'DONE',
+    thisWeekBtn:'This week',
+    weekHint:'Tap an empty slot to add a task there. Tap a task to edit or finish it.',
+    levels:'Level ladder', badges:'Medals', locked:'Not yet', here:'now',
+    stickers:'Sticker collection', unlockAt:'Unlocks at Lv.{l}',
+    report:'This week', completion:'Completion', hoursDone:'Hours studied', perDay:'Tasks done by day', perCat:'Hours by category (done / planned)',
+    editQuest:'Edit task', addQuest:'New task', title:'Title', category:'Category', when:'When',
+    weekly:'Every week', once:'One day', repeatOn:'Repeat on', date:'Date', start:'Start', end:'End (optional)',
+    difficulty:'Difficulty', notes:'Notes', save:'Save', cancel:'Cancel', del:'Delete', delConfirm:'Tap again to delete',
+    markDone:'Mark as done', completed:'Done (undo)', futureNote:'You can finish this on the day.',
+    errTitle:'Enter a title.', errDays:'Pick at least one day.', errDate:'Pick a date.', errTime:'End time must be after the start time.',
+    name:'Your name', upload:'Upload photo', removePhoto:'Remove', language:'Language', theme:'Theme',
+    themeAuto:'Auto', themeLight:'Light', themeDark:'Dark',
+    backup:'Backup', exportBtn:'Export data', importBtn:'Import file', pasteBtn:'Paste backup text', pasteGo:'Import',
+    pastePh:'Paste the backup text here', reset:'Reset everything', resetConfirm:'Tap again to erase all data',
+    close:'Close', imported:'Data imported', badImport:'That isn\'t a Study Quest backup. Copy the whole text and try again.',
+    storageWarn:'This browser is blocking storage, so changes won\'t be saved after you close the page.',
+    undone:'Undone', levelUp:'LEVEL UP', stageClear:'ALL CLEAR', questDone:'Task done',
+    newBadge:'New medal', youAreNow:'You are now', defaultName:'Student',
+    focus:'(not counting rest)', tasksDone:'Tasks done', streakDays:'Day streak', colon:': ',
+    prevWeek:'Previous week', nextWeek:'Next week', coachLabel:'His name (who reminds you)', reminderLead:'Minutes before', daysShort:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    todayL:'Today', viewAll:'All tasks ›', doneBtn:'Done!', addFirst:'Add a task', restNow:'Free time',
+    welcome:'Your schedule is empty. Add your first task, or import a backup in settings.'
+  },
+  zh:{
+    tabs:{home:'主页',week:'任务',ach:'奖励',stats:'统计'},
+    cats:{english:'英语',class:'课程',study:'自习',sport:'运动',rest:'休息',life:'生活'},
+    diff:{1:'简单',2:'普通',3:'困难'},
+    level:'Lv.', xp:'经验', toNext:'距离升级', streakL:'天连续', doneL:'个完成', clearedL:'天通关',
+    profile:'设置', now:'正在进行', next:'下一个', minsLeft:'还剩', startsIn:'后开始',
+    allDone:'今天的任务全部完成啦！', freeDay:'今天没有安排。',
+    laterDone:'今天没有其他安排了。', nextDay:'下一个任务',
+    stamp:'打卡', sealTxt:'完成',
+    thisWeekBtn:'本周',
+    weekHint:'点空白处在那个时间加任务，点任务可以编辑或打卡。',
+    levels:'等级', badges:'勋章', locked:'未获得', here:'现在',
+    stickers:'表情包收藏', unlockAt:'Lv.{l} 解锁',
+    report:'本周成绩单', completion:'完成率', hoursDone:'学习时长', perDay:'每天完成数', perCat:'各类时长（完成 / 计划）',
+    editQuest:'编辑任务', addQuest:'新任务', title:'标题', category:'分类', when:'时间安排',
+    weekly:'每周重复', once:'只有一天', repeatOn:'重复日', date:'日期', start:'开始', end:'结束（可不填）',
+    difficulty:'难度', notes:'备注', save:'保存', cancel:'取消', del:'删除', delConfirm:'再点一次确认删除',
+    markDone:'打卡完成', completed:'已完成（撤销）', futureNote:'到当天才能打卡。',
+    errTitle:'请输入标题。', errDays:'请至少选择一天。', errDate:'请选择日期。', errTime:'结束时间要晚于开始时间。',
+    name:'你的名字', upload:'上传照片', removePhoto:'移除', language:'语言', theme:'主题',
+    themeAuto:'跟随系统', themeLight:'浅色', themeDark:'深色',
+    backup:'备份', exportBtn:'导出数据', importBtn:'导入文件', pasteBtn:'粘贴备份文字', pasteGo:'导入',
+    pastePh:'把备份文字粘贴到这里', reset:'清空所有数据', resetConfirm:'再点一次清空全部数据',
+    close:'关闭', imported:'导入成功', badImport:'这不是 Study Quest 的备份。请复制完整的文字再试一次。',
+    storageWarn:'浏览器禁止了本地存储，关闭页面后修改不会保存。',
+    undone:'已撤销', levelUp:'升级啦', stageClear:'全部通关', questDone:'任务完成',
+    newBadge:'获得新勋章', youAreNow:'你现在是', defaultName:'同学',
+    focus:'（不含休息）', tasksDone:'完成任务', streakDays:'连续打卡天数', colon:'：',
+    prevWeek:'上一周', nextWeek:'下一周', coachLabel:'提醒你的人叫什么', reminderLead:'提前几分钟', daysShort:['周日','周一','周二','周三','周四','周五','周六'],
+    todayL:'今日', viewAll:'查看全部 ›', doneBtn:'完成！', addFirst:'添加任务', restNow:'自由时间',
+    welcome:'还没有安排。添加第一个任务，或者在设置里导入备份。'
+  }
+};
+
+const LEVEL_TITLES = [
+  {min:1, en:'Rookie Learner', zh:'学习萌新'},
+  {min:3, en:'Focus Apprentice', zh:'专注学徒'},
+  {min:5, en:'Discipline Pro', zh:'自律达人'},
+  {min:8, en:'Study Ace', zh:'学霸'},
+  {min:12, en:'Legendary Scholar', zh:'传说学神'}
+];
+
+// his sticker pack, one unlocked per level
+const STICKERS = [
+  {f:'smug', lv:2}, {f:'chin', lv:3}, {f:'shock', lv:4}, {f:'angry', lv:5}
+];
+
+const CHEERS = {
+  en:[
+    'Nice work. One more done, and you\'re getting stronger.',
+    'That\'s how it\'s done. Future you says thank you.',
+    'Keep that rhythm going.',
+    'Small steps add up. Good day so far.',
+    'Look at you go. Discipline looks good on you.',
+    'Your brain just leveled up a little.',
+    'You showed up and did it. That\'s the whole secret.',
+    'Another one. You\'re stacking wins.',
+    'Proud of you. Keep going.',
+    'On to the next one.',
+    'Consistency beats talent, and you\'re being consistent.',
+    'Done. Take a breath, you earned it.'
+  ],
+  zh:[
+    '干得漂亮！又搞定一个，你在一点点变强。',
+    '就是这样！未来的你会感谢现在的你。',
+    '漂亮！保持这个节奏。',
+    '小步前进，大大收获。今天状态很好！',
+    '看看你！自律的样子真的很酷。',
+    '任务完成！你的大脑又悄悄升级了。',
+    '你来了，你做到了，这就是全部秘诀。',
+    '又一个！胜利在一点点积累。',
+    '真心为你骄傲，继续加油！',
+    '冲向下一个！',
+    '坚持胜过天赋，而你正在坚持。',
+    '搞定！喘口气，这是你应得的。'
+  ]
+};
+const CAT_CHEERS = {
+  en:{english:['Every word you learn opens another door.','Your English gets stronger every day.'],
+      class:['Class done. Knowledge +1.'],study:['Focused and finished.'],
+      sport:['Strong body, sharp mind.'],rest:['Rest is part of the plan. Recharged.'],life:['Taking care of yourself counts too.']},
+  zh:{english:['每背一个单词，就多一把打开世界的钥匙。','你的英语每天都在变强！'],
+      class:['课程攻克！知识 +1。'],study:['专注完成，很棒。'],
+      sport:['强健的身体，清醒的头脑。'],rest:['休息也是计划的一部分，满电复活！'],life:['照顾好自己也很重要。']}
+};
+
+// seal: the two characters on the medal
+const BADGES = [
+  {id:'first',seal:'起步',en:['First Step','Finish your first task'],zh:['第一步','完成第一个任务'],test:s=>s.total>=1},
+  {id:'early',seal:'早起',en:['Early Bird','Finish a task that starts before 9:00'],zh:['早起鸟','完成一个 9 点前开始的任务'],test:s=>s.early},
+  {id:'clear1',seal:'通关',en:['Stage Clear','Finish every task in one day'],zh:['首次通关','一天内完成所有任务'],test:s=>s.clears>=1},
+  {id:'t10',seal:'十件',en:['Getting Started','Finish 10 tasks'],zh:['渐入佳境','完成 10 个任务'],test:s=>s.total>=10},
+  {id:'streak3',seal:'三天',en:['On Fire','3-day streak'],zh:['火力全开','连续打卡 3 天'],test:s=>s.streak>=3},
+  {id:'eng10',seal:'词汇',en:['Word Collector','Finish 10 English tasks'],zh:['单词收集家','完成 10 次英语任务'],test:s=>s.cat.english>=10},
+  {id:'sport5',seal:'羽球',en:['Shuttle Star','Finish 5 sport sessions'],zh:['羽球之星','完成 5 次运动'],test:s=>s.cat.sport>=5},
+  {id:'lv5',seal:'自律',en:['Discipline Pro','Reach level 5'],zh:['自律达人','达到 5 级'],test:s=>s.level>=5},
+  {id:'streak7',seal:'一周',en:['Week Warrior','7-day streak'],zh:['一周勇士','连续打卡 7 天'],test:s=>s.streak>=7},
+  {id:'clear7',seal:'大师',en:['Stage Master','Clear 7 full days'],zh:['通关大师','通关 7 天'],test:s=>s.clears>=7},
+  {id:'t50',seal:'五十',en:['Task Hunter','Finish 50 tasks'],zh:['任务猎人','完成 50 个任务'],test:s=>s.total>=50},
+  {id:'eng50',seal:'英雄',en:['English Hero','Finish 50 English tasks'],zh:['英语英雄','完成 50 次英语任务'],test:s=>s.cat.english>=50},
+  {id:'t100',seal:'百胜',en:['Century','Finish 100 tasks'],zh:['百战百胜','完成 100 个任务'],test:s=>s.total>=100},
+  {id:'lv10',seal:'十级',en:['Unstoppable','Reach level 10'],zh:['势不可挡','达到 10 级'],test:s=>s.level>=10},
+  {id:'streak30',seal:'传奇',en:['Legend','30-day streak'],zh:['传奇','连续打卡 30 天'],test:s=>s.streak>=30}
+];
+
+function seedTasks(){
+  // The personal schedule is not shipped in the public code; it is imported on the phone from a backup.
+  return [];
+}
+
+/* ---------- state ---------- */
+let storageOK = true;
+let state = load();
+let ui = {tab:'home', weekOffset:0};
+let freshStamp = null;
+
+function freshState(){
+  return {seedVer:SEED_VER,profile:{name:'',avatar:'',nicks:'',coach:''},pet:{hunger:70,mood:80,last:Date.now(),voice:true},lang:'zh',theme:'light',remind:{on:true,before:5},tasks:seedTasks(),done:{},badges:{}};
+}
+function mergeSeeds(s){
+  for(const t of seedTasks()){
+    const have = s.tasks.find(x => x.id === t.id);
+    if(!have) s.tasks.push(t);
+    else if(have.titleZh && !have.date) have.repeat = [...new Set([...(have.repeat||[]), ...t.repeat])];
+  }
+  s.seedVer = SEED_VER;
+  return s;
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE);
+    if(raw){
+      const s = JSON.parse(raw);
+      if(s && Array.isArray(s.tasks)){
+        const st = Object.assign(freshState(), s);
+        return (s.seedVer || 1) < SEED_VER ? mergeSeeds(st) : st;
+      }
+    }
+  }catch(e){storageOK = false;}
+  return freshState();
+}
+function save(){
+  try{localStorage.setItem(STORE, JSON.stringify(state)); storageOK = true;}
+  catch(e){storageOK = false;}
+}
+
+const L = () => I18N[state.lang] || I18N.en;
+const locale = () => state.lang === 'zh' ? 'zh-CN' : 'en-US';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseKey = k => {const [y,m,d] = k.split('-').map(Number); return new Date(y,m-1,d);};
+const addDays = (d,n) => {const x = new Date(d); x.setDate(x.getDate()+n); return x;};
+const mins = hhmm => {if(!hhmm) return null; const [h,m] = hhmm.split(':').map(Number); return h*60+m;};
+const today = () => {const d = new Date(); d.setHours(0,0,0,0); return d;};
+const mondayOf = d => {const x = new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate() - ((x.getDay()+6)%7)); return x;};
+const taskTitle = t => (state.lang === 'zh' && t.titleZh) ? t.titleZh : t.title;
+const taskXP = t => DIFF_XP[t.diff] || 20;
+const isDone = (t,k) => state.done[t.id+'|'+k] != null;
+const timeLabel = t => t.end ? `${t.start}–${t.end}` : t.start;
+const durMin = t => t.end ? Math.max(0, mins(t.end)-mins(t.start)) : 0;
+const fmtDate = (d,opts) => d.toLocaleDateString(locale(), opts);
+const nowMin = () => {const n = new Date(); return n.getHours()*60+n.getMinutes();};
+
+function tasksFor(d){
+  const k = keyOf(d), wd = d.getDay();
+  return state.tasks
+    .filter(t => t.date ? t.date === k : (t.repeat||[]).includes(wd))
+    .sort((a,b) => mins(a.start)-mins(b.start));
+}
+
+function totalXP(){return Object.values(state.done).reduce((a,b) => a+(+b||0), 0);}
+function levelInfo(xp){
+  let lvl = 1, need = 100, rest = xp;
+  while(rest >= need){rest -= need; lvl++; need = 100 + (lvl-1)*50;}
+  return {lvl, cur:rest, need};
+}
+function levelTitle(lvl){
+  let t = LEVEL_TITLES[0];
+  for(const x of LEVEL_TITLES) if(lvl >= x.min) t = x;
+  return t[state.lang] || t.en;
+}
+
+function doneDates(){
+  const s = new Set();
+  for(const k of Object.keys(state.done)) s.add(k.split('|')[1]);
+  return s;
+}
+function streak(){
+  const dates = doneDates();
+  let d = today(), n = 0;
+  if(!dates.has(keyOf(d))) d = addDays(d,-1);
+  while(dates.has(keyOf(d))){n++; d = addDays(d,-1);}
+  return n;
+}
+function clearedCount(){
+  let n = 0;
+  for(const k of doneDates()){
+    const list = tasksFor(parseKey(k));
+    if(list.length && list.every(t => isDone(t,k))) n++;
+  }
+  return n;
+}
+function gameStats(){
+  const byId = Object.fromEntries(state.tasks.map(t => [t.id,t]));
+  const cat = Object.fromEntries(CATS.map(c => [c,0]));
+  let total = 0, early = false;
+  for(const k of Object.keys(state.done)){
+    total++;
+    const t = byId[k.split('|')[0]];
+    if(t){cat[t.cat] = (cat[t.cat]||0)+1; if(mins(t.start) < 9*60) early = true;}
+  }
+  return {total, cat, early, streak:streak(), clears:clearedCount(), level:levelInfo(totalXP()).lvl};
+}
+function checkBadges(){
+  const s = gameStats(), fresh = [];
+  for(const b of BADGES){
+    if(!state.badges[b.id] && b.test(s)){state.badges[b.id] = keyOf(today()); fresh.push(b);}
+  }
+  if(fresh.length) save();
+  return fresh;
+}
+
+/* ---------- completing ---------- */
+function toggleDone(task, k){
+  const id = task.id+'|'+k;
+  if(state.done[id] != null){
+    delete state.done[id]; save(); render(); toast('', L().undone); return;
+  }
+  if(parseKey(k) > today()) return;
+  const before = levelInfo(totalXP()).lvl;
+  const gain = taskXP(task);
+  state.done[id] = gain;
+  save();
+  const after = levelInfo(totalXP()).lvl;
+  const list = tasksFor(parseKey(k));
+  const cleared = list.every(t => isDone(t,k));
+  const fresh = checkBadges();
+  freshStamp = id;
+  render();
+  freshStamp = null;
+  celebrate(task, gain, after > before ? after : 0, cleared);
+  fresh.forEach((b,i) => setTimeout(() => toast(b.seal, `<b>${esc(L().newBadge)}</b> · ${esc(b[state.lang][0])}`), 1400 + i*800));
+}
+
+/* ---------- 安仁: one picture per mood ---------- */
+const CHAR = {normal:'idle',happy:'happy',eat:'eat',hurt:'hurt',angry:'sulk',love:'blush',sad:'hungry',hungry:'hungry',
+  sleepy:'sleepy',kiss:'kiss',remind:'remind',chubby:'chubby',left:'left',right:'right'};
+const charSrc = e => `img/anren/${CHAR[e] || 'idle'}.webp`;
+function preloadChar(){for(const f of new Set(Object.values(CHAR))){const i = new Image(); i.src = `img/anren/${f}.webp`;}}
+
+/* ---------- render: HUD & tabs ---------- */
+function avatarHTML(){
+  const name = state.profile.name || L().defaultName;
+  return state.profile.avatar ? `<img src="${esc(state.profile.avatar)}" alt="">` : esc(name.trim().charAt(0).toUpperCase() || '学');
+}
+function renderHero(){
+  const l = L(), li = levelInfo(totalXP());
+  const name = state.profile.name || l.defaultName;
+  document.getElementById('hero').innerHTML = `<div class="hud">
+    <button class="ava" id="heroAv" aria-label="${esc(l.profile)}">${avatarHTML()}</button>
+    <div style="min-width:0">
+      <div class="hname"><span>${esc(name)}</span><span class="lv">${l.level}${li.lvl}</span></div>
+      <div class="xpbar" role="img" aria-label="${li.cur} / ${li.need} ${l.xp}"><i style="width:${(li.cur/li.need*100).toFixed(1)}%"></i><span>${li.cur} / ${li.need}</span></div>
+    </div>
+    <div class="chip" title="${esc(l.streakDays)}">${icon('flame')}<span>${streak()}</span></div>
+    <button class="gear" id="profBtn" aria-label="${esc(l.profile)}">${icon('gear')}</button></div>`;
+  document.getElementById('heroAv').onclick = openProfile;
+  document.getElementById('profBtn').onclick = openProfile;
+}
+
+function renderTabs(){
+  const l = L();
+  const tabs = ['home','week','ach','stats'];
+  document.getElementById('tabs').innerHTML = `<div class="tabs-in">` +
+    tabs.map(t => `<button class="tab ${ui.tab===t?'on':''}" data-t="${t}"><b>${icon(t)}</b><span>${esc(l.tabs[t])}</span></button>`).join('') +
+    `</div><button id="addBtn" class="c3d" aria-label="${esc(l.addQuest)}" ${ui.tab!=='week'?'hidden':''}>+</button>`;
+  document.querySelectorAll('.tab').forEach(b => b.onclick = () => go(b.dataset.t));
+  document.getElementById('addBtn').onclick = () => openTask(null, {date: ui.selDay && isPhone() ? ui.selDay : keyOf(today())});
+}
+function go(tab){
+  try{window.speechSynthesis?.cancel();}catch(e){}
+  ui.tab = tab; if(tab === 'week') ui.selDay = null;
+  render(); window.scrollTo(0,0);
+}
+
+/* ---------- render: home (the room) ---------- */
+function fmtDur(m){
+  const h = Math.floor(m/60), r = m%60;
+  if(state.lang === 'zh') return h ? `${h}小时${r?r+'分钟':''}` : `${r}分钟`;
+  return h ? `${h}h${r?' '+r+'m':''}` : `${r}m`;
+}
+function nowCardHTML(){
+  const l = L(), d = today(), k = keyOf(d), list = tasksFor(d), nm = nowMin();
+  if(!state.tasks.length) return `<div class="nowcard card"><div><h3 style="font-size:16px">${esc(l.welcome)}</h3></div>
+    <button class="c3d go big" data-add="1">${esc(l.addFirst)}</button></div>`;
+  const dn = list.filter(t => isDone(t,k)).length;
+  const foot = `<div class="nowfoot"><span class="num" style="font-weight:800">${l.todayL} ${dn}/${list.length}</span>
+    <div class="pips">${list.map(t => `<i class="${isDone(t,k)?'on':''}"></i>`).join('')}</div><button class="linkbtn" data-go="week">${esc(l.viewAll)}</button></div>`;
+  if(!list.length){
+    let d2 = addDays(d,1), nx = null;
+    for(let i=0;i<7 && !nx;i++,d2=addDays(d2,1)){const nl = tasksFor(d2); if(nl.length) nx = [d2, nl[0]];}
+    return `<div class="nowcard card"><div><div class="lab">${esc(l.freeDay)}</div>
+      ${nx ? `<h3>${esc(taskTitle(nx[1]))}</h3><div class="tm">${l.nextDay} · ${esc(fmtDate(nx[0],{weekday:'short',month:'numeric',day:'numeric'}))} ${nx[1].start}</div>` : ''}</div>
+      <span></span><div class="nowfoot"><span class="spacer"></span><button class="linkbtn" data-go="week">${esc(l.viewAll)}</button></div></div>`;
+  }
+  if(dn === list.length) return `<div class="nowcard card"><div><div class="lab" style="color:var(--good)">${esc(l.stageClear)}</div><h3>${esc(l.allDone)}</h3></div><span></span>${foot}</div>`;
+  const cur = list.find(t => t.end && !isDone(t,k) && mins(t.start) <= nm && nm < mins(t.end));
+  // the task to show: the one happening now, else the earliest unfinished one that hasn't ended, else any unfinished one
+  const t = cur || list.find(x => !isDone(x,k) && (x.end ? mins(x.end) : mins(x.start)+30) > nm) || list.find(x => !isDone(x,k));
+  let lab, tm;
+  if(cur){lab = `<i class="live"></i>${l.now}`; tm = `${timeLabel(t)} · ${l.minsLeft} ${fmtDur(mins(t.end)-nm)}`;}
+  else if(mins(t.start) > nm){
+    const wait = fmtDur(mins(t.start)-nm);
+    lab = `<i style="--cc:var(--c-${t.cat})"></i>${l.next}`; tm = `${timeLabel(t)} · ${state.lang==='zh' ? wait+l.startsIn : l.startsIn+' '+wait}`;
+  } else {lab = `<i style="--cc:var(--c-${t.cat})"></i>${l.cats[t.cat]}`; tm = timeLabel(t);}
+  return `<div class="nowcard card" style="--cc:var(--c-${t.cat})"><div style="min-width:0"><div class="lab">${lab}</div><h3>${esc(taskTitle(t))}</h3>
+    <div class="tm num">${esc(tm)} · +${taskXP(t)}</div></div>
+    <button class="c3d go big" data-done="${t.id}" data-k="${k}">${esc(l.doneBtn)}</button>${foot}</div>`;
+}
+function renderHome(){
+  const P = PET[state.lang], l = L(), p = petNow(), list = tasksFor(today()), k = keyOf(today());
+  let line = state.tasks.length ? coachGreeting(list, k, nowMin()) : fill(pick(P.hello), {n:nick()});
+  if(p.hunger < 30) line = P.hungry; else if(p.mood < 30) line = P.sad;
+  const bar = (v, id) => `<div class="track" style="--cc:${meterColor(id,v)}"><i id="${id}" style="width:${v}%"></i></div>`;
+  const rb = (kind, emo, label, cls='') => `<button class="rbtn ${cls}" data-pet="${kind}"><b>${emo}</b><span>${esc(label)}</span></button>`;
+  return `<section class="home">
+    <div class="meters"><div class="meter">${esc(P.hungerL)} ${bar(p.hunger,'mH')}</div><div class="meter">${esc(P.moodL)} ${bar(p.mood,'mM')}</div></div>
+    <div class="room">
+      <div class="bubble" id="petSay">${esc(line)}</div>
+      <div class="side">${rb('feed','🍙',P.feedL)}${rb('hug','🤗',P.hugL,'love')}${rb('pat','✋',P.patL)}</div>
+      <div class="charwrap"><div id="pet" class="pet idle" data-pet="poke" role="button" aria-label="${esc(coachName())}"><img src="${charSrc(petIdleExpr())}" alt="${esc(coachName())}"></div><div id="petfx"></div></div>
+      <div class="side">${rb('kiss','😘',P.kissL,'love')}${rb('hit','👊',P.hitL,'hit')}<a class="rbtn" href="stress.html" style="text-decoration:none"><b>💥</b><span>${esc(P.stressS)}</span></a></div>
+      <div class="foods" id="foods" hidden>${FOODS.map(f => `<button data-pet="feed" data-food="${f}" aria-label="${esc(P.feedL)} ${f}">${f}</button>`).join('')}</div>
+    </div>
+    <div id="nowcard">${nowCardHTML()}</div>
+  </section>`;
+}
+
+/* ---------- render: task list rows ---------- */
+function statusLine(list, k){
+  const l = L(), nm = nowMin();
+  if(!list.length) return `<span class="muted">${state.tasks.length ? l.freeDay : ''}</span>`;
+  if(list.every(t => isDone(t,k))) return `<b style="color:var(--good)">${l.allDone}</b>`;
+  const cur = list.find(t => t.end && !isDone(t,k) && mins(t.start) <= nm && nm < mins(t.end));
+  if(cur) return `<span>${l.now}${l.colon}<b>${esc(taskTitle(cur))}</b> <span class="muted">· ${l.minsLeft} ${fmtDur(mins(cur.end)-nm)}</span></span>`;
+  const nx = list.find(t => mins(t.start) > nm && !isDone(t,k));
+  if(nx){
+    const wait = fmtDur(mins(nx.start)-nm);
+    return `<span>${l.next}${l.colon}<b>${esc(taskTitle(nx))}</b> <span class="muted">· ${state.lang==='zh' ? wait+l.startsIn : l.startsIn+' '+wait}</span></span>`;
+  }
+  return `<span class="muted">${l.laterDone}</span>`;
+}
+function taskRow(t, k, nm, isToday){
+  const l = L(), dn = isDone(t,k);
+  const now = isToday && t.end && mins(t.start) <= nm && nm < mins(t.end);
+  const future = parseKey(k) > today();
+  const id = t.id+'|'+k;
+  const right = dn
+    ? `<button class="seal ${freshStamp===id?'fresh':''}" data-done="${t.id}" data-k="${k}" aria-label="${esc(l.completed)}">${l.sealTxt}</button>`
+    : `<button class="stamp" data-done="${t.id}" data-k="${k}" ${future?'disabled':''} aria-label="${esc(l.markDone)}">${l.stamp}</button>`;
+  return `<div class="trow ${dn?'done':''} ${now?'now':''}" style="--cc:var(--c-${t.cat})">
+    <div class="t-time">${t.start}${t.end?`<small>${t.end}</small>`:''}</div>
+    <div class="t-body" data-edit="${t.id}" data-k="${k}">
+      <div class="t-title"><span>${esc(taskTitle(t))}</span></div>
+      <div class="t-meta"><span class="cat">${l.cats[t.cat]}</span><span class="num">+${taskXP(t)}</span>${t.notes?`<span>${esc(t.notes)}</span>`:''}</div>
+    </div>
+    ${right}
+  </div>`;
+}
+
+/* ---------- render: week ---------- */
+const PX = 56;
+function weekNav(){
+  const l = L(), ws = addDays(mondayOf(today()), ui.weekOffset*7), we = addDays(ws,6);
+  const range = state.lang === 'zh'
+    ? `${ws.getMonth()+1}月${ws.getDate()}日 – ${we.getMonth()+1}月${we.getDate()}日`
+    : `${fmtDate(ws,{month:'short',day:'numeric'})} – ${fmtDate(we,{month:'short',day:'numeric'})}`;
+  return `<div class="weeknav"><h2>${esc(range)}</h2>
+    <button class="ghost" data-wk="-1" aria-label="${esc(l.prevWeek)}">‹</button>
+    <button class="ghost" data-wk="0" ${ui.weekOffset===0?'disabled':''}>${l.thisWeekBtn}</button>
+    <button class="ghost" data-wk="1" aria-label="${esc(l.nextWeek)}">›</button></div>`;
+}
+function layoutDay(list){
+  const items = list.map(t => {const s = mins(t.start); return {t, s, e: t.end ? Math.max(mins(t.end), s+25) : s+30};});
+  items.sort((a,b) => a.s-b.s || b.e-a.e);
+  const clusters = []; let cur = [], curEnd = -1;
+  for(const it of items){
+    if(cur.length && it.s >= curEnd){clusters.push(cur); cur = []; curEnd = -1;}
+    cur.push(it); curEnd = Math.max(curEnd, it.e);
+  }
+  if(cur.length) clusters.push(cur);
+  for(const cl of clusters){
+    const lanes = [];
+    for(const it of cl){
+      let i = lanes.findIndex(end => end <= it.s);
+      if(i < 0){i = lanes.length; lanes.push(0);}
+      lanes[i] = it.e; it.lane = i;
+    }
+    cl.forEach(it => it.lanes = lanes.length);
+  }
+  return items;
+}
+const isPhone = () => matchMedia('(max-width:760px)').matches;
+function renderWeekPhone(days){
+  const l = L(), tk = keyOf(today()), keys = days.map(keyOf);
+  if(!keys.includes(ui.selDay)) ui.selDay = keys.includes(tk) ? tk : keys[0];
+  const sel = parseKey(ui.selDay), list = tasksFor(sel), nm = nowMin();
+  const strip = days.map(d => {
+    const k = keyOf(d), dl = tasksFor(d), dn = dl.filter(t => isDone(t,k)).length;
+    const mark = !dl.length ? '' : dn === dl.length ? `<i class="clear">${state.lang==='zh'?'通关':'✓'}</i>` : `<i>${dn}/${dl.length}</i>`;
+    return `<button class="dchip ${k===tk?'today':''} ${k===ui.selDay?'sel':''}" data-sel="${k}">${l.daysShort[d.getDay()]}<b>${d.getDate()}</b>${mark || '<i></i>'}</button>`;
+  }).join('');
+  const dayTxt = state.lang === 'zh' ? `${sel.getMonth()+1}月${sel.getDate()}日 ${l.daysShort[sel.getDay()]}` : fmtDate(sel,{weekday:'long',month:'long',day:'numeric'});
+  return weekNav() + `<div class="daystrip">${strip}</div>
+    <div class="dayline"><h3>${esc(dayTxt)}</h3><span class="num muted">${list.filter(t => isDone(t,ui.selDay)).length}/${list.length}</span></div>
+    ${ui.selDay === tk && list.length ? `<div class="status">${statusLine(list, tk)}</div>` : ''}
+    ${list.length ? `<div class="sheet">${list.map(t => taskRow(t,ui.selDay,nm,ui.selDay===tk)).join('')}</div>` : `<div class="empty">${l.freeDay}</div>`}`;
+}
+function renderWeek(){
+  const l = L(), ws = addDays(mondayOf(today()), ui.weekOffset*7), tk = keyOf(today());
+  const days = [...Array(7)].map((_,i) => addDays(ws,i));
+  if(isPhone()) return renderWeekPhone(days);
+  const lists = days.map(d => layoutDay(tasksFor(d)));
+  let minH = 7, maxH = 24;
+  lists.flat().forEach(it => {minH = Math.min(minH, Math.floor(it.s/60)); maxH = Math.max(maxH, Math.ceil(it.e/60));});
+  maxH = Math.min(maxH, 24);
+  const H = (maxH-minH)*PX, nm = nowMin();
+  let html = weekNav() + `<div class="gridwrap"><div class="wgrid"><div class="whead"></div>`;
+  days.forEach(d => {
+    const k = keyOf(d), list = tasksFor(d), dn = list.filter(t => isDone(t,k)).length;
+    html += `<div class="whead ${k===tk?'today':''}">${l.daysShort[d.getDay()]}<b>${d.getMonth()+1}/${d.getDate()}</b>
+      <span class="num">${list.length ? dn+'/'+list.length : '—'}</span></div>`;
+  });
+  html += `<div class="tcol" style="height:${H}px">`;
+  for(let h=minH+1; h<maxH; h++) html += `<div style="top:${(h-minH)*PX}px">${pad(h)}:00</div>`;
+  html += `</div>`;
+  days.forEach((d,i) => {
+    const k = keyOf(d);
+    html += `<div class="dcol ${k===tk?'today':''}" data-day="${k}" data-min="${minH}" style="height:${H}px">`;
+    for(let h=minH+1; h<maxH; h++) html += `<div class="hline" style="top:${(h-minH)*PX}px"></div>`;
+    for(const it of lists[i]){
+      const top = (it.s - minH*60)/60*PX, ht = (it.e-it.s)/60*PX - 2, w = 100/it.lanes;
+      html += `<div class="blk ${isDone(it.t,k)?'done':''}" data-edit="${it.t.id}" data-k="${k}"
+        style="--cc:var(--c-${it.t.cat});top:${top}px;height:${ht}px;left:calc(${w*it.lane}% + 2px);width:calc(${w}% - 4px)"
+        title="${esc(timeLabel(it.t)+' '+taskTitle(it.t))}"><b>${esc(taskTitle(it.t))}</b>${ht>34?`<span class="num">${esc(timeLabel(it.t))}</span>`:''}</div>`;
+    }
+    if(k===tk && nm >= minH*60 && nm <= maxH*60) html += `<div class="nowline" style="top:${(nm-minH*60)/60*PX}px"></div>`;
+    html += `</div>`;
+  });
+  html += `</div></div><div class="legend">${CATS.map(c => `<span class="cat" style="--cc:var(--c-${c})">${l.cats[c]}</span>`).join('')}</div>
+    <div class="hint">${l.weekHint}</div>`;
+  return html;
+}
+
+/* ---------- render: rewards ---------- */
+function renderAch(){
+  const l = L(), li = levelInfo(totalXP());
+  const ladder = LEVEL_TITLES.map((t,i) => {
+    const next = LEVEL_TITLES[i+1];
+    const on = li.lvl >= t.min && (!next || li.lvl < next.min), past = next && li.lvl >= next.min;
+    return `<li class="${on?'on':past?'past':''}"><span class="lvn num">${l.level}${t.min}${next?'–'+(next.min-1):'+'}</span><b>${esc(t[state.lang])}</b>${on?`<span class="here">${l.here}</span>`:''}</li>`;
+  }).join('');
+  const stickers = STICKERS.map(s => {
+    const got = li.lvl >= s.lv;
+    return `<div class="stk ${got?'':'locked'}"><img src="img/stickers/${s.f}.webp" alt="" loading="lazy">${got ? '' : `<span class="lockt">${esc(fill(l.unlockAt,{l:s.lv}))}</span>`}</div>`;
+  }).join('');
+  const badges = BADGES.map(b => {
+    const got = state.badges[b.id];
+    return `<div class="badge ${got?'got':'locked'}"><div class="medal">${b.seal}</div><b>${esc(b[state.lang][0])}</b>
+      <p>${esc(b[state.lang][1])}</p><p class="num">${got ? esc(got.replace(/-/g,'.')) : l.locked}</p></div>`;
+  }).join('');
+  return `<h3 class="sec-title">${l.stickers} <small>${STICKERS.filter(s => li.lvl >= s.lv).length}/${STICKERS.length}</small></h3><div class="stickers">${stickers}</div>
+    <h3 class="sec-title">${l.badges} <small>${Object.keys(state.badges).length}/${BADGES.length}</small></h3><div class="badges">${badges}</div>
+    <h3 class="sec-title">${l.levels}</h3><ul class="ladder card">${ladder}</ul>`;
+}
+
+/* ---------- render: weekly report ---------- */
+function renderStats(){
+  const l = L(), ws = addDays(mondayOf(today()), ui.weekOffset*7);
+  const days = [...Array(7)].map((_,i) => addDays(ws,i));
+  let total = 0, done = 0, doneMin = 0;
+  const plan = Object.fromEntries(CATS.map(c => [c,0])), got = Object.fromEntries(CATS.map(c => [c,0]));
+  const perDay = days.map(d => {
+    const k = keyOf(d), list = tasksFor(d);
+    let dn = 0;
+    for(const t of list){
+      total++; plan[t.cat] += durMin(t);
+      if(isDone(t,k)){dn++; done++; got[t.cat] += durMin(t); if(t.cat !== 'rest') doneMin += durMin(t);}
+    }
+    return {d, dn, n:list.length};
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  const hrs = m => (m/60).toFixed(1)+'h';
+  const maxN = Math.max(1, ...perDay.map(p => p.n));
+  return weekNav() + `
+    <h3 class="sec-title">${l.report}</h3>
+    <div class="report">
+      <div class="rrow"><span>${l.completion}</span><span class="lead"></span><b>${pct}%</b></div>
+      <div class="rrow"><span>${l.tasksDone}</span><span class="lead"></span><b>${done}/${total}</b></div>
+      <div class="rrow"><span>${l.hoursDone} <small class="muted">${l.focus}</small></span><span class="lead"></span><b>${hrs(doneMin)}</b></div>
+      <div class="rrow"><span>${l.streakDays}</span><span class="lead"></span><b>${streak()}</b></div>
+    </div>
+    <h3 class="sec-title">${l.perDay}</h3>
+    <div class="chartcard">
+    <div class="cols">${perDay.map(p => `<div class="col"><small>${p.n ? p.dn+'/'+p.n : ''}</small>
+      <div class="bar ${!p.dn?'zero':p.dn===p.n?'full':''}" style="height:${p.n ? Math.max(2, p.dn/maxN*100) : 2}%"></div></div>`).join('')}</div>
+    <div class="axis"></div>
+    <div class="cols" style="height:auto;margin-top:4px">${perDay.map(p => `<div class="col"><span>${l.daysShort[p.d.getDay()]}</span></div>`).join('')}</div></div>
+    <h3 class="sec-title">${l.perCat}</h3>
+    <div class="chartcard"><div class="bars">${CATS.filter(c => plan[c]).map(c => `<div class="barrow" style="--cc:var(--c-${c})"><span class="cat">${l.cats[c]}</span>
+      <div class="track"><i style="width:${got[c]/plan[c]*100}%"></i></div><span class="v">${hrs(got[c])} / ${hrs(plan[c])}</span></div>`).join('') || `<div class="hint">—</div>`}</div></div>`;
+}
+
+/* ---------- main render ---------- */
+function render(){
+  document.documentElement.lang = state.lang === 'zh' ? 'zh-CN' : 'en';
+  if(state.theme === 'auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', state.theme);
+  document.body.classList.toggle('wide', ui.tab === 'week' && !isPhone());
+  document.body.classList.toggle('home', ui.tab === 'home');
+  document.getElementById('warn').innerHTML = storageOK ? '' : `<div class="warn">${L().storageWarn}</div>`;
+  renderHero(); renderTabs();
+  const v = document.getElementById('view');
+  v.innerHTML = ui.tab==='home' ? renderHome() : ui.tab==='week' ? renderWeek() : ui.tab==='ach' ? renderAch() : renderStats();
+}
+// light refresh for the home screen, so the clock moves without resetting what he is doing
+function refreshHome(){
+  const nc = document.getElementById('nowcard');
+  if(nc) nc.innerHTML = nowCardHTML();
+}
+
+const view = document.getElementById('view');
+view.addEventListener('click', e => {
+  const pa = e.target.closest('[data-pet]');
+  if(pa){petAction(pa.dataset.pet, pa.dataset.food); return;}
+  const g = e.target.closest('[data-go]');
+  if(g){go(g.dataset.go); return;}
+  if(e.target.closest('[data-add]')){openTask(null, {date:keyOf(today())}); return;}
+  const wk = e.target.closest('[data-wk]');
+  if(wk){const n = +wk.dataset.wk; ui.weekOffset = n === 0 ? 0 : ui.weekOffset + n; ui.selDay = null; render(); return;}
+  const sd = e.target.closest('[data-sel]');
+  if(sd){ui.selDay = sd.dataset.sel; render(); return;}
+  const dn = e.target.closest('[data-done]');
+  if(dn){const t = state.tasks.find(x => x.id === dn.dataset.done); if(t) toggleDone(t, dn.dataset.k); return;}
+  const ed = e.target.closest('[data-edit]');
+  if(ed){const t = state.tasks.find(x => x.id === ed.dataset.edit); if(t) openTask(t, {ctx: ed.dataset.k}); return;}
+  const col = e.target.closest('.dcol');
+  if(col){
+    const r = col.getBoundingClientRect();
+    let m = +col.dataset.min*60 + Math.round((e.clientY - r.top)/PX*2)/2*60;
+    m = Math.min(m, 23*60+30);
+    openTask(null, {date: col.dataset.day, start: `${pad(Math.floor(m/60))}:${pad(m%60)}`});
+  }
+});
+
+/* ---------- task dialog ---------- */
+const taskDlg = document.getElementById('taskDlg');
+function openTask(task, opts={}){
+  const l = L();
+  const t = task || {id:null,title:'',cat:'study',start:opts.start||'09:00',end:'',repeat:[],date:opts.date||keyOf(today()),diff:2,notes:''};
+  const weekly = !t.date;
+  const ctx = task && opts.ctx;
+  let ctxHTML = '';
+  if(ctx){
+    const d = parseKey(ctx), dn = isDone(t,ctx), future = d > today();
+    ctxHTML = `<div class="ctx"><span class="num">${esc(ctx.replace(/-/g,'.'))} ${l.daysShort[d.getDay()]}</span>
+      ${future ? `<span class="hint" style="margin:0">${l.futureNote}</span>` :
+        `<button type="button" class="${dn?'ghost':'c3d go'}" id="ctxDone">${dn ? l.completed : l.markDone+' +'+taskXP(t)}</button>`}</div>`;
+  }
+  const dayOrder = [1,2,3,4,5,6,0];
+  document.getElementById('taskForm').innerHTML = `
+    <h3>${task ? l.editQuest : l.addQuest}</h3>
+    ${ctxHTML}
+    <div class="field"><label for="fTitle">${l.title}</label><input id="fTitle" name="title" maxlength="80" value="${esc(task ? taskTitle(t) : '')}" required></div>
+    <div class="row">
+      <div class="field"><label for="fCat">${l.category}</label><select id="fCat" name="cat">${CATS.map(c => `<option value="${c}" ${t.cat===c?'selected':''}>${l.cats[c]}</option>`).join('')}</select></div>
+      <div class="field"><label for="fDiff">${l.difficulty}</label><select id="fDiff" name="diff">${[1,2,3].map(n => `<option value="${n}" ${+t.diff===n?'selected':''}>${l.diff[n]} +${DIFF_XP[n]}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><label>${l.when}</label>
+      <div class="seg"><label><input type="radio" name="mode" value="weekly" ${weekly?'checked':''}><span>${l.weekly}</span></label>
+      <label><input type="radio" name="mode" value="once" ${!weekly?'checked':''}><span>${l.once}</span></label></div></div>
+    <div class="field" id="fWeekly"><label>${l.repeatOn}</label><div class="days">
+      ${dayOrder.map(d => `<label><input type="checkbox" name="rep" value="${d}" ${(t.repeat||[]).includes(d)?'checked':''}><span>${l.daysShort[d]}</span></label>`).join('')}</div></div>
+    <div class="field" id="fOnce"><label for="fDate">${l.date}</label><input type="date" id="fDate" name="date" value="${esc(t.date || keyOf(today()))}"></div>
+    <div class="row">
+      <div class="field"><label for="fStart">${l.start}</label><input type="time" id="fStart" name="start" value="${esc(t.start)}" required></div>
+      <div class="field"><label for="fEnd">${l.end}</label><input type="time" id="fEnd" name="end" value="${esc(t.end)}"></div>
+    </div>
+    <div class="field"><label for="fNotes">${l.notes}</label><textarea id="fNotes" name="notes" rows="2" maxlength="200">${esc(t.notes)}</textarea></div>
+    <div class="err" id="tErr"></div>
+    <div class="actions">
+      ${task ? `<button type="button" class="ghost danger" id="tDel">${l.del}</button>` : ''}
+      <span class="spacer"></span>
+      <button type="button" class="ghost" id="tCancel">${l.cancel}</button>
+      <button type="submit" class="primary">${l.save}</button>
+    </div>`;
+  const f = document.getElementById('taskForm');
+  const syncMode = () => {
+    const w = f.mode.value === 'weekly';
+    document.getElementById('fWeekly').hidden = !w;
+    document.getElementById('fOnce').hidden = w;
+  };
+  f.querySelectorAll('[name=mode]').forEach(r => r.onchange = syncMode);
+  syncMode();
+  document.getElementById('tCancel').onclick = () => taskDlg.close();
+  const del = document.getElementById('tDel');
+  if(del) del.onclick = () => {
+    if(del.dataset.armed){
+      state.tasks = state.tasks.filter(x => x.id !== task.id);
+      save(); taskDlg.close(); render();
+    } else {del.dataset.armed = '1'; del.textContent = l.delConfirm;}
+  };
+  const cd = document.getElementById('ctxDone');
+  if(cd) cd.onclick = () => {taskDlg.close(); toggleDone(task, ctx);};
+  f.onsubmit = ev => {
+    ev.preventDefault();
+    const err = document.getElementById('tErr');
+    const title = f.title.value.trim();
+    const mode = f.mode.value;
+    const rep = [...f.querySelectorAll('[name=rep]:checked')].map(x => +x.value);
+    const start = f.start.value, end = f.end.value;
+    if(!title) return err.textContent = l.errTitle;
+    if(mode === 'weekly' && !rep.length) return err.textContent = l.errDays;
+    if(mode === 'once' && !f.date.value) return err.textContent = l.errDate;
+    if(!start) return;
+    if(end && mins(end) <= mins(start)) return err.textContent = l.errTime;
+    const data = {cat:f.cat.value, diff:+f.diff.value, start, end, notes:f.notes.value.trim(),
+      repeat: mode==='weekly' ? rep : [], date: mode==='once' ? f.date.value : null};
+    if(task){
+      if(title !== taskTitle(task)){task.title = title; delete task.titleZh;}
+      Object.assign(task, data);
+    } else {
+      state.tasks.push(Object.assign({id:'t'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), title}, data));
+    }
+    save(); taskDlg.close(); render();
+  };
+  taskDlg.showModal();
+}
+
+/* ---------- settings dialog ---------- */
+const profDlg = document.getElementById('profDlg');
+function openProfile(){
+  const l = L(), C = COACH[state.lang], P = PET[state.lang];
+  document.getElementById('profBody').innerHTML = `
+    <h3>${l.profile}</h3>
+    <div class="prof-av"><div class="ava">${avatarHTML()}</div>
+      <div class="btnrow"><button class="primary" id="pUp">${l.upload}</button>
+      ${state.profile.avatar ? `<button class="ghost" id="pRm">${l.removePhoto}</button>` : ''}</div></div>
+    <div class="field"><label for="pName">${l.name}</label><input id="pName" maxlength="30" value="${esc(state.profile.name)}" placeholder="${esc(l.defaultName)}"></div>
+    <div class="field"><label for="pCoach">${l.coachLabel}</label><input id="pCoach" maxlength="30" value="${esc(state.profile.coach)}" placeholder="${esc(COACH_DEFAULT)}"></div>
+    <div class="field"><label for="pNicks">${C.nicks}</label><input id="pNicks" maxlength="120" value="${esc(state.profile.nicks)}" placeholder="baby, 宝贝, 学霸"></div>
+    <div class="row">
+      <div class="field"><label for="pLang">${l.language}</label><select id="pLang"><option value="en" ${state.lang==='en'?'selected':''}>English</option><option value="zh" ${state.lang==='zh'?'selected':''}>中文</option></select></div>
+      <div class="field"><label for="pTheme">${l.theme}</label><select id="pTheme">${['auto','light','dark'].map(x => `<option value="${x}" ${state.theme===x?'selected':''}>${l['theme'+x[0].toUpperCase()+x.slice(1)]}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><label class="switch"><input type="checkbox" id="pVoice" ${state.pet.voice?'checked':''}> ${P.voice}</label></div>
+    <div class="field"><label>${C.remind}</label>
+      <label class="switch"><input type="checkbox" id="pRem" ${state.remind.on?'checked':''}> ${C.before}
+        <select id="pBefore" style="width:auto" aria-label="${esc(l.reminderLead)}">${[0,5,10,15,30].map(m => `<option value="${m}" ${+state.remind.before===m?'selected':''}>${m} min</option>`).join('')}</select></label>
+      ${'Notification' in window ? (Notification.permission === 'granted' ? `<div class="hint">${C.notifOn}</div>` :
+        Notification.permission === 'denied' ? `<div class="hint">${C.notifBlocked}</div>` :
+        `<div class="btnrow"><button class="ghost" id="pNotif">${C.notif}</button></div>`) : ''}
+      <div class="hint">${C.remindNote}</div>
+      <div class="btnrow"><button class="c3d" id="pCal">${C.calBtn}</button></div>
+      <div class="hint">${C.calNote}</div></div>
+    <div class="field"><label>${l.backup}</label>
+      <div class="btnrow"><button class="ghost" id="pExp">${l.exportBtn}</button><button class="ghost" id="pImp">${l.importBtn}</button><button class="ghost" id="pPaste">${l.pasteBtn}</button></div>
+      <div id="pasteBox" hidden style="margin-top:8px"><textarea id="pasteTxt" rows="4" placeholder="${esc(l.pastePh)}" aria-label="${esc(l.pastePh)}"></textarea>
+        <div class="btnrow"><button class="primary" id="pasteGo">${l.pasteGo}</button></div></div>
+      <div class="err" id="pErr" role="alert"></div></div>
+    <div class="actions"><button class="ghost danger" id="pReset">${l.reset}</button><span class="spacer"></span><button class="primary" id="pClose">${l.close}</button></div>`;
+  document.getElementById('pUp').onclick = () => document.getElementById('avatarFile').click();
+  const rm = document.getElementById('pRm');
+  if(rm) rm.onclick = () => {state.profile.avatar = ''; save(); render(); openProfile();};
+  document.getElementById('pName').oninput = e => {state.profile.name = e.target.value.trim(); save(); renderHero();};
+  document.getElementById('pLang').onchange = e => {state.lang = e.target.value; save(); render(); openProfile();};
+  document.getElementById('pTheme').onchange = e => {state.theme = e.target.value; save(); render();};
+  document.getElementById('pCoach').oninput = e => {state.profile.coach = e.target.value; save();};
+  document.getElementById('pNicks').oninput = e => {state.profile.nicks = e.target.value; save();};
+  document.getElementById('pVoice').onchange = e => {state.pet.voice = e.target.checked; save();};
+  document.getElementById('pCal').onclick = exportCalendar;
+  document.getElementById('pRem').onchange = e => {state.remind.on = e.target.checked; save();};
+  document.getElementById('pBefore').onchange = e => {state.remind.before = +e.target.value; save();};
+  const pn = document.getElementById('pNotif');
+  if(pn) pn.onclick = () => Notification.requestPermission().then(() => openProfile());
+  document.getElementById('pExp').onclick = exportData;
+  document.getElementById('pImp').onclick = () => document.getElementById('importFile').click();
+  document.getElementById('pPaste').onclick = () => {const b = document.getElementById('pasteBox'); b.hidden = !b.hidden; if(!b.hidden) document.getElementById('pasteTxt').focus();};
+  document.getElementById('pasteGo').onclick = () => importText(document.getElementById('pasteTxt').value);
+  const rs = document.getElementById('pReset');
+  rs.onclick = () => {
+    if(rs.dataset.armed){const lang = state.lang; state = freshState(); state.lang = lang; save(); profDlg.close(); render();}
+    else {rs.dataset.armed = '1'; rs.textContent = l.resetConfirm;}
+  };
+  document.getElementById('pClose').onclick = () => profDlg.close();
+  if(!profDlg.open) profDlg.showModal();
+}
+
+document.getElementById('avatarFile').onchange = e => {
+  const file = e.target.files[0]; e.target.value = '';
+  if(!file) return;
+  const img = new Image();
+  img.onload = () => {
+    const S = 256, c = document.createElement('canvas'); c.width = c.height = S;
+    const m = Math.min(img.width, img.height);
+    c.getContext('2d').drawImage(img, (img.width-m)/2, (img.height-m)/2, m, m, 0, 0, S, S);
+    state.profile.avatar = c.toDataURL('image/jpeg', .85);
+    URL.revokeObjectURL(img.src);
+    save(); render(); openProfile();
+  };
+  img.src = URL.createObjectURL(file);
+};
+
+function exportData(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `study-quest-backup-${keyOf(today())}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function importText(txt){
+  try{
+    const s = JSON.parse(String(txt).trim());
+    if(!s || !Array.isArray(s.tasks)) throw 0;
+    state = Object.assign(freshState(), s); save(); profDlg.close(); render(); toast('', L().imported);
+  }catch(e){
+    const pe = profDlg.open && document.getElementById('pErr');
+    if(pe) pe.textContent = L().badImport; else toast('', L().badImport);
+  }
+}
+document.getElementById('importFile').onchange = e => {
+  const file = e.target.files[0]; e.target.value = '';
+  if(file) file.text().then(importText);
+};
+
+/* ---------- celebration & effects ---------- */
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const REWARDS = {
+  en:{
+    small:[['😘','A big kiss for you, {n}!'],['🤗','Come here, {n}. Big hug!'],['🫶','Sending you all my love, {n}.'],
+      ['🧋','Here\'s a bubble tea, {n}. You earned it!'],['🍓','A bowl of strawberries for my hardworking {n}!'],
+      ['🌷','A little flower for you, {n}.'],['🍫','Chocolate time! Well done, {n}.'],['⭐','A gold star for {n}!'],
+      ['🍦','Ice cream break, {n}? You deserve it.'],['💌','A love letter: "{n}, you\'re amazing."']],
+    big:[['🎁','Gift box unlocked! Inside: a giant hug, a kiss, and my proudest smile for you, {n}!'],
+      ['💐','A whole bouquet for you, {n}. You crushed it!'],['🎂','A celebration cake just for {n}!'],
+      ['🧸','A teddy bear and the biggest hug ever, {n}!'],['👑','A crown for my champion {n}!']]
+  },
+  zh:{
+    small:[['😘','给 {n} 一个大大的亲亲！'],['🤗','过来，{n}，抱一个！'],['🫶','把满满的爱送给你，{n}。'],
+      ['🧋','请 {n} 喝一杯奶茶，这是你应得的！'],['🍓','给努力的 {n} 一碗草莓！'],
+      ['🌷','送 {n} 一朵小花。'],['🍫','巧克力时间！做得好，{n}。'],['⭐','给 {n} 一颗小金星！'],
+      ['🍦','{n}，来个冰淇淋休息一下？你值得。'],['💌','一封情书：“{n}，你真的超棒。”']],
+    big:[['🎁','礼物盒已解锁！里面有：一个超大拥抱、一个亲亲，还有我最骄傲的笑容，送给 {n}！'],
+      ['💐','一整束花送给 {n}，你太厉害了！'],['🎂','专门为 {n} 准备的庆祝蛋糕！'],
+      ['🧸','一只小熊加上最大的拥抱，送给 {n}！'],['👑','给我的冠军 {n} 戴上皇冠！']]
+  }
+};
+let celTimer;
+function celebrate(task, gain, newLevel, cleared){
+  const l = L();
+  const pool = CHEERS[state.lang].concat((CAT_CHEERS[state.lang][task.cat]||[]), (CAT_CHEERS[state.lang][task.cat]||[]));
+  let sealTxt = l.questDone, msg = pick(pool);
+  if(cleared){sealTxt = l.stageClear; msg = l.allDone;}
+  if(newLevel){sealTxt = l.levelUp; msg = `${l.youAreNow} ${l.level}${newLevel} ${levelTitle(newLevel)}`;}
+  const R = REWARDS[state.lang], big = newLevel || cleared;
+  const [re, rt] = pick(big ? R.big : R.small);
+  const pose = big ? 'happy' : re === '😘' ? 'kiss' : re === '🤗' || re === '🫶' ? 'love' : pick(['happy','kiss','love']);
+  const el = document.getElementById('celebrate');
+  el.innerHTML = `<img class="celchar" src="${charSrc(pose)}" alt=""><div class="celcard"><div class="ribbon">${esc(sealTxt)}</div><div class="xp">+${gain} ${l.xp}</div><p>${esc(msg)}</p>
+    <div class="reward"><span class="re">${re}</span><div><div class="who2">${esc(coachName())}</div>${esc(fill(rt,{n:nick()}))}</div></div></div>`;
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  el.onclick = () => el.classList.remove('show');
+  clearTimeout(celTimer);
+  celTimer = setTimeout(() => el.classList.remove('show'), big ? 6000 : 4200);
+  thump();
+  confetti(big ? 140 : 50);
+}
+function toast(sealTxt, html){
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `${sealTxt ? `<span class="mini">${esc(sealTxt)}</span>` : ''}<span>${html}</span>`;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 3800);
+}
+function thump(){
+  try{
+    const a = new (window.AudioContext || window.webkitAudioContext)(), t = a.currentTime;
+    [523,659,784].forEach((f,i) => {
+      const o = a.createOscillator(), g = a.createGain();
+      o.type = 'triangle'; o.frequency.value = f; o.connect(g); g.connect(a.destination);
+      g.gain.setValueAtTime(.0001, t+i*.09); g.gain.exponentialRampToValueAtTime(.16, t+i*.09+.02); g.gain.exponentialRampToValueAtTime(.001, t+i*.09+.3);
+      o.start(t+i*.09); o.stop(t+i*.09+.32);
+    });
+  }catch(e){}
+}
+const fx = document.getElementById('fx'), ctx2 = fx.getContext('2d');
+let parts = [], raf = 0;
+function confetti(n){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  fx.width = innerWidth; fx.height = innerHeight;
+  const cs = getComputedStyle(document.documentElement);
+  const colors = ['--sun','--pink','--go','--blue','--red'].map(v => cs.getPropertyValue(v).trim());
+  for(let i=0;i<n;i++) parts.push({x:innerWidth/2, y:innerHeight*.35, vx:(Math.random()-.5)*14, vy:Math.random()*-12-3,
+    s:Math.random()*6+5, r:Math.random()*6, vr:(Math.random()-.5)*.3, c:pick(colors), life:120+Math.random()*60});
+  if(!raf) raf = requestAnimationFrame(tick);
+}
+function tick(){
+  ctx2.clearRect(0,0,fx.width,fx.height);
+  parts = parts.filter(p => p.life-- > 0 && p.y < fx.height+20);
+  for(const p of parts){
+    p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    ctx2.save(); ctx2.translate(p.x,p.y); ctx2.rotate(p.r); ctx2.fillStyle = p.c;
+    ctx2.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); ctx2.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(tick) : (ctx2.clearRect(0,0,fx.width,fx.height), 0);
+}
+
+/* ---------- the coach: reminders and greetings ---------- */
+const COACH_DEFAULT = '安仁';
+const COACH = {
+  en:{
+    morning:'Good morning, {n}!', afternoon:'Good afternoon, {n}!', evening:'Good evening, {n}!', night:'Still up, {n}?',
+    plan:'You have {c} tasks today. First up: “{t}” at {s}.',
+    left:'{d} done, {r} to go. Next: “{t}” at {s}.',
+    cleared:'You finished everything today. I\'m so proud of you!',
+    free:'No tasks today. Take a real break!',
+    soon:'Heads up, {n}! “{t}” starts in {m} min ({s}). Get your things ready.',
+    start:'It\'s {s}, {n}. Time for “{t}”. Phone down, focus on. You\'ve got this!',
+    end:'{n}, “{t}” should be done now. Did you finish? Tap done for +{x} XP!',
+    cal:['{n}, you\'ve got this!','Let\'s go, {n}!','{n}, I believe in you','Focus time, {n}','You\'re doing amazing, {n}'],
+    calDesc:'Hey {n}, “{t}” starts at {s}. Do your best, then open Study Quest and mark it done for +{x} XP. — {c}',
+    nicks:'What should he call you? (separate with commas)', calBtn:'Add reminders to phone calendar',
+    calNote:'Downloads a calendar file. Open it on your phone and add the events, and your phone shows the reminders even when this app is closed. If your schedule changes, delete the old Study Quest events and add the new file.',
+    ok:'Got it', doneBtn:'Done!', remind:'Reminders', before:'Remind me before a task',
+    notif:'Allow notifications', notifOn:'Notifications are on.', notifBlocked:'Notifications are blocked in this browser.',
+    remindNote:'Reminders work while this app is open.'
+  },
+  zh:{
+    morning:'早上好，{n}！', afternoon:'下午好，{n}！', evening:'晚上好，{n}！', night:'还没睡吗，{n}？',
+    plan:'今天有 {c} 个任务，第一个是 {s} 的「{t}」。',
+    left:'已完成 {d} 个，还剩 {r} 个。下一个：{s}「{t}」。',
+    cleared:'今天的任务全部完成了，我真心为你骄傲！',
+    free:'今天没有任务，好好休息一下吧～',
+    soon:'{n}，注意啦！「{t}」还有 {m} 分钟开始（{s}），准备一下吧。',
+    start:'{n}，{s} 到了，该做「{t}」啦。放下手机，专注起来，你可以的！',
+    end:'{n}，「{t}」应该结束了，完成了吗？点完成领取 +{x} 经验！',
+    cal:['{n}，你可以的！','冲呀 {n}！','{n}，我相信你','{n}，专注时间到','{n} 今天也超棒'],
+    calDesc:'{n}，「{t}」{s} 开始啦。认真完成，然后打开学习闯关打卡领取 +{x} 经验！—— {c}',
+    nicks:'想让他怎么叫你？（用逗号分开）', calBtn:'把提醒加到手机日历',
+    calNote:'会下载一个日历文件。在手机上打开它并添加日程，这样即使 App 没打开，手机也会弹出提醒。如果改了安排，先删掉旧的 Study Quest 日程，再重新添加。',
+    ok:'知道了', doneBtn:'完成！', remind:'提醒', before:'任务开始前提醒我',
+    notif:'允许通知', notifOn:'通知已开启。', notifBlocked:'浏览器已禁止通知。',
+    remindNote:'App 开着的时候提醒才会生效。'
+  }
+};
+function coachAvatar(pose='remind'){return `<div class="cav"><img src="${charSrc(pose)}" alt=""></div>`;}
+const fill = (s,o) => s.replace(/\{(\w)\}/g, (_,k) => o[k] ?? '');
+const coachName = () => (state.profile.coach || '').trim() || COACH_DEFAULT;
+function nick(){
+  const list = String(state.profile.nicks || '').split(/[,，、]/).map(s => s.trim()).filter(Boolean);
+  return list.length ? pick(list) : (state.profile.name || L().defaultName);
+}
+function coachGreeting(list, k, nm){
+  const c = COACH[state.lang], n = nick();
+  const h = Math.floor(nm/60);
+  const hi = fill(h < 5 ? c.night : h < 12 ? c.morning : h < 18 ? c.afternoon : h < 23 ? c.evening : c.night, {n});
+  if(!list.length) return hi + ' ' + c.free;
+  const dn = list.filter(t => isDone(t,k)).length;
+  if(dn === list.length) return hi + ' ' + c.cleared;
+  const nx = list.find(t => !isDone(t,k) && mins(t.start) >= nm) || list.find(t => !isDone(t,k));
+  if(!dn) return hi + ' ' + fill(c.plan, {c:list.length, t:taskTitle(nx), s:nx.start});
+  return hi + ' ' + fill(c.left, {d:dn, r:list.length-dn, t:taskTitle(nx), s:nx.start});
+}
+let coachTimer;
+function coachSay(msg, task, k){
+  const c = COACH[state.lang], el = document.getElementById('coach');
+  el.innerHTML = `<div class="coachbox">${coachAvatar(task ? 'happy' : 'remind')}<div style="flex:1;min-width:0">
+    <div class="who2">${esc(coachName())}</div><div class="msg">${esc(msg)}</div>
+    <div class="btns">${task ? `<button class="c3d go" id="coachDone">${c.doneBtn}</button>` : ''}<button class="ghost" id="coachOk">${c.ok}</button></div></div></div>`;
+  el.classList.add('show');
+  const hide = () => el.classList.remove('show');
+  document.getElementById('coachOk').onclick = hide;
+  const db = document.getElementById('coachDone');
+  if(db) db.onclick = () => {hide(); if(!isDone(task,k)) toggleDone(task,k);};
+  clearTimeout(coachTimer);
+  coachTimer = setTimeout(hide, 60000);
+  beep();
+  // he also shows the reminder pose in the room
+  const pe = document.getElementById('pet');
+  if(pe && !task){pe.className = 'pet hop'; pe.querySelector('img').src = charSrc('remind'); petSayText(msg);}
+  try{
+    if('Notification' in window && Notification.permission === 'granted' && document.hidden)
+      new Notification(coachName() + ' · 学习闯关', {body: msg});
+  }catch(e){}
+}
+function beep(){
+  try{
+    const a = new (window.AudioContext || window.webkitAudioContext)(), o = a.createOscillator(), g = a.createGain();
+    o.connect(g); g.connect(a.destination); o.frequency.value = 880;
+    g.gain.setValueAtTime(.12, a.currentTime); g.gain.exponentialRampToValueAtTime(.001, a.currentTime+.5);
+    o.start(); o.stop(a.currentTime+.5);
+  }catch(e){}
+}
+const fired = new Set();
+function checkReminders(){
+  if(!state.remind || !state.remind.on) return;
+  const c = COACH[state.lang], d = today(), k = keyOf(d), nm = nowMin();
+  const before = +state.remind.before || 0;
+  for(const t of tasksFor(d)){
+    if(isDone(t,k)) continue;
+    const s = mins(t.start), o = {t:taskTitle(t), s:t.start, m:before, x:taskXP(t), n:nick()};
+    const fire = (type, cond, msg, withDone) => {
+      const id = type+'|'+t.id+'|'+k;
+      if(cond && !fired.has(id)){fired.add(id); coachSay(fill(msg,o), withDone ? t : null, k);}
+    };
+    fire('soon', before > 0 && nm >= s-before && nm < s, c.soon, false);
+    fire('start', nm >= s && nm < s+3, c.start, false);
+    if(t.end) fire('end', nm >= mins(t.end) && nm < mins(t.end)+15, c.end, true);
+  }
+}
+
+/* ---------- the room (Talking Tom style) ---------- */
+const FOODS = ['🍙','🍜','🥟','🍓','🧋','🍰'];
+const PET = {
+  zh:{voice:'他说话的声音', patL:'摸摸头', hungerL:'饱腹', moodL:'心情', hugL:'抱抱', hitL:'打他', kissL:'亲亲', stressS:'解压',
+    hello:['{n}，你来啦！今天想喂我吃什么？','嘿嘿，{n}来看我啦～','我在这里等你好久啦！'],
+    feed:['好吃！谢谢{n}～','啊呜啊呜……还要！','{n}喂的就是最香的！','吃饱了才有力气提醒你学习！','嗯～这个味道我记住了'],
+    full:['吃不下啦，肚子要爆炸了','再吃就变成球了……','饱饱的，好幸福～'],
+    hit:['哎呦！','疼疼疼……我错了还不行嘛','呜呜，{n}下手好重','别打啦，我去帮你背单词！','打是亲骂是爱，对吧？','脑袋上起包了啦！'],
+    angry:['哼！不理你了','我生气了！要抱抱才能好！','哼哼，除非你抱我一下……'],
+    makeup:['那……抱一下就原谅你','好啦好啦，不生气了～最喜欢{n}了','和好啦！'],
+    hug:['抱抱～最喜欢{n}了','好暖和～','充电完成！','不想松手……','被{n}抱住了，好幸福'],
+    kiss:['mua～ 给{n}的！','亲亲！今天也要加油哦','嘿嘿，害羞了……','再亲一下嘛～'],
+    pat:['嘿嘿，舒服～','再摸一下嘛～','头发被摸乱了啦～','嘿嘿嘿……'],
+    poke:['干嘛呀～','痒！哈哈哈','{n}，今天的任务做完了吗？','我在这里陪你学习哦','戳我干嘛，想我了吗？','{n}今天也很可爱！'],
+    sleepy:['好困……{n}也早点睡吧','呼……呼……','晚安{n}，明天继续加油'],
+    feedL:'喂饭', hungry:'肚子好饿……可以喂我吃点东西吗？', sad:'有点难过……可以抱抱我吗？'},
+  en:{voice:'His voice', patL:'Pat', hungerL:'Full', moodL:'Mood', hugL:'Hug', hitL:'Hit', kissL:'Kiss', stressS:'Relax',
+    hello:['{n}, you\'re here! What are you feeding me today?','Hehe, {n} came to see me~','I\'ve been waiting for you!'],
+    feed:['Yummy! Thank you {n}~','Nom nom nom... more!','Food from {n} tastes the best!','Now I have energy to remind you to study!','Mmm~ I\'ll remember this taste'],
+    full:['I\'m stuffed, my tummy will explode','One more bite and I\'ll be a ball...','So full, so happy~'],
+    hit:['Ouch!','Owww... okay okay, I\'m sorry','{n} hits so hard','Stop! I\'ll go memorize words for you!','Hitting means love, right?','I got a bump on my head!'],
+    angry:['Hmph! Not talking to you','I\'m mad! Only a hug can fix this!','Hmph... unless you hug me...'],
+    makeup:['Okay... one hug and you\'re forgiven','Fine fine, not mad anymore~ I love {n} most','Friends again!'],
+    hug:['Hugs~ I love {n} most','So warm~','Fully recharged!','Don\'t wanna let go...','Hugged by {n}, so happy'],
+    kiss:['Mwah~ for {n}!','Kiss! Do your best today','Hehe, now I\'m shy...','One more?~'],
+    pat:['Hehe, that feels nice~','One more pat~','You\'re messing up my hair~','Hehehe...'],
+    poke:['What is it~','That tickles! Haha','{n}, did you finish today\'s tasks?','I\'m right here studying with you','Poking me? Did you miss me?','{n} looks cute today!'],
+    sleepy:['So sleepy... go to bed early too, {n}','Zzz...','Good night {n}, let\'s keep going tomorrow'],
+    feedL:'Feed', hungry:'I\'m so hungry... can you feed me something?', sad:'I feel a bit sad... can I have a hug?'}
+};
+let petHits = [], angryUntil = 0, chubbyUntil = 0, petTimer;
+function petNow(){
+  const p = state.pet, hrs = (Date.now() - (p.last || Date.now()))/36e5;
+  return {hunger:Math.max(0, Math.round(p.hunger - hrs*6)), mood:Math.max(0, Math.round(p.mood - hrs*3))};
+}
+function petAdjust(dh, dm){
+  const cur = petNow();
+  state.pet.hunger = Math.max(0, Math.min(100, cur.hunger + dh));
+  state.pet.mood = Math.max(0, Math.min(100, cur.mood + dm));
+  state.pet.last = Date.now();
+  save();
+}
+const isNight = () => {const h = new Date().getHours(); return h >= 23 || h < 6;};
+function petIdleExpr(){
+  const p = petNow();
+  if(Date.now() < angryUntil) return 'angry';
+  if(Date.now() < chubbyUntil) return 'chubby';
+  if(p.hunger < 30) return 'hungry';
+  if(p.mood < 30) return 'sad';
+  if(isNight()) return 'sleepy';
+  return 'normal';
+}
+function meterColor(id, v){return v < 30 ? 'var(--red)' : id === 'mH' ? 'var(--sun)' : 'var(--pink)';}
+function petFx(emoji, n=1){
+  const box = document.getElementById('petfx');
+  if(!box) return;
+  for(let i=0;i<n;i++){
+    const s = document.createElement('span');
+    s.className = 'fxe'; s.textContent = emoji;
+    s.style.left = (25 + Math.random()*50) + '%';
+    s.style.top = (25 + Math.random()*30) + '%';
+    s.style.animationDelay = (i*0.12) + 's';
+    box.appendChild(s);
+    setTimeout(() => s.remove(), 1600 + i*120);
+  }
+}
+function petSayText(text){
+  const el = document.getElementById('petSay');
+  if(!el) return;
+  el.textContent = text;
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+}
+function petSay(text){
+  petSayText(text);
+  if(!state.pet.voice || !('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu,''));
+    u.lang = state.lang === 'zh' ? 'zh-CN' : 'en-US'; u.pitch = 1.6; u.rate = 1.05;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function sfx(kind){
+  try{
+    const a = new (window.AudioContext || window.webkitAudioContext)(), o = a.createOscillator(), g = a.createGain();
+    o.connect(g); g.connect(a.destination);
+    const t = a.currentTime;
+    if(kind === 'hit'){o.type = 'square'; o.frequency.setValueAtTime(420,t); o.frequency.exponentialRampToValueAtTime(90,t+.25);}
+    else if(kind === 'eat'){o.type = 'triangle'; o.frequency.setValueAtTime(300,t); o.frequency.setValueAtTime(450,t+.08); o.frequency.setValueAtTime(320,t+.16);}
+    else {o.type = 'sine'; o.frequency.setValueAtTime(600,t); o.frequency.exponentialRampToValueAtTime(1100,t+.2);}
+    g.gain.setValueAtTime(.12,t); g.gain.exponentialRampToValueAtTime(.001,t+.3);
+    o.start(); o.stop(t+.3);
+  }catch(e){}
+}
+function petAction(kind, food){
+  const P = PET[state.lang], n = nick(), el = document.getElementById('pet');
+  if(!el) return;
+  const tray = document.getElementById('foods');
+  if(kind === 'feed' && !food){tray.hidden = !tray.hidden; return;}
+  if(tray) tray.hidden = true;
+  let expr = 'happy', anim = 'love', line;
+  const angry = Date.now() < angryUntil;
+  if(kind === 'feed'){
+    if(petNow().hunger >= 100){line = pick(P.full); expr = 'chubby'; anim = 'hop'; chubbyUntil = Date.now() + 20000;}
+    else {petAdjust(15, 4); line = pick(P.feed); expr = 'eat'; anim = 'eat'; petFx(food, 1); setTimeout(() => petFx('😋'), 700);}
+    sfx('eat');
+  } else if(kind === 'hit'){
+    const now = Date.now();
+    petHits = petHits.filter(t => now - t < 20000); petHits.push(now);
+    petAdjust(0, -8);
+    if(petHits.length >= 5 || angry){angryUntil = now + 15000; line = pick(P.angry); expr = 'angry'; anim = 'angry'; petFx('💢');}
+    else {line = pick(P.hit); expr = 'hurt'; anim = 'hit'; petFx(pick(['💥','💫','⭐']), 2);}
+    sfx('hit');
+  } else if(kind === 'hug'){
+    petAdjust(0, 12);
+    if(angry){angryUntil = 0; petHits = []; line = pick(P.makeup);} else line = pick(P.hug);
+    expr = 'love'; petFx('💕', 3); sfx('love');
+  } else if(kind === 'kiss'){
+    petAdjust(0, 10);
+    if(angry){angryUntil = 0; petHits = []; line = pick(P.makeup); expr = 'love';} else {line = pick(P.kiss); expr = 'kiss';}
+    petFx('💋', 2); setTimeout(() => petFx('💗', 2), 300); sfx('love');
+  } else if(kind === 'pat'){
+    petAdjust(0, 6);
+    if(angry){line = pick(P.angry); expr = 'angry'; anim = 'angry';}
+    else {line = pick(P.pat); expr = pick(['happy','love']); petFx('✨', 2);}
+    sfx('love');
+  } else {
+    if(angry){line = pick(P.angry); expr = 'angry'; anim = 'angry';}
+    else if(isNight()){line = pick(P.sleepy); expr = 'sleepy'; anim = 'hop';}
+    else {line = pick(P.poke); expr = pick(['happy','left','right','kiss','love','remind']); anim = 'hop';}
+  }
+  el.className = 'pet'; void el.offsetWidth; el.className = 'pet ' + anim;
+  el.querySelector('img').src = charSrc(expr);
+  petSay(fill(line, {n}));
+  const p = petNow();
+  for(const [id,v] of [['mH',p.hunger],['mM',p.mood]]){
+    const bar = document.getElementById(id);
+    if(bar){bar.style.width = v + '%'; bar.parentElement.style.setProperty('--cc', meterColor(id, v));}
+  }
+  clearTimeout(petTimer);
+  petTimer = setTimeout(() => {
+    const pe = document.getElementById('pet');
+    if(pe){pe.className = 'pet idle'; pe.querySelector('img').src = charSrc(petIdleExpr());}
+  }, 2800);
+}
+
+/* calendar file (.ics) so the phone's own calendar pops up his reminders */
+function icsText(s){return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
+function icsFold(line){
+  const out = []; let cur = '', bytes = 0;
+  for(const ch of line){
+    const b = new TextEncoder().encode(ch).length;
+    if(bytes + b > 73){out.push(cur); cur = ' '; bytes = 1;}
+    cur += ch; bytes += b;
+  }
+  out.push(cur);
+  return out.join('\r\n');
+}
+function exportCalendar(){
+  const c = COACH[state.lang], before = +state.remind.before || 0;
+  const BY = ['SU','MO','TU','WE','TH','FR','SA'];
+  const stamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const dt = (d, hhmm) => keyOf(d).replace(/-/g,'') + 'T' + hhmm.replace(':','') + '00';
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Study Quest//Coach//EN','CALSCALE:GREGORIAN','X-WR-CALNAME:Study Quest'];
+  for(const t of state.tasks){
+    let first;
+    if(t.date) first = parseKey(t.date);
+    else {
+      if(!(t.repeat||[]).length) continue;
+      first = today();
+      while(!t.repeat.includes(first.getDay())) first = addDays(first,1);
+    }
+    const n = nick(), o = {t:taskTitle(t), s:t.start, x:taskXP(t), n};
+    const endM = t.end ? mins(t.end) : Math.min(mins(t.start)+15, 23*60+59);
+    lines.push('BEGIN:VEVENT', `UID:${t.id}@study-quest`, `DTSTAMP:${stamp}`,
+      `DTSTART:${dt(first,t.start)}`, `DTEND:${dt(first,`${pad(Math.floor(endM/60))}:${pad(endM%60)}`)}`);
+    if(!t.date) lines.push(`RRULE:FREQ=WEEKLY;BYDAY=${t.repeat.map(d => BY[d]).join(',')}`);
+    lines.push(`SUMMARY:${icsText(`${CAT_EMOJI[t.cat]} ${taskTitle(t)} · ${fill(pick(c.cal),{n})}`)}`,
+      `DESCRIPTION:${icsText(fill(c.calDesc,{...o,c:coachName()}))}`,
+      'BEGIN:VALARM','ACTION:DISPLAY',`TRIGGER:-PT${before}M`,`DESCRIPTION:${icsText(fill(c.soon,{...o,m:before}))}`,'END:VALARM',
+      'END:VEVENT');
+  }
+  lines.push('END:VCALENDAR');
+  const blob = new Blob([lines.map(icsFold).join('\r\n')+'\r\n'], {type:'text/calendar'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'study-quest-reminders.ics';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* refresh "now" info every 30s; check reminders every 20s */
+setInterval(() => {
+  if(taskDlg.open || profDlg.open) return;
+  if(ui.tab === 'home') refreshHome();
+  else if(ui.tab === 'week') render();
+}, 30000);
+setInterval(checkReminders, 20000);
+setTimeout(checkReminders, 1500);
+
+matchMedia('(max-width:760px)').addEventListener('change', render);
+
+save();
+render();
+preloadChar();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
