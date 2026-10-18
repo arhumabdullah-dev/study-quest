@@ -321,9 +321,9 @@ const T = {
     cats:{english:'英语',class:'课程',study:'自习',sport:'运动',rest:'休息',life:'生活'},
     diff:{1:'简单',2:'普通',3:'困难'}, daysShort:['周日','周一','周二','周三','周四','周五','周六'],
     lead:'看看{h}今天怎么样，给她送爱，帮她改课表。',
-    signIn:'登录', signUp:'注册', username:'用户名', usernameHint:'小写字母、数字或 _，3–20 位', password:'密码', passwordHint:'至少 6 位',
+    signIn:'登录', signUp:'注册', username:'用户名', usernameHint:'只能用小写字母和数字，3–20 位', password:'密码', passwordHint:'至少 6 位',
     nick:'你的名字（她会看到，可不填）', show:'显示', hide:'隐藏', go:'登录', create:'创建账号', busy:'请稍等…',
-    errUser:'用户名只能用小写字母、数字和 _，3–20 位。', errPass:'密码至少 6 位。', errWrong:'用户名或密码不对。',
+    errUser:'用户名只能用小写字母和数字，3–20 位。', errPass:'密码至少 6 位。', errWrong:'用户名或密码不对。',
     errTaken:'这个用户名已经有人用了，换一个吧。', errNet:'连不上服务器，先离线使用。', errSetup:'账号已创建，请稍后再登录。',
     errEmail:'这个用户名不能用，试试只用字母和数字。', errRate:'试得太多次了，过几分钟再试。', errOther:'出错了：{m}',
     expired:'登录过期了，请重新登录。',
@@ -351,16 +351,20 @@ const T = {
     savedT:'已保存！她下次打开 App 就会更新', deletedT:'已删除！她下次打开 App 就会更新', gone:'这个任务在她那边已经被删掉了。', saving:'保存中…',
     language:'语言', account:'账号', signedAs:'已登录：{u}', pairedWith:'已连接：{h}', unlink:'解除连接', unlinkConfirm:'再点一次确认解除',
     unlinked:'已解除连接', apps:'她的 App', appStudy:'学习闯关', appStress:'解压室', appsHint:'这两个是她手机上的 App，在这里也能打开看看。',
-    tapHer:'去「送爱」给她鼓励吧', defaultHer:'小春'
+    tapHer:'去「送爱」给她鼓励吧', defaultHer:'小春',
+    upTitle:'上传她的完整课表', upLead:'把她的备份文字粘贴到下面（学习闯关 → ⚙ 设置 → 课表和备份），或者选一个 .json 备份文件。会换成备份里的课表，她的打卡记录和勋章都会保留。',
+    upPh:'在这里粘贴备份文字…', upFile:'选择 .json 文件', upGo:'上传课表', upOk:'已上传 {n} 个任务！她打开 App 就会自动更新',
+    errUpEmpty:'先粘贴备份文字，或者选一个文件。', errUpJson:'这不是有效的备份文字。请把备份完整复制过来再试。', errUpTasks:'备份里没有找到课表（tasks）。请确认复制的是学习闯关的备份。',
+    upHomeT:'她的课表还是空的', upHomeP:'可以在「课表」里一次上传她的完整课表。', upHomeBtn:'去上传课表'
   },
   en:{
     title:'His page', tabs:{home:'Her day', love:'Send love', week:'Schedule', set:'Settings'},
     cats:{english:'English',class:'Class',study:'Study',sport:'Sport',rest:'Rest',life:'Self-care'},
     diff:{1:'Easy',2:'Normal',3:'Hard'}, daysShort:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
     lead:'See how {h} is doing, send her love, edit her schedule.',
-    signIn:'Sign in', signUp:'Sign up', username:'Username', usernameHint:'Lowercase letters, numbers or _, 3–20 characters', password:'Password', passwordHint:'At least 6 characters',
+    signIn:'Sign in', signUp:'Sign up', username:'Username', usernameHint:'Lowercase letters and numbers only, 3–20 characters', password:'Password', passwordHint:'At least 6 characters',
     nick:'Your name (she sees it, optional)', show:'Show', hide:'Hide', go:'Sign in', create:'Create account', busy:'One moment…',
-    errUser:'Username: lowercase letters, numbers and _, 3–20 characters.', errPass:'Password needs at least 6 characters.', errWrong:'Wrong username or password.',
+    errUser:'Username: lowercase letters and numbers only, 3–20 characters.', errPass:'Password needs at least 6 characters.', errWrong:'Wrong username or password.',
     errTaken:'That username is taken. Try another one.', errNet:'Can\'t reach the server, keep using offline.', errSetup:'Account created; sign-in will work once setup is finished.',
     errEmail:'That username can\'t be used. Try letters and numbers only.', errRate:'Too many tries. Wait a few minutes and try again.', errOther:'Something went wrong: {m}',
     expired:'Your sign-in expired. Please sign in again.',
@@ -388,7 +392,11 @@ const T = {
     savedT:'Saved! Updates on her phone next time she opens the app', deletedT:'Deleted! Updates on her phone next time she opens the app', gone:'She already deleted this task on her side.', saving:'Saving…',
     language:'Language', account:'Account', signedAs:'Signed in as {u}', pairedWith:'Connected with {h}', unlink:'Unlink', unlinkConfirm:'Tap again to unlink',
     unlinked:'Unlinked', apps:'Her apps', appStudy:'Study Quest', appStress:'Stress Room', appsHint:'These are the two apps on her phone. You can open them here too.',
-    tapHer:'Cheer her on in Send love', defaultHer:'Xiaochun'
+    tapHer:'Cheer her on in Send love', defaultHer:'Xiaochun',
+    upTitle:'Upload her full schedule', upLead:'Paste her backup text below (Study Quest → ⚙ Settings → Schedule & backup), or pick a .json backup file. Her schedule is replaced with the backup\'s; her check-ins and medals are kept.',
+    upPh:'Paste the backup text here…', upFile:'Choose a .json file', upGo:'Upload schedule', upOk:'Uploaded {n} tasks! Her app updates next time she opens it',
+    errUpEmpty:'Paste the backup text or choose a file first.', errUpJson:'That isn\'t valid backup text. Copy the whole backup and try again.', errUpTasks:'No schedule (tasks) found in that backup. Make sure it\'s a Study Quest backup.',
+    upHomeT:'Her schedule is still empty', upHomeP:'You can upload her whole schedule at once in Schedule.', upHomeBtn:'Upload her schedule'
   }
 };
 
@@ -650,7 +658,7 @@ async function doAuth(f){
   const user = f.user.value.trim().toLowerCase(), pass = f.pass.value;
   const err = document.getElementById('aErr'), btn = document.getElementById('aGo');
   S.lastUser = user; S.authOk = '';
-  if(!/^[a-z0-9_]{3,20}$/.test(user)) return err.textContent = l.errUser;
+  if(!/^[a-z0-9]{3,20}$/.test(user)) return err.textContent = l.errUser;
   if(pass.length < 6) return err.textContent = l.errPass;
   err.textContent = ''; btn.disabled = true; btn.textContent = l.busy;
   try{
@@ -741,7 +749,10 @@ function renderHome(){
   const hn = herNow();
   const syncL = `<div class="syncline"><span>${fill(l.synced, {t:hasData ? rel(S.her.updated_at) : l.never})}</span>
     ${sameClock() ? '' : `<span>🕒 ${fill(l.herTime, {t:pad(hn.getHours())+':'+pad(hn.getMinutes())})}</span>`}</div>`;
-  if(!hasData){view.innerHTML = hud + syncL + noDataCard(); bindHome(); return;}
+  const upNote = () => `<div class="card grp"><h3>📋 ${l.upHomeT}</h3><p>${l.upHomeP}</p>
+    <button class="c3d blue wide" id="goUp">${l.upHomeBtn}</button></div>`;
+  const bindUpNote = () => {const b = document.getElementById('goUp'); if(b) b.onclick = () => {S.tab = 'week'; S.upFocus = true; window.scrollTo(0,0); render();};};
+  if(!hasData){view.innerHTML = hud + syncL + noDataCard() + upNote(); bindHome(); bindUpNote(); return;}
 
   const day = herToday(), k = keyOf(day), list = tasksFor(day), nm = hn.getHours()*60 + hn.getMinutes();
   const dn = list.filter(t => isDone(t,k)).length;
@@ -772,8 +783,8 @@ function renderHome(){
         <span class="big">${dn}/${list.length}</span></div>
       <div class="meter"><span>${l.weekPct}</span><div class="track"><i style="width:${st.wPct}%"></i></div><span class="num">${st.wPct}%</span></div>
       ${list.length ? rows : `<div class="empty">${l.noTasks}</div>`}
-    </div>`;
-  bindHome();
+    </div>${herTasks().length ? '' : upNote()}`;
+  bindHome(); bindUpNote();
   const doll = document.getElementById('herDoll');
   doll.onclick = () => {
     doll.className = 'doll'; void doll.offsetWidth; doll.className = 'doll hop';
@@ -873,7 +884,7 @@ function openNote(){
 /* ---------- her schedule ---------- */
 function renderWeek(){
   const l = L();
-  if(!(S.her && S.her.data)){view.innerHTML = `<h1 class="sec-title">${l.schedTitle}</h1>` + noDataCard(); bindHome(); return;}
+  if(!(S.her && S.her.data)){view.innerHTML = `<h1 class="sec-title">${l.schedTitle}</h1>` + noDataCard() + uploadCard(); bindHome(); bindUpload(); return;}
   const t0 = herToday(), mon = addDays(mondayOf(t0), S.wk*7);
   if(!S.sel || mondayOf(parseKey(S.sel)).getTime() !== mon.getTime()) S.sel = keyOf(S.wk === 0 ? t0 : mon);
   const days = [...Array(7)].map((_,i) => addDays(mon,i));
@@ -901,7 +912,10 @@ function renderWeek(){
         <div><div class="t-title">${esc(taskTitle(t))}</div><div class="t-meta"><span class="cat">${l.cats[t.cat] || ''}</span><span>${l.diff[t.diff] || ''}</span>${t.date ? '' : `<span>🔁</span>`}</div></div>
         <div class="tick ${d?'y':'edit'}">${d ? '✓' : '✎'}</div></div>`;
     }).join('') : `<div class="empty">${l.dayEmpty}</div>`}</div>
-    <p class="hint" style="margin:12px 4px">${l.schedHint}</p>`;
+    <p class="hint" style="margin:12px 4px">${l.schedHint}</p>
+    ${herTasks().length ? uploadCard() : ''}`;
+  if(!herTasks().length) document.querySelector('.weeknav').insertAdjacentHTML('beforebegin', uploadCard());
+  bindUpload();
   document.querySelectorAll('[data-wk]').forEach(b => b.onclick = () => {const v = +b.dataset.wk; S.wk = v === 0 ? 0 : S.wk + v; S.sel = null; render();});
   document.querySelectorAll('[data-day]').forEach(b => b.onclick = () => {S.sel = b.dataset.day; render();});
   document.getElementById('addTask').onclick = () => openTask(null, {date:S.sel});
@@ -910,6 +924,86 @@ function renderWeek(){
     r.onclick = open;
     r.onkeydown = ev => {if(ev.key === 'Enter' || ev.key === ' '){ev.preventDefault(); open();}};
   });
+}
+
+/* ---------- upload her full schedule (backup JSON from index.html / private/her-schedule.json) ---------- */
+function uploadCard(){
+  const l = L();
+  return `<form class="card grp" id="upForm" novalidate><h3>📋 ${l.upTitle}</h3><p>${l.upLead}</p>
+    <textarea id="upText" name="text" rows="4" placeholder="${l.upPh}" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="${l.upTitle}"></textarea>
+    <input type="file" id="upFile" accept=".json,application/json,text/plain" hidden>
+    <div class="err" id="upErr" role="alert"></div>
+    <div class="btnrow"><button type="button" class="ghost" id="upPick">📁 ${l.upFile}</button></div>
+    <button type="submit" class="c3d blue wide" id="upGo" style="margin-top:12px">${l.upGo}</button></form>`;
+}
+function parseBackup(txt){
+  const l = L();
+  let d;
+  try{d = JSON.parse(String(txt).trim());}catch(e){throw Object.assign(new Error(l.errUpJson), {user:true});}
+  if(!d || typeof d !== 'object' || Array.isArray(d)) throw Object.assign(new Error(l.errUpJson), {user:true});
+  if(!Array.isArray(d.tasks) || d.tasks.some(t => !t || typeof t !== 'object' || !t.id)) throw Object.assign(new Error(l.errUpTasks), {user:true});
+  return d;
+}
+const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+/* merge per CONTRACT.md: tasks from the backup, done/badges unioned, profile only fills empty fields, never the photo */
+async function uploadBackup(b){
+  const pid = S.partner.id;
+  const rows = await api(`/rest/v1/app_state?user_id=eq.${pid}&select=*`);
+  const row = rows[0], cur = row && isObj(row.data) ? row.data : null;
+  const bp = isObj(b.profile) ? {...b.profile} : {};
+  delete bp.avatar;
+  let data;
+  if(!cur) data = {...b, profile:bp};
+  else {
+    data = {...cur};
+    for(const k of Object.keys(b)) if(data[k] == null) data[k] = b[k];
+    data.tasks = b.tasks;
+    data.done = {...(isObj(b.done) ? b.done : {}), ...(isObj(cur.done) ? cur.done : {})};
+    data.badges = {...(isObj(b.badges) ? b.badges : {}), ...(isObj(cur.badges) ? cur.badges : {})};
+    const sp = isObj(cur.profile) ? {...cur.profile} : {};
+    for(const k of Object.keys(bp)) if(sp[k] == null || String(sp[k]).trim() === '') sp[k] = bp[k];
+    delete sp.avatar;
+    data.profile = sp;
+  }
+  data = JSON.parse(JSON.stringify(data));
+  const now = new Date().toISOString();
+  await api('/rest/v1/app_state', {method:'POST', prefer:'resolution=merge-duplicates,return=minimal',
+    body:{user_id:pid, data, updated_at:now, updated_by:uid()}});
+  S.her = {...(row || {user_id:pid}), data, updated_at:now, updated_by:uid()};
+  S.online = true; saveCache();
+  return data.tasks.length;
+}
+function bindUpload(){
+  const f = document.getElementById('upForm');
+  if(!f) return;
+  const l = L(), err = document.getElementById('upErr'), go = document.getElementById('upGo'), file = document.getElementById('upFile');
+  if(S.upFocus){S.upFocus = false; f.scrollIntoView({block:'center'});}
+  document.getElementById('upPick').onclick = () => file.click();
+  const send = async txt => {
+    err.textContent = '';
+    if(!String(txt || '').trim()) return err.textContent = l.errUpEmpty;
+    let b;
+    try{b = parseBackup(txt);}catch(e){return err.textContent = e.message;}
+    f.querySelectorAll('button,textarea').forEach(x => x.disabled = true); go.textContent = l.saving;
+    try{
+      const n = await uploadBackup(b);
+      S.wk = 0; S.sel = null;
+      render(); toast('✅ ' + fill(l.upOk, {n}));
+    }catch(e){
+      f.querySelectorAll('button,textarea').forEach(x => x.disabled = false); go.textContent = l.upGo;
+      if(e.auth) return signOutLocal(l.expired);
+      err.textContent = e.net ? l.errNet : fill(l.errOther, {m:e.message});
+    }
+  };
+  file.onchange = () => {
+    const fl = file.files && file.files[0];
+    if(!fl) return;
+    const rd = new FileReader();
+    rd.onload = () => {f.text.value = rd.result; file.value = ''; send(rd.result);};
+    rd.onerror = () => {err.textContent = l.errUpJson; file.value = '';};
+    rd.readAsText(fl);
+  };
+  f.onsubmit = ev => {ev.preventDefault(); send(f.text.value);};
 }
 
 /* re-read her state, change only data.tasks, upsert with updated_by = me (CONTRACT.md) */

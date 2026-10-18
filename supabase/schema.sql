@@ -80,15 +80,28 @@ create policy "msg mark read" on public.messages for update to authenticated
 revoke update on public.messages from authenticated;
 grant update (read_at) on public.messages to authenticated;
 
--- new account -> profile row (username/role come from sign-up metadata)
+-- data prepared for a username before that person signs up (filled by a private seed script; nobody can read it)
+create table if not exists public.pending_state (
+  username text primary key,
+  data jsonb not null,
+  created_at timestamptz not null default now()
+);
+alter table public.pending_state enable row level security;
+revoke all on public.pending_state from anon, authenticated;
+
+-- new account -> profile row (username/role come from sign-up metadata), plus any waiting data
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
+declare u text := lower(coalesce(new.raw_user_meta_data->>'username', split_part(new.email,'@',1)));
 begin
   insert into public.profiles (id, username, display_name, role)
-  values (new.id,
-          lower(coalesce(new.raw_user_meta_data->>'username', split_part(new.email,'@',1))),
+  values (new.id, u,
           coalesce(new.raw_user_meta_data->>'display_name', new.raw_user_meta_data->>'username'),
           case when new.raw_user_meta_data->>'role' = 'him' then 'him' else 'her' end);
+  insert into public.app_state (user_id, data, updated_at)
+    select new.id, p.data, now() from public.pending_state p where p.username = u
+    on conflict (user_id) do nothing;
+  delete from public.pending_state where username = u;
   return new;
 end $$;
 drop trigger if exists on_auth_user_created on auth.users;

@@ -5,3 +5,4 @@ private/
 Thumbs.db
 # other image experiments, not part of the site
 output/
+supabase/seed-her.sql

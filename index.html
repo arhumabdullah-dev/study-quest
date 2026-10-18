@@ -371,6 +371,37 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 .paired .cav{width:44px;height:44px}
 .msgemo{font-size:52px;line-height:1.15;margin-top:4px}
 .celcard .from{font-size:12px;font-weight:800;color:var(--pencil);margin-top:8px}
+.hcloud{flex:none;width:18px;height:18px;color:var(--good);display:grid;place-items:center}
+.hcloud svg{width:18px;height:18px;display:block}
+.hcloud.off{color:var(--pencil)}
+
+/* welcome / login: full screen, shows on open until she signs in or chooses to skip */
+#welcome{position:fixed;inset:0;z-index:54;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column;align-items:center;
+  background:var(--sky2);background-image:linear-gradient(180deg,var(--sky1),var(--sky2) 75%);
+  padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.wbox{width:min(400px,100%);margin:auto 0;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.wtitle{font:900 28px/1.2 var(--f-body);margin:0;color:var(--ink)}
+.wwhy{margin:0;font-weight:700;font-size:15px;line-height:1.45;color:var(--ink);opacity:.85;max-width:330px}
+.wdoll{position:relative;height:min(34vh,270px);display:flex;justify-content:center;align-items:flex-end;margin:4px 0 6px}
+.wdoll::before{content:"";position:absolute;left:50%;bottom:-10px;width:min(72vw,270px);height:44px;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(closest-side,var(--floor2) 0 60%,var(--floor1) 61% 99%,transparent)}
+.wdoll img{position:relative;height:100%;width:auto;filter:drop-shadow(0 8px 10px rgba(0,0,0,.2));animation:wbob 3.2s ease-in-out infinite}
+@keyframes wbob{50%{transform:translateY(-6px)}}
+.wbtns{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.wbtns .c3d{width:100%;min-height:58px;font-size:19px;text-decoration:none;display:grid;place-items:center}
+.wbtns .ghost{min-height:48px}
+.wskip{border:0;background:none;color:var(--ink);opacity:.8;font-weight:700;font-size:14px;min-height:44px;padding:8px 14px;text-decoration:underline;text-underline-offset:3px}
+.wtop{width:100%;display:flex}
+.wtop .ghost{min-height:44px}
+.wcard{width:100%;background:var(--sheet);border-radius:24px;padding:16px 16px 6px;box-shadow:0 6px 0 var(--shade);text-align:left}
+.wcard p{margin:0 0 12px;font-weight:700}
+.wcard .field{margin-bottom:12px}
+.wcard .field>label{display:block;font-weight:800;margin-bottom:4px}
+.wcard .hint{margin-top:4px}
+.wform .wdoll{height:min(15vh,120px);margin:0 0 4px}
+.wform .wdoll::before{height:26px;width:150px;bottom:-6px}
+.wform .wtitle{font-size:23px}
+@media (max-height:600px){.wform .wdoll{display:none}}
 
 /* celebration: he jumps in with the reward */
 #celebrate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;pointer-events:none;opacity:0;transition:opacity .2s;overflow-y:auto;
@@ -427,6 +458,7 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 </div>
 <nav class="tabs" id="tabs"></nav>
 <div id="celebrate"></div>
+<div id="welcome" hidden></div>
 <div id="coach"></div>
 <div id="toasts"></div>
 
@@ -790,7 +822,7 @@ function renderHero(){
   document.getElementById('hero').innerHTML = `<div class="hud">
     <button class="ava" id="heroAv" aria-label="${esc(l.profile)}">${avatarHTML()}</button>
     <div style="min-width:0">
-      <div class="hname"><span>${esc(name)}</span><span class="lv">${l.level}${li.lvl}</span></div>
+      <div class="hname"><span>${esc(name)}</span><span class="lv">${l.level}${li.lvl}</span>${cloudHTML()}</div>
       <div class="xpbar" role="img" aria-label="${li.cur} / ${li.need} ${l.xp}" title="${esc(l.xpTip)}"><i style="width:${(li.cur/li.need*100).toFixed(1)}%"></i><span>${l.xp} ${li.cur} / ${li.need}</span></div>
     </div>
     <button class="chip" id="streakBtn" aria-label="${esc(l.streakDays)} ${streak()}">${icon('flame')}<span>${streak()}</span><small>${l.dayU}</small></button>
@@ -1107,7 +1139,7 @@ view.addEventListener('click', e => {
   const ad = e.target.closest('[data-add]');
   if(ad){openTask(null, {date:ad.dataset.add.length > 1 ? ad.dataset.add : keyOf(today())}); return;}
   if(e.target.closest('[data-imp]')){openProfile({focus:'pasteTxt'}); return;}
-  if(e.target.closest('[data-acc]')){openProfile({focus:'aUser'}); return;}
+  if(e.target.closest('[data-acc]')){showWelcome('in'); return;}
   if(e.target.closest('[data-rename]')){openProfile({focus:'pCoach'}); return;}
   const wk = e.target.closest('[data-wk]');
   if(wk){const n = +wk.dataset.wk; ui.weekOffset = n === 0 ? 0 : ui.weekOffset + n; ui.selDay = null; render(); return;}
@@ -1782,11 +1814,11 @@ function exportCalendar(){
 const SB_URL = 'https://uaxmcjuxkuepystatqyn.supabase.co', SB_KEY = 'sb_publishable_QxMM_jpZLHnA5CAijHwmyQ_9VVs2uR5';
 const ACC = {
   en:{
-    title:'Account', signIn:'Sign in', signUp:'Sign up', user:'Username', userPh:'e.g. xiaochun', userHint:'Lowercase letters, numbers or _, 3–20 characters',
+    title:'Account', signIn:'Sign in', signUp:'Sign up', user:'Username', userPh:'e.g. xiaochun', userHint:'Letters and numbers only, 3–20 characters (no spaces or symbols)',
     pw:'Password', pwHint:'At least 6 characters. Remember it: you need it on a new phone.', show:'Show', hide:'Hide',
     signInGo:'Sign in', signUpGo:'Create account', wait:'One moment…',
     why:'Sign in so your progress is saved online and you can connect with {c}.',
-    errUser:'Usernames use lowercase letters, numbers or _, 3–20 characters.', errPw:'The password needs at least 6 characters.',
+    errUser:'Usernames can only use letters and numbers, 3–20 characters.', errPw:'The password needs at least 6 characters.',
     errWrong:'Wrong username or password. Try again.', errTaken:'That username is taken. Pick another one.',
     errNet:'Can\'t reach the server, keep using offline.', errMany:'Too many tries. Wait a few minutes and try again.',
     errOther:'Something went wrong. Try again later.', errSetup:'Sign-up is not open yet (the server is still being set up). Try again later.', created:'Account created; sign-in will work once setup is finished.',
@@ -1798,15 +1830,19 @@ const ACC = {
     needNet:'Go online to connect with him.', hisAcc:'This is his account. Use it in partner.html; nothing syncs here.',
     welcome:'Signed in. Your progress is saved online.', hisEdit:'{c} updated your schedule', outDone:'Signed out. Your progress stays on this phone.',
     hasAcc:'Already have an account? Sign in instead',
+    wTitle:'Welcome to Study Quest', wWhy:'Sign in and your progress is saved online: a new phone won\'t lose it, and you can connect with {c}.',
+    wUp:'Create my account', wIn:'Sign in', wSkip:'Use without an account', wSkipped:'OK! You can sign in any time in settings.',
+    wUpT:'Create your account', wInT:'Welcome back', wToIn:'Already have an account? Sign in', wToUp:'No account yet? Create one',
+    back:'Back', later:'Later', openPartner:'Open partner.html', cloudOk:'Saved online', cloudOff:'Offline, syncs later',
     kinds:{kiss:'A kiss from {c}', hug:'A hug from {c}', gift:'A gift from {c}', reward:'A reward from {c}', note:'A note from {c}'},
     emo:{kiss:'😘', hug:'🤗', gift:'🎁', reward:'🏆', note:'💌'}, gotIt:'Got it 💗'
   },
   zh:{
-    title:'账号', signIn:'登录', signUp:'注册', user:'用户名', userPh:'比如 xiaochun', userHint:'小写字母、数字或 _，3–20 位',
+    title:'账号', signIn:'登录', signUp:'注册', user:'用户名', userPh:'比如 xiaochun', userHint:'只能用字母和数字，3–20 位（不能有空格或符号）',
     pw:'密码', pwHint:'至少 6 位。记住它，换手机时要用。', show:'显示', hide:'隐藏',
     signInGo:'登录', signUpGo:'注册账号', wait:'请稍等…',
     why:'登录后，换手机也不会丢进度，还能和{c}连在一起。',
-    errUser:'用户名只能用小写字母、数字或 _，3–20 位。', errPw:'密码至少要 6 位。',
+    errUser:'用户名只能用字母和数字，3–20 位。', errPw:'密码至少要 6 位。',
     errWrong:'用户名或密码不对，再试一次。', errTaken:'这个用户名已经有人用了，换一个吧。',
     errNet:'连不上服务器，先离线使用。', errMany:'试的次数太多了，等几分钟再试。',
     errOther:'出错了，请稍后再试。', errSetup:'注册暂时用不了（服务器还在设置中），请稍后再试。', created:'账号已创建，请稍后再登录。',
@@ -1818,6 +1854,10 @@ const ACC = {
     needNet:'联网后就能和他连接。', hisAcc:'这是男生的账号，请在 partner.html 里使用，这里不会同步。',
     welcome:'登录成功，进度已经保存到网上。', hisEdit:'{c} 更新了你的课表', outDone:'已退出登录，进度还留在这台手机上。',
     hasAcc:'已经有账号？直接登录就行',
+    wTitle:'欢迎来到学习闯关', wWhy:'登录后进度会保存在网上，换手机也不会丢，还能和{c}连接。',
+    wUp:'注册我的账号', wIn:'登录', wSkip:'先不登录，直接用', wSkipped:'好哒！以后随时可以在设置里登录。',
+    wUpT:'注册你的账号', wInT:'欢迎回来', wToIn:'已经有账号？去登录', wToUp:'还没有账号？注册一个',
+    back:'返回', later:'以后再说', openPartner:'打开 partner.html', cloudOk:'已保存到网上', cloudOff:'离线中，联网后同步',
     kinds:{kiss:'{c}的亲亲', hug:'{c}的抱抱', gift:'{c}送你的礼物', reward:'{c}给你的奖励', note:'{c}给你的留言'},
     emo:{kiss:'😘', hug:'🤗', gift:'🎁', reward:'🏆', note:'💌'}, gotIt:'收到啦 💗'
   }
@@ -1877,7 +1917,7 @@ async function sbAuth(path, opt={}){
 function dropSess(){
   ['sq.session','sq.lastPush','sq.dirty','sq.acct','sq.syncAt'].forEach(k => lsSet(k, null));
   const mode = acct.mode; acct = freshAcct(); acct.mode = mode; msgQ = [];
-  renderAcc();
+  renderAcc(); render();
 }
 const isHis = () => !!(acct.me && acct.me.role === 'him');
 
@@ -1897,6 +1937,15 @@ function setSt(st){
   acct.st = st;
   if(st === 'ok'){acct.at = Date.now(); lsSet('sq.syncAt', acct.at);}
   const el = document.getElementById('accSt'); if(el) el.innerHTML = stHTML();
+  const hc = document.getElementById('hCloud'); if(hc) hc.outerHTML = cloudHTML();
+}
+// small cloud next to her name on the HUD: green with a tick when synced, grey when offline
+function cloudHTML(){
+  if(!accSess()) return '';
+  const a = accT(), off = acct.st === 'off', t = off ? a.cloudOff : a.cloudOk;
+  return `<span class="hcloud ${off ? 'off' : ''}" id="hCloud" role="img" aria-label="${esc(t)}" title="${esc(t)}"><svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 19h10.5a4.5 4.5 0 0 0 .4-8.98A6 6 0 0 0 6.2 9.6 4.7 4.7 0 0 0 7 19z" fill="currentColor"/>
+    ${off ? '' : '<path d="M9.2 14.2l2.1 2.1 3.8-3.9" fill="none" stroke="var(--sheet)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'}</svg></span>`;
 }
 
 /* profiles: me + the person I'm paired with */
@@ -2015,13 +2064,17 @@ function nextMsg(){
 }
 
 /* pair code: she makes it, he types it into partner.html */
-let pairTimer = 0;
+let pairTimer = 0, pairUp = false;
+async function newPairCode(){
+  const code = await sbAuth('/rest/v1/rpc/create_pair_code', {method:'POST', body:{}});
+  acct.code = String(code).replace(/\D/g, ''); acct.codeAt = Date.now(); acct.codeWatch = true;
+}
 const codeLeft = () => acct.code ? Math.ceil((acct.codeAt + 30*60000 - Date.now())/60000) : 0;
 function watchPair(){
   clearTimeout(pairTimer);
-  if(!profDlg.open || !accSess() || acct.partner || codeLeft() <= 0) return;
+  if((!profDlg.open && !pairUp) || !accSess() || acct.partner || codeLeft() <= 0) return;
   pairTimer = setTimeout(() => loadProfiles().then(() => {
-    renderAcc();
+    renderAcc(); if(pairUp) showPairOffer();
     if(acct.partner) cloudSync(); else watchPair();
   }, () => watchPair()), 5000);
 }
@@ -2085,8 +2138,7 @@ function renderAcc(){
   if(cb) cb.onclick = async () => {
     cb.disabled = true;
     try{
-      const code = await sbAuth('/rest/v1/rpc/create_pair_code', {method:'POST', body:{}});
-      acct.code = String(code).replace(/\D/g, ''); acct.codeAt = Date.now(); acct.codeWatch = true;
+      await newPairCode();
       renderAcc(); watchPair();
     }catch(e){cb.disabled = false; toast('', esc(accErr(e)));}
   };
@@ -2111,34 +2163,37 @@ function accErr(e){
   if(/weak_password/i.test(m)) return a.errPw;
   return a.errOther;
 }
-async function accSubmit(ev){
-  ev.preventDefault();
-  const a = accT(), u = document.getElementById('aUser').value.trim().toLowerCase(), p = document.getElementById('aPw').value;
-  const err = document.getElementById('aErr'), go = document.getElementById('aGo'), up = acct.mode === 'up';
-  acct.u = u; acct.p = p;
-  if(!/^[a-z0-9_]{3,20}$/.test(u)){err.textContent = a.errUser; return;}
-  if(p.length < 6){err.textContent = a.errPw; return;}
-  err.textContent = ''; go.disabled = true; go.textContent = a.wait;
+// sign up / sign in, then the first-sign-in sync. Shared by the settings form and the welcome screen.
+// Resolves to '' when signed in, otherwise the text to show her.
+async function accAuth(up, u, p){
+  const a = accT();
+  if(!/^[a-z0-9]{3,20}$/.test(u)) return a.errUser;
+  if(p.length < 6) return a.errPw;
   const email = u + '@study-quest.app';
+  let j;
   try{
-    const j = up
+    j = up
       ? await sbRaw('/auth/v1/signup', {method:'POST', body:{email, password:p, data:{username:u, display_name:String(state.profile.name || '').trim() || u, role:'her'}}})
       : await sbRaw('/auth/v1/token?grant_type=password', {method:'POST', body:{email, password:p}});
-    if(!j || !j.access_token){
-      // sign-up worked but email confirmation is still on in the dashboard
-      acct.mode = 'in'; renderAcc(); document.getElementById('aErr').textContent = a.created; return;
-    }
-    ['sq.lastPush','sq.dirty','sq.syncAt'].forEach(k => lsSet(k, null));
-    keepSess(j, {user:{id:j.user.id, username:u}});
-    const mode = acct.mode; acct = freshAcct(); acct.mode = mode;
-    renderAcc();
-    await cloudSync({prof:true});
-    if(acct.st === 'ok') toast('', esc(a.welcome));
-    pollMsgs();
-  }catch(e){
-    const er = document.getElementById('aErr');
-    if(er){er.textContent = accErr(e); go.disabled = false; go.textContent = up ? a.signUpGo : a.signInGo;}
-  }
+  }catch(e){return accErr(e);}
+  if(!j || !j.access_token){acct.mode = 'in'; return a.created;}   // sign-up worked but email confirmation is still on
+  ['sq.lastPush','sq.dirty','sq.syncAt'].forEach(k => lsSet(k, null));
+  keepSess(j, {user:{id:j.user.id, username:u}});
+  lsSet('sq.skipLogin', null);
+  const mode = acct.mode; acct = freshAcct(); acct.mode = mode;
+  renderAcc(); render();
+  await cloudSync({prof:true});
+  return '';
+}
+async function accSubmit(ev){
+  ev.preventDefault();
+  const a = accT(), go = document.getElementById('aGo');
+  acct.u = document.getElementById('aUser').value.trim().toLowerCase(); acct.p = document.getElementById('aPw').value;
+  document.getElementById('aErr').textContent = ''; go.disabled = true; go.textContent = a.wait;
+  const msg = await accAuth(acct.mode === 'up', acct.u, acct.p);
+  if(!msg){if(acct.st === 'ok') toast('', esc(a.welcome)); pollMsgs(); return;}
+  renderAcc();
+  const er = document.getElementById('aErr'); if(er) er.textContent = msg;
 }
 async function accSignOut(){
   const s = accSess(); if(!s) return;
@@ -2146,7 +2201,105 @@ async function accSignOut(){
   // last push first, but never wait long
   if(lsGet('sq.dirty')) await Promise.race([cloudSync(), new Promise(r => setTimeout(r, 4000))]);
   sbRaw('/auth/v1/logout', {method:'POST', token:s.access_token}).catch(() => {});
+  lsSet('sq.skipLogin', '1');   // she chose to sign out: don't greet her with the login screen next time
   dropSess(); toast('', esc(accT().outDone));
+}
+
+/* welcome / login screen: on open while signed out, until she signs in or taps "use without an account" */
+const welEl = document.getElementById('welcome');
+const wel = {step:'intro', u:'', p:'', eye:false, busy:false};
+const needWelcome = () => !accSess() && !lsGet('sq.skipLogin');
+function showWelcome(step='intro'){
+  wel.step = step; wel.busy = false;
+  if(profDlg.open) profDlg.close();
+  document.getElementById('celebrate').classList.remove('show');
+  renderWelcome(); welEl.hidden = false; welEl.scrollTop = 0;
+}
+function closeWelcome(){welEl.hidden = true; welEl.innerHTML = '';}
+function renderWelcome(){
+  const a = accT(), c = coachName(), s = wel.step, $ = id => document.getElementById(id);
+  const doll = e => `<div class="wdoll"><img src="${herSrc(e)}" alt="${esc(herName())}"></div>`;
+  let h;
+  if(s === 'intro') h = `${doll('happy')}<h1 class="wtitle">${esc(a.wTitle)}</h1><p class="wwhy">${esc(fill(a.wWhy, {c}))}</p>
+    <div class="wbtns"><button class="c3d go" id="wUp">${esc(a.wUp)}</button><button class="c3d blue" id="wIn">${esc(a.wIn)}</button></div>
+    <button class="wskip" id="wSkip">${esc(a.wSkip)}</button>`;
+  else if(s === 'him') h = `${doll('pout')}<div class="wcard"><p>${esc(a.hisAcc)}</p>
+    <div class="wbtns" style="margin-bottom:12px"><a class="c3d blue" href="partner.html">${esc(a.openPartner)}</a><button class="ghost" id="wOut">${esc(a.signOut)}</button></div></div>`;
+  else {
+    const up = s === 'up';
+    h = `<div class="wtop"><button class="ghost" id="wBack">‹ ${esc(a.back)}</button></div>${doll(up ? 'happy' : 'blush')}<h1 class="wtitle">${esc(up ? a.wUpT : a.wInT)}</h1>
+    <form class="wcard" id="wForm" novalidate>
+      <div class="field"><label for="wUser">${esc(a.user)}</label><input id="wUser" name="username" maxlength="20" value="${esc(wel.u)}" placeholder="${esc(a.userPh)}"
+        autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next"><div class="hint">${esc(a.userHint)}</div></div>
+      <div class="field"><label for="wPw">${esc(a.pw)}</label><div class="pwrow"><input id="wPw" name="password" type="${wel.eye ? 'text' : 'password'}" value="${esc(wel.p)}"
+        autocomplete="${up ? 'new-password' : 'current-password'}" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go">
+        <button type="button" class="ghost" id="wEye" aria-pressed="${wel.eye}">${esc(wel.eye ? a.hide : a.show)}</button></div>
+        ${up ? `<div class="hint">${esc(a.pwHint)}</div>` : ''}</div>
+      <div class="err" id="wErr" role="alert"></div>
+      <button type="submit" class="c3d go" id="wGo" style="width:100%;min-height:54px;font-size:18px;margin-top:6px">${esc(up ? a.signUpGo : a.signInGo)}</button>
+      <button type="button" class="linkbtn" id="wSwap" style="width:100%;min-height:44px;margin-top:6px">${esc(up ? a.wToIn : a.wToUp)}</button>
+    </form>`;
+  }
+  welEl.innerHTML = `<div class="wbox ${s === 'up' || s === 'in' ? 'wform' : ''}">${h}</div>`;
+  const on = (id, f) => {const b = $(id); if(b) b.onclick = f;};
+  on('wUp', () => showWelcome('up'));
+  on('wIn', () => showWelcome('in'));
+  on('wSkip', () => {lsSet('sq.skipLogin', '1'); closeWelcome(); toast('', esc(a.wSkipped)); afterWelcome();});
+  on('wBack', () => {keepW(); showWelcome('intro');});
+  on('wSwap', () => {keepW(); showWelcome(s === 'up' ? 'in' : 'up');});
+  on('wOut', async () => {await accSignOut(); lsSet('sq.skipLogin', null); showWelcome('intro');});
+  on('wEye', () => {
+    wel.eye = !wel.eye; const pw = $('wPw'), b = $('wEye');
+    pw.type = wel.eye ? 'text' : 'password'; b.textContent = wel.eye ? a.hide : a.show; b.setAttribute('aria-pressed', wel.eye); pw.focus();
+  });
+  const form = $('wForm');
+  if(form) form.onsubmit = async ev => {
+    ev.preventDefault();
+    if(wel.busy) return;
+    keepW(); wel.u = wel.u.trim().toLowerCase();
+    const go = $('wGo'), up = s === 'up';
+    wel.busy = true; go.disabled = true; go.textContent = a.wait; $('wErr').textContent = '';
+    const msg = await accAuth(up, wel.u, wel.p);
+    wel.busy = false;
+    if(msg){
+      if(up && acct.mode === 'in' && msg === a.created){showWelcome('in'); $('wErr').textContent = msg; return;}
+      go.disabled = false; go.textContent = up ? a.signUpGo : a.signInGo; $('wErr').textContent = msg; return;
+    }
+    wel.p = ''; wel.eye = false;
+    if(isHis()){showWelcome('him'); return;}
+    closeWelcome();
+    if(acct.st === 'ok') toast('', esc(a.welcome));
+    pollMsgs();
+    afterWelcome();
+  };
+  function keepW(){const u = $('wUser'), p = $('wPw'); if(u) wel.u = u.value; if(p) wel.p = p.value;}
+}
+// after the welcome screen: offer to connect with him (optional), then the first-time guide
+function afterWelcome(){
+  if(accSess() && acct.me && !isHis() && !acct.partner) setTimeout(showPairOffer, 300);
+  else if(!state.guided) setTimeout(showGuide, 400);
+}
+function showPairOffer(){
+  const a = accT(), c = coachName(), el = document.getElementById('celebrate');
+  pairUp = true;
+  let body;
+  if(acct.partner) body = `<p>${esc(fill(a.joined, {p:partnerName()}))}</p>`;
+  else if(codeLeft() > 0) body = `<div class="paircode num" aria-live="polite">${esc(acct.code)}</div><div class="hint" style="margin:0 0 6px">${esc(fill(a.codeHint, {c, m:codeLeft()}))}</div>`;
+  else body = `<p>${esc(fill(a.pairWhy, {c}))}</p><button class="c3d pink" id="wCode" style="width:100%;margin-top:12px;font-size:17px;min-height:50px">💞 ${esc(fill(a.connect, {c}))}</button>`;
+  el.innerHTML = `<img class="celchar" src="${charSrc(acct.partner ? 'love' : 'happy')}" alt=""><div class="celcard"><div class="ribbon">${esc(fill(a.connect, {c}))}</div>${body}
+    <button class="${acct.partner ? 'c3d go' : 'ghost'}" id="wLater" style="width:100%;margin-top:12px;min-height:48px;font-size:16px">${esc(acct.partner ? a.gotIt : a.later)}</button></div>`;
+  el.classList.add('show','guide'); el.onclick = null; clearTimeout(celTimer); el.scrollTop = 0;
+  const cb = document.getElementById('wCode');
+  if(cb) cb.onclick = async () => {
+    cb.disabled = true; cb.textContent = a.wait;
+    try{await newPairCode(); showPairOffer();}
+    catch(e){cb.disabled = false; cb.textContent = '💞 ' + fill(a.connect, {c}); toast('', esc(accErr(e)));}
+  };
+  document.getElementById('wLater').onclick = () => {
+    el.classList.remove('show','guide'); pairUp = false; clearTimeout(pairTimer);
+    if(!state.guided) setTimeout(showGuide, 300);
+  };
+  watchPair();
 }
 
 /* when to sync: on open, every 60 s while visible, when coming back, when the network returns; push on hide */
@@ -2179,7 +2332,7 @@ matchMedia('(max-width:760px)').addEventListener('change', render);
 save();
 render();
 preloadChar();
-if(!state.guided) setTimeout(showGuide, 400);
+if(needWelcome()) showWelcome(); else if(!state.guided) setTimeout(showGuide, 400);
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>

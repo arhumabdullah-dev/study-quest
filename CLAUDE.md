@@ -37,3 +37,10 @@ Two home-screen web apps for one person: a Chinese university student (her boyfr
 ## Reminders
 
 Web pages can't push notifications when closed on iPhone without a server. Reminders work two ways: in-app pop-ups while the app is open, and the "把提醒加到手机日历" button, which exports an `.ics` calendar with alarms so her phone's calendar shows them even when the app is closed.
+
+## Accounts (Supabase)
+
+- Optional login with username + password, couple pairing by 6-digit code, cloud sync of her state, messages from him, and his page `partner.html`. Everything works signed out too; localStorage stays the source of truth on the phone.
+- Endpoints, keys, session and merge rules: `supabase/CONTRACT.md`. Database: `supabase/schema.sql` (project `uaxmcjuxkuepystatqyn`, Seoul). Only the publishable key may appear in code; never a secret/service_role key.
+- Her account username is `xiaochun520`; her schedule waits in `pending_state` and moves into her account when she signs up. The seed script with her data is `supabase/seed-her.sql` (gitignored, never publish).
+- Usernames are letters and digits only (the auth server rejected underscores).
