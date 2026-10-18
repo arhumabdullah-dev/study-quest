@@ -86,7 +86,7 @@ body.home .wrap{padding-bottom:calc(var(--navh) + 8px + env(safe-area-inset-bott
 .card{background:var(--sheet);border-radius:24px;box-shadow:0 6px 0 var(--shade)}
 
 /* HUD: her photo, level, XP, streak */
-.hud{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--sheet);border-radius:22px;padding:8px 10px 8px 8px;box-shadow:0 5px 0 var(--shade)}
+.hud{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;gap:7px;align-items:center;background:var(--sheet);border-radius:22px;padding:8px 10px 8px 8px;box-shadow:0 5px 0 var(--shade)}
 .ava{width:50px;height:50px;border-radius:50%;border:3px solid var(--sun);padding:0;overflow:hidden;background:var(--sun);display:grid;place-items:center;font:800 22px var(--f-body);color:var(--on-sun)}
 .ava img{width:100%;height:100%;object-fit:cover;display:block}
 .hname{display:flex;align-items:center;gap:6px;font-weight:800;font-size:16px;min-width:0}
@@ -95,38 +95,59 @@ body.home .wrap{padding-bottom:calc(var(--navh) + 8px + env(safe-area-inset-bott
 .xpbar{position:relative;height:16px;margin-top:5px;background:var(--paper);border-radius:999px;overflow:hidden;box-shadow:inset 0 2px 0 var(--shade)}
 .xpbar i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(180deg,#ffe066,var(--sun));transition:width .6s cubic-bezier(.2,.8,.2,1)}
 .xpbar span{position:absolute;inset:0;display:grid;place-items:center;font:800 10px/1 var(--f-num);color:var(--ink)}
-.chip{display:flex;align-items:center;gap:3px;background:var(--paper);border-radius:999px;padding:6px 9px;font:800 15px var(--f-num)}
+.chip{display:flex;align-items:center;gap:2px;background:var(--paper);border:0;border-radius:999px;padding:0 9px;min-height:44px;font:800 15px var(--f-num);color:var(--ink)}
 .chip svg{width:18px;height:18px}
+.chip small{font-size:11px;font-weight:800;color:var(--pencil)}
 .gear{width:44px;height:44px;border-radius:50%;border:0;background:var(--paper);display:grid;place-items:center;color:var(--ink);padding:0}
+.gear.q{font:900 21px/1 var(--f-body);background:var(--sun);color:var(--on-sun);box-shadow:0 3px 0 var(--sun-e)}
 
 /* home: the room */
 .home{display:flex;flex-direction:column;gap:10px;margin-top:10px;
   min-height:calc(100vh - var(--navh) - 100px - max(10px,env(safe-area-inset-top)) - env(safe-area-inset-bottom));
   min-height:calc(100dvh - var(--navh) - 100px - max(10px,env(safe-area-inset-top)) - env(safe-area-inset-bottom))}
 .meters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.meter{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--ink)}
-.meter .track{flex:1}
+.meter{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--ink);white-space:nowrap}
+.meter .track{flex:1;height:14px}
+.home.setup #nowcard{order:-1}
+.roomhint{margin:-4px 2px 0;font-size:12px;font-weight:700;color:var(--ink);opacity:.75;text-align:center;line-height:1.35}
 .track{height:12px;background:color-mix(in srgb,var(--sheet) 70%,transparent);border-radius:999px;overflow:hidden}
 .track i{display:block;height:100%;border-radius:999px;background:var(--cc,var(--blue));transition:width .5s}
 .room{position:relative;flex:1;min-height:330px;display:grid;grid-template-columns:62px minmax(0,1fr) 62px;align-items:end;
   border-radius:28px;overflow:hidden;
   background:radial-gradient(120% 34% at 50% 100%,var(--floor2) 0 55%,transparent 56%),radial-gradient(150% 40% at 50% 104%,var(--floor1) 0 60%,transparent 61%)}
-.bubble{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:3;width:max-content;max-width:min(78%,340px);background:var(--bubble);color:var(--bubble-ink);
-  border-radius:20px;padding:10px 14px;font-weight:700;font-size:15px;line-height:1.35;text-align:center;box-shadow:0 4px 0 var(--shade);animation:pop .3s cubic-bezier(.3,1.5,.5,1)}
+/* bubble sits just above his head; on short rooms it stops 8px below the top (94px = 4 lines max) */
+.bubble{position:absolute;left:50%;bottom:min(calc(var(--H) + 16px),calc(100% - 102px));transform:translateX(-50%);z-index:3;width:max-content;max-width:min(calc(100% - 128px),320px);background:var(--bubble);color:var(--bubble-ink);
+  border-radius:20px;padding:9px 13px;cursor:pointer;font-weight:700;font-size:14px;line-height:1.35;text-align:center;box-shadow:0 4px 0 var(--shade);animation:pop .3s cubic-bezier(.3,1.5,.5,1);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+.tapme{position:absolute;left:50%;bottom:34%;transform:translateX(-50%);z-index:3;pointer-events:none;white-space:nowrap;background:var(--sun);color:var(--on-sun);
+  font-weight:900;font-size:14px;padding:6px 12px;border-radius:999px;box-shadow:0 3px 0 var(--sun-e);animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(-50%) translateY(-6px)}}
 .bubble::after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-9px;border:9px solid transparent;border-bottom:0;border-top-color:var(--bubble)}
 @keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
 .side{display:flex;flex-direction:column;gap:14px;align-items:center;padding-bottom:18px;z-index:2}
-.rbtn{width:58px;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;padding:0;font-size:12px;font-weight:800;color:var(--ink)}
+.rbtn{width:60px;display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;padding:0;font-size:12px;font-weight:800;color:var(--ink)}
+.rbtn span{background:var(--sheet);color:var(--ink);border-radius:999px;padding:1px 7px;white-space:nowrap;box-shadow:0 2px 0 var(--shade)}
+.nametag{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:3;display:flex;align-items:center;gap:6px;min-height:40px;white-space:nowrap;
+  border:0;border-radius:999px;background:var(--sheet);color:var(--ink);font-weight:900;font-size:15px;padding:4px 8px 4px 14px;box-shadow:0 4px 0 var(--shade);max-width:100%}
+.nametag span{overflow:hidden;text-overflow:ellipsis}
+.nametag i{font-style:normal;font-size:13px;width:28px;height:28px;border-radius:50%;background:var(--paper);display:grid;place-items:center;flex:none}
 .rbtn b{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:27px;background:var(--sheet);box-shadow:0 5px 0 var(--shade);transition:transform .08s,box-shadow .08s}
 .rbtn:active b{transform:translateY(4px);box-shadow:0 1px 0 var(--shade)}
 .rbtn.hit b{background:var(--red);box-shadow:0 5px 0 var(--red-e)}
-.rbtn.hit span{color:var(--red)}
+.rbtn.hit span{color:var(--danger)}
 .rbtn.love b{background:var(--pink);box-shadow:0 5px 0 var(--pink-e)}
-.charwrap{position:relative;align-self:end;display:flex;justify-content:center;padding-top:76px}
+.room{--H:min(42vh,400px,calc((100vw - 152px) / .95))}
+@supports (height:1dvh){.room{--H:min(40dvh,400px,calc((100vw - 152px) / .95))}}
+.charwrap{position:relative;align-self:end;display:flex;justify-content:center;padding-top:80px}
+.duo{display:flex;align-items:flex-end;justify-content:center}
+.who{position:relative;z-index:1}
+.who.herw{z-index:0;margin-right:calc(var(--H) * -.17)}
 .pet{position:relative;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;display:flex;justify-content:center}
-.pet img{display:block;height:min(46vh,410px);height:min(44dvh,410px);max-width:100%;object-fit:contain;transform-origin:50% 100%;pointer-events:none;
+.pet img{display:block;height:var(--H);max-width:none;object-fit:contain;transform-origin:50% 100%;pointer-events:none;
   filter:drop-shadow(0 8px 6px rgba(60,40,10,.18))}
 .pet.idle img{animation:bob 2.8s ease-in-out infinite}
+.pet.her img{height:calc(var(--H) * .82)}
+.pet.her.idle img{animation-delay:-1.4s}
 .pet.hit img{animation:squash .5s ease}
 .pet.eat img{animation:chew .3s ease 4}
 .pet.love img{animation:wiggle .45s ease 3}
@@ -154,6 +175,13 @@ body.home .wrap{padding-bottom:calc(var(--navh) + 8px + env(safe-area-inset-bott
 .nowcard h3{margin:2px 0 0;font-size:20px;line-height:1.2;font-weight:900;overflow-wrap:anywhere}
 .nowcard .tm{font:700 13px var(--f-num);color:var(--pencil)}
 .nowcard .big{font-size:18px;padding:14px 20px;border-radius:18px;min-width:96px}
+.donebox{display:flex;flex-direction:column;align-items:center;gap:7px}
+.donebox small{font-size:11px;font-weight:800;color:var(--pencil);white-space:nowrap}
+.nowcard.solo{grid-template-columns:minmax(0,1fr);text-align:center}
+.nowcard.solo h3{font-size:19px}
+.nowcard.solo p{margin:4px 0 6px;font-size:14px;font-weight:600;color:var(--pencil)}
+.nowcard.solo .big{width:100%}
+.nowcard.solo .ghost{width:100%;min-height:46px}
 .nowfoot{grid-column:1/-1;display:flex;align-items:center;gap:8px;border-top:2px dashed var(--rule);padding-top:10px;margin-top:4px}
 .pips{display:flex;gap:4px;flex-wrap:wrap;flex:1;min-width:0}
 .pips i{width:12px;height:12px;border-radius:50%;background:var(--rule)}
@@ -169,11 +197,21 @@ body.home .wrap{padding-bottom:calc(var(--navh) + 8px + env(safe-area-inset-bott
 .tab.on{color:var(--ink)}
 .tab.on b{background:var(--sun);color:var(--on-sun);box-shadow:0 4px 0 var(--sun-e);transform:translateY(-2px)}
 #addBtn{position:fixed;z-index:31;right:max(16px,calc(50vw - 264px),env(safe-area-inset-right));bottom:calc(var(--navh) + 22px + env(safe-area-inset-bottom));
-  width:60px;height:60px;border-radius:50%;font:800 34px/1 var(--f-body);display:grid;place-items:center;padding:0}
+  height:56px;border-radius:999px;font:900 18px/1 var(--f-body);display:flex;align-items:center;gap:6px;padding:0 20px 0 16px}
+#addBtn b{font-size:28px;line-height:1}
+body.weektab .wrap{padding-bottom:calc(var(--navh) + 100px + env(safe-area-inset-bottom))}
 
 /* section titles */
 .sec-title{font:900 19px var(--f-body);margin:22px 4px 10px;display:flex;align-items:baseline;gap:8px}
 .sec-title small{font:700 12px var(--f-num);color:var(--pencil)}
+.sec-sub{margin:-6px 4px 10px;font-size:13px;font-weight:600;color:var(--pencil);line-height:1.4}
+.helpline{background:var(--sheet);border-radius:16px;padding:9px 12px;margin:0 0 12px;font-size:13px;font-weight:700;color:var(--ink);line-height:1.45;box-shadow:0 3px 0 var(--shade)}
+.helpline b{color:var(--good)}
+.intro{padding:14px 16px;margin-top:14px}
+.intro h3{margin:0 0 2px;font:900 18px var(--f-body)}
+.intro .xpbar{height:18px;margin:8px 0}
+.intro p{margin:0;font-size:13px;font-weight:600;color:var(--pencil);line-height:1.45}
+.rsub{display:block;font-size:11px;font-weight:600;color:var(--pencil);line-height:1.3}
 
 /* task lists */
 .status{display:flex;align-items:center;gap:8px;font-size:14px;margin:0 0 10px;min-height:22px}
@@ -189,7 +227,7 @@ body.home .wrap{padding-bottom:calc(var(--navh) + 8px + env(safe-area-inset-bott
 .cat::before{content:"";width:9px;height:9px;background:var(--cc);border-radius:50%}
 .trow.now{background:var(--hl-soft);margin:0 -14px;padding-left:14px;padding-right:14px}
 .trow.done .t-title{color:var(--pencil);text-decoration:line-through}
-.stamp{width:48px;height:48px;border-radius:50%;border:3px dashed var(--rule);background:none;color:var(--pencil);font-size:12px;font-weight:800;padding:0}
+.stamp{width:48px;height:48px;border-radius:50%;border:3px dashed var(--go);background:var(--sheet);color:var(--good);font-size:12px;font-weight:800;padding:0}
 .stamp:active{transform:scale(.92)}
 .stamp:disabled{opacity:.35;cursor:not-allowed}
 .seal{width:48px;height:48px;border-radius:50%;border:0;background:var(--go);color:var(--on);box-shadow:0 4px 0 var(--go-e);display:grid;place-items:center;font:900 13px var(--f-body);padding:0}
@@ -199,7 +237,8 @@ body.home .wrap{padding-bottom:calc(var(--navh) + 8px + env(safe-area-inset-bott
 
 /* week */
 .weeknav{display:flex;align-items:center;gap:6px;margin-top:16px}
-.weeknav h2{flex:1;margin:0 4px;font:900 19px var(--f-body)}
+.weeknav h2{flex:1;min-width:0;margin:0 4px;font:900 17px/1.25 var(--f-body)}
+.weeknav .ghost[data-wk]{min-width:44px}
 .weeknav .ghost{padding:8px 12px;min-height:44px}
 .daystrip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:12px 0 14px}
 .dchip{border:0;background:var(--sheet);border-radius:16px;padding:7px 0 5px;text-align:center;font-size:11px;font-weight:700;color:var(--pencil);min-width:0;box-shadow:0 3px 0 var(--shade)}
@@ -301,10 +340,23 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 .switch{display:flex;align-items:center;gap:10px;font-size:14px;flex-wrap:wrap;font-weight:600}
 .switch input{width:auto}
 .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.btnrow button{min-height:44px}
+.dlghead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.dlghead h3{flex:1;margin:0}
+.grp{background:var(--paper);border-radius:20px;padding:14px 14px 4px;margin-bottom:12px}
+.grp.top{box-shadow:0 0 0 3px var(--go)}
+.grp h4{margin:0 0 2px;font:900 16px var(--f-body)}
+.grp>.hint:first-of-type{margin:0 0 12px;font-size:13px}
+.grp input,.grp select,.grp textarea{background:var(--sheet)}
+.grp .field>label{color:var(--ink)}
+.grp .field .hint{margin-top:4px}
 
 /* celebration: he jumps in with the reward */
-#celebrate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .2s;
-  background:rgba(20,26,50,.45);padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+#celebrate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;pointer-events:none;opacity:0;transition:opacity .2s;overflow-y:auto;
+  background:rgba(20,26,50,.45);padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+#celebrate>:first-child{margin-top:auto}
+#celebrate>:last-child{margin-bottom:auto}
+#celebrate.guide .celchar{height:min(22vh,180px);margin-bottom:16px}
 #celebrate.show{opacity:1;pointer-events:auto}
 .celchar{height:min(34vh,280px);display:block;margin-bottom:-26px;position:relative;z-index:1;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
 #celebrate.show .celchar{animation:jumpIn .5s cubic-bezier(.3,1.5,.5,1)}
@@ -314,6 +366,9 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 #celebrate.show .ribbon{animation:stampIn .4s .15s cubic-bezier(.3,1.6,.5,1) backwards}
 .celcard .xp{font:900 22px var(--f-num);color:var(--sun-e)}
 .celcard p{margin:6px 0 0;font-weight:700}
+.steps{margin:6px 0 0;padding:0;list-style:none;counter-reset:s;text-align:left;display:flex;flex-direction:column;gap:7px}
+.steps li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;font-weight:700;font-size:14px;background:var(--paper);border-radius:14px;padding:9px 11px}
+.steps li::before{content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:var(--sun);color:var(--on-sun);display:grid;place-items:center;font-weight:900;font-size:13px}
 .reward{display:flex;gap:10px;align-items:center;text-align:left;margin-top:12px;padding:10px 12px;background:var(--paper);border-radius:18px;font-weight:700}
 .reward .who2{font-size:12px;font-weight:800;color:var(--pencil)}
 .reward .re{font-size:24px;vertical-align:-4px}
@@ -337,7 +392,8 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 .coachbox .btns{display:flex;gap:6px;flex-wrap:wrap}
 .coachbox .btns button{padding:8px 14px;font-size:14px}
 
-@media (max-height:700px){.pet img{height:min(38vh,330px);height:min(36dvh,330px)}.charwrap{padding-top:66px}.room{min-height:290px}}
+@media (max-height:700px){.room{--H:min(32vh,300px,calc((100vw - 152px) / .95))}@supports (height:1dvh){.room{--H:min(30dvh,300px,calc((100vw - 152px) / .95))}}.charwrap{padding-top:70px}.room{min-height:262px}.side{gap:8px}.home{gap:8px}
+  #celebrate.guide .celchar{height:min(16vh,130px)}.steps li{font-size:13px;padding:7px 10px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -382,7 +438,7 @@ const I18N = {
     cats:{english:'English',class:'Class',study:'Study',sport:'Sport',rest:'Rest',life:'Self-care'},
     diff:{1:'Easy',2:'Normal',3:'Hard'},
     level:'Lv.', xp:'XP', toNext:'to next level', streakL:'day streak', doneL:'done', clearedL:'days cleared',
-    profile:'Settings', now:'Now', next:'Next', minsLeft:'left', startsIn:'starts in',
+    profile:'Settings', now:'Do this now', next:'Up next', notYet:'Not done yet', minsLeft:'left', startsIn:'starts in',
     allDone:'Every task today is done!', freeDay:'Nothing scheduled today.',
     laterDone:'Nothing else scheduled today.', nextDay:'Next up',
     stamp:'Done', sealTxt:'DONE',
@@ -398,23 +454,35 @@ const I18N = {
     errTitle:'Enter a title.', errDays:'Pick at least one day.', errDate:'Pick a date.', errTime:'End time must be after the start time.',
     name:'Your name', upload:'Upload photo', removePhoto:'Remove', language:'Language', theme:'Theme',
     themeAuto:'Auto', themeLight:'Light', themeDark:'Dark',
-    backup:'Backup', exportBtn:'Export data', importBtn:'Import file', pasteBtn:'Paste backup text', pasteGo:'Import',
+    backup:'Backup', exportBtn:'Export data', importBtn:'Import file', pasteGo:'Import',
     pastePh:'Paste the backup text here', reset:'Reset everything', resetConfirm:'Tap again to erase all data',
     close:'Close', imported:'Data imported', badImport:'That isn\'t a Study Quest backup. Copy the whole text and try again.',
     storageWarn:'This browser is blocking storage, so changes won\'t be saved after you close the page.',
     undone:'Undone', levelUp:'LEVEL UP', stageClear:'ALL CLEAR', questDone:'Task done',
     newBadge:'New medal', youAreNow:'You are now', defaultName:'Student',
     focus:'(not counting rest)', tasksDone:'Tasks done', streakDays:'Day streak', colon:': ',
-    prevWeek:'Previous week', nextWeek:'Next week', coachLabel:'His name (who reminds you)', reminderLead:'Minutes before', daysShort:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-    todayL:'Today', viewAll:'All tasks ›', doneBtn:'Done!', addFirst:'Add a task', restNow:'Free time',
-    welcome:'Your schedule is empty. Add your first task, or import a backup in settings.'
+    prevWeek:'Previous week', nextWeek:'Next week', coachLabel:'His name', coachHint:'This is what the boy in the middle is called. Give him any name you like.', herLabel:'Your character\'s name', herHint:'The girl standing next to him is you. Give her any name you like.', reminderLead:'Minutes before', daysShort:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    todayL:'Today', viewAll:'All tasks ›', doneBtn:'Done!', doneCap:'Tap when finished', addFirst:'Add a task', addShort:'Add', addDay:'+ Add a task on this day', restNow:'Free time',
+    impTitle:'First, bring in your schedule', impText:'Copy the backup text {c} sent you, tap the button below and paste it in.', impBtn:'Paste my schedule', orAdd:'Or add a task yourself',
+    tapMe:'👆 Tap him', renameL:'Rename him', roomHint:'Feed him to fill Full · hug or kiss him to raise Mood',
+    streakTip:'{s}-day streak. Finish at least 1 task every day to keep it growing.', dayU:'d', help:'How to play', xpTip:'XP to the next level',
+    weekHelp:'Tap a date to see that day · when a task is finished, tap its <b>Done</b> circle on the right · tap a task to edit it · numbers under dates = done / total',
+    achIntro:'Finish tasks to earn XP (Easy +10 · Normal +20 · Hard +30). Fill the bar to level up.', toLv:'{x} XP to Lv.{l}',
+    stickHint:'Each new level unlocks a sticker: first {c}\'s, then {h}\'s.', badgeHint:'Medals unlock by themselves when you reach the goal. Grey ones are still locked.', levelHint:'Higher levels get cooler titles.',
+    statsHint:'How this week went. Use the arrows to switch weeks.', complSub:'Tasks done ÷ all tasks this week', hoursSub:'Time of finished tasks (rest not counted)',
+    streakSub:'Days in a row with at least 1 task done', perDaySub:'Each bar is one day. Green = every task that day done.', perCatSub:'Bar = how much of the planned time you finished',
+    secImp:'Schedule & backup', secImpHint:'Paste the backup text {c} sent you below, then tap Import.', impWarn:'Importing replaces all current tasks and progress.',
+    fileHint:'Export data saves your progress as a file. Use Import file to bring it back on a new phone.',
+    secYou:'You & him', secShow:'Display', replayGuide:'Show the guide again',
+    guideTitle:'How it works', guideGo:'Got it!',
+    guide:['This is {c}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Rewards shows medals and stickers you unlock.','The gear opens settings: import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
   },
   zh:{
     tabs:{home:'主页',week:'任务',ach:'奖励',stats:'统计'},
     cats:{english:'英语',class:'课程',study:'自习',sport:'运动',rest:'休息',life:'生活'},
     diff:{1:'简单',2:'普通',3:'困难'},
     level:'Lv.', xp:'经验', toNext:'距离升级', streakL:'天连续', doneL:'个完成', clearedL:'天通关',
-    profile:'设置', now:'正在进行', next:'下一个', minsLeft:'还剩', startsIn:'后开始',
+    profile:'设置', now:'现在要做', next:'接下来', notYet:'还没完成', minsLeft:'还剩', startsIn:'后开始',
     allDone:'今天的任务全部完成啦！', freeDay:'今天没有安排。',
     laterDone:'今天没有其他安排了。', nextDay:'下一个任务',
     stamp:'打卡', sealTxt:'完成',
@@ -430,16 +498,28 @@ const I18N = {
     errTitle:'请输入标题。', errDays:'请至少选择一天。', errDate:'请选择日期。', errTime:'结束时间要晚于开始时间。',
     name:'你的名字', upload:'上传照片', removePhoto:'移除', language:'语言', theme:'主题',
     themeAuto:'跟随系统', themeLight:'浅色', themeDark:'深色',
-    backup:'备份', exportBtn:'导出数据', importBtn:'导入文件', pasteBtn:'粘贴备份文字', pasteGo:'导入',
+    backup:'备份', exportBtn:'导出数据', importBtn:'导入文件', pasteGo:'导入',
     pastePh:'把备份文字粘贴到这里', reset:'清空所有数据', resetConfirm:'再点一次清空全部数据',
     close:'关闭', imported:'导入成功', badImport:'这不是 Study Quest 的备份。请复制完整的文字再试一次。',
     storageWarn:'浏览器禁止了本地存储，关闭页面后修改不会保存。',
     undone:'已撤销', levelUp:'升级啦', stageClear:'全部通关', questDone:'任务完成',
     newBadge:'获得新勋章', youAreNow:'你现在是', defaultName:'同学',
     focus:'（不含休息）', tasksDone:'完成任务', streakDays:'连续打卡天数', colon:'：',
-    prevWeek:'上一周', nextWeek:'下一周', coachLabel:'提醒你的人叫什么', reminderLead:'提前几分钟', daysShort:['周日','周一','周二','周三','周四','周五','周六'],
-    todayL:'今日', viewAll:'查看全部 ›', doneBtn:'完成！', addFirst:'添加任务', restNow:'自由时间',
-    welcome:'还没有安排。添加第一个任务，或者在设置里导入备份。'
+    prevWeek:'上一周', nextWeek:'下一周', coachLabel:'他的名字', coachHint:'中间这个男生的名字，可以改成你喜欢的。', herLabel:'你的小人叫什么', herHint:'站在他旁边的女生就是你，可以给她起名字。', reminderLead:'提前几分钟', daysShort:['周日','周一','周二','周三','周四','周五','周六'],
+    todayL:'今日', viewAll:'查看全部 ›', doneBtn:'完成！', doneCap:'做完就点这里', addFirst:'添加任务', addShort:'添加', addDay:'+ 在这天加任务', restNow:'自由时间',
+    impTitle:'先把你的课表放进来', impText:'把{c}发给你的那段备份文字复制下来，点下面的按钮粘贴就好。', impBtn:'粘贴我的课表', orAdd:'或者自己添加任务',
+    tapMe:'👆 点点他', renameL:'给他改名字', roomHint:'喂饭让他吃饱 · 抱抱、亲亲让他开心',
+    streakTip:'已经连续打卡 {s} 天。每天至少完成 1 个任务，火苗就会继续变大。', dayU:'天', help:'怎么玩', xpTip:'升级还需要的经验',
+    weekHelp:'点上面的日期看那一天 · 做完一件事，点右边的<b>「打卡」</b>圆圈 · 点任务名可以修改 · 日期下的数字 = 已完成 / 总数',
+    achIntro:'做完任务拿经验（简单 +10 · 普通 +20 · 困难 +30），经验条满了就升级。', toLv:'再拿 {x} 经验升到 Lv.{l}',
+    stickHint:'每升一级解锁一张表情包：先是{c}的，再是{h}的。', badgeHint:'达成条件会自动获得勋章，灰色的是还没拿到的。', levelHint:'等级越高，称号越厉害。',
+    statsHint:'看看这周做得怎么样，用上面的箭头切换周。', complSub:'做完的任务 ÷ 本周全部任务', hoursSub:'做完的任务时长加起来（不含休息）',
+    streakSub:'连续每天至少完成 1 个任务的天数', perDaySub:'每根柱子是一天，绿色 = 那天全部完成。', perCatSub:'条越满，计划的时间完成得越多',
+    secImp:'课表和备份', secImpHint:'把{c}发给你的备份文字粘贴到下面，再点「导入」。', impWarn:'注意：导入会替换现在所有的任务和进度。',
+    fileHint:'「导出数据」把现在的进度存成文件，换手机时用「导入文件」恢复。',
+    secYou:'你和他', secShow:'显示', replayGuide:'重新看一遍怎么玩',
+    guideTitle:'怎么玩', guideGo:'知道啦！',
+    guide:['这是{c}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
   }
 };
 
@@ -453,7 +533,8 @@ const LEVEL_TITLES = [
 
 // his sticker pack, one unlocked per level
 const STICKERS = [
-  {f:'smug', lv:2}, {f:'chin', lv:3}, {f:'shock', lv:4}, {f:'angry', lv:5}
+  {f:'smug', lv:2}, {f:'chin', lv:3}, {f:'shock', lv:4}, {f:'angry', lv:5},
+  {f:'xc-hmph', lv:6}, {f:'xc-what', lv:7}, {f:'xc-hehe', lv:8}, {f:'xc-think', lv:9}
 ];
 
 const CHEERS = {
@@ -526,7 +607,7 @@ let ui = {tab:'home', weekOffset:0};
 let freshStamp = null;
 
 function freshState(){
-  return {seedVer:SEED_VER,profile:{name:'',avatar:'',nicks:'',coach:''},pet:{hunger:70,mood:80,last:Date.now(),voice:true},lang:'zh',theme:'light',remind:{on:true,before:5},tasks:seedTasks(),done:{},badges:{}};
+  return {seedVer:SEED_VER,profile:{name:'',avatar:'',nicks:'',coach:'',herName:''},pet:{hunger:70,mood:80,last:Date.now(),voice:true},lang:/^zh/i.test(navigator.language || '') ? 'zh' : 'en',theme:'light',remind:{on:true,before:5},tasks:seedTasks(),done:{},badges:{}};
 }
 function mergeSeeds(s){
   for(const t of seedTasks()){
@@ -537,13 +618,19 @@ function mergeSeeds(s){
   s.seedVer = SEED_VER;
   return s;
 }
+// older versions saved a placeholder coach name ('Claude'); clear it so coachName() falls back to 安仁 / Anren
+function migrate(st){
+  st.profile = Object.assign({name:'',avatar:'',nicks:'',coach:'',herName:''}, st.profile);
+  if(/^\s*claude\s*$/i.test(st.profile.coach || '')) st.profile.coach = '';
+  return st;
+}
 function load(){
   try{
     const raw = localStorage.getItem(STORE);
     if(raw){
       const s = JSON.parse(raw);
       if(s && Array.isArray(s.tasks)){
-        const st = Object.assign(freshState(), s);
+        const st = migrate(Object.assign(freshState(), s));
         return (s.seedVer || 1) < SEED_VER ? mergeSeeds(st) : st;
       }
     }
@@ -658,12 +745,18 @@ function toggleDone(task, k){
 const CHAR = {normal:'idle',happy:'happy',eat:'eat',hurt:'hurt',angry:'sulk',love:'blush',sad:'hungry',hungry:'hungry',
   sleepy:'sleepy',kiss:'kiss',remind:'remind',chubby:'chubby',left:'left',right:'right'};
 const charSrc = e => `img/anren/${CHAR[e] || 'idle'}.webp`;
-function preloadChar(){for(const f of new Set(Object.values(CHAR))){const i = new Image(); i.src = `img/anren/${f}.webp`;}}
+// her character (小春): fewer moods, same 466:760 frame
+const HER_FACES = ['idle','happy','eat','blush','kiss','pout','chubby','hungry'];
+const herSrc = e => `img/xiaochun/${HER_FACES.includes(e) ? e : 'idle'}.webp`;
+function preloadChar(){
+  for(const f of new Set(Object.values(CHAR))){const i = new Image(); i.src = `img/anren/${f}.webp`;}
+  for(const f of HER_FACES){const i = new Image(); i.src = herSrc(f);}
+}
 
 /* ---------- render: HUD & tabs ---------- */
 function avatarHTML(){
   const name = state.profile.name || L().defaultName;
-  return state.profile.avatar ? `<img src="${esc(state.profile.avatar)}" alt="">` : esc(name.trim().charAt(0).toUpperCase() || '学');
+  return `<img src="${state.profile.avatar ? esc(state.profile.avatar) : 'img/xiaochun-avatar.webp'}" alt="${esc(name)}">`;
 }
 function renderHero(){
   const l = L(), li = levelInfo(totalXP());
@@ -672,12 +765,15 @@ function renderHero(){
     <button class="ava" id="heroAv" aria-label="${esc(l.profile)}">${avatarHTML()}</button>
     <div style="min-width:0">
       <div class="hname"><span>${esc(name)}</span><span class="lv">${l.level}${li.lvl}</span></div>
-      <div class="xpbar" role="img" aria-label="${li.cur} / ${li.need} ${l.xp}"><i style="width:${(li.cur/li.need*100).toFixed(1)}%"></i><span>${li.cur} / ${li.need}</span></div>
+      <div class="xpbar" role="img" aria-label="${li.cur} / ${li.need} ${l.xp}" title="${esc(l.xpTip)}"><i style="width:${(li.cur/li.need*100).toFixed(1)}%"></i><span>${l.xp} ${li.cur} / ${li.need}</span></div>
     </div>
-    <div class="chip" title="${esc(l.streakDays)}">${icon('flame')}<span>${streak()}</span></div>
+    <button class="chip" id="streakBtn" aria-label="${esc(l.streakDays)} ${streak()}">${icon('flame')}<span>${streak()}</span><small>${l.dayU}</small></button>
+    <button class="gear q" id="helpBtn" aria-label="${esc(l.help)}">?</button>
     <button class="gear" id="profBtn" aria-label="${esc(l.profile)}">${icon('gear')}</button></div>`;
-  document.getElementById('heroAv').onclick = openProfile;
-  document.getElementById('profBtn').onclick = openProfile;
+  document.getElementById('heroAv').onclick = () => openProfile();
+  document.getElementById('profBtn').onclick = () => openProfile();
+  document.getElementById('helpBtn').onclick = showGuide;
+  document.getElementById('streakBtn').onclick = () => toast('', esc(fill(l.streakTip, {s:streak()})));
 }
 
 function renderTabs(){
@@ -685,7 +781,7 @@ function renderTabs(){
   const tabs = ['home','week','ach','stats'];
   document.getElementById('tabs').innerHTML = `<div class="tabs-in">` +
     tabs.map(t => `<button class="tab ${ui.tab===t?'on':''}" data-t="${t}"><b>${icon(t)}</b><span>${esc(l.tabs[t])}</span></button>`).join('') +
-    `</div><button id="addBtn" class="c3d" aria-label="${esc(l.addQuest)}" ${ui.tab!=='week'?'hidden':''}>+</button>`;
+    `</div><button id="addBtn" class="c3d" aria-label="${esc(l.addQuest)}" ${ui.tab!=='week'?'hidden':''}><b>+</b>${esc(l.addShort)}</button>`;
   document.querySelectorAll('.tab').forEach(b => b.onclick = () => go(b.dataset.t));
   document.getElementById('addBtn').onclick = () => openTask(null, {date: ui.selDay && isPhone() ? ui.selDay : keyOf(today())});
 }
@@ -703,8 +799,7 @@ function fmtDur(m){
 }
 function nowCardHTML(){
   const l = L(), d = today(), k = keyOf(d), list = tasksFor(d), nm = nowMin();
-  if(!state.tasks.length) return `<div class="nowcard card"><div><h3 style="font-size:16px">${esc(l.welcome)}</h3></div>
-    <button class="c3d go big" data-add="1">${esc(l.addFirst)}</button></div>`;
+  if(!state.tasks.length) return importCardHTML();
   const dn = list.filter(t => isDone(t,k)).length;
   const foot = `<div class="nowfoot"><span class="num" style="font-weight:800">${l.todayL} ${dn}/${list.length}</span>
     <div class="pips">${list.map(t => `<i class="${isDone(t,k)?'on':''}"></i>`).join('')}</div><button class="linkbtn" data-go="week">${esc(l.viewAll)}</button></div>`;
@@ -724,10 +819,17 @@ function nowCardHTML(){
   else if(mins(t.start) > nm){
     const wait = fmtDur(mins(t.start)-nm);
     lab = `<i style="--cc:var(--c-${t.cat})"></i>${l.next}`; tm = `${timeLabel(t)} · ${state.lang==='zh' ? wait+l.startsIn : l.startsIn+' '+wait}`;
-  } else {lab = `<i style="--cc:var(--c-${t.cat})"></i>${l.cats[t.cat]}`; tm = timeLabel(t);}
-  return `<div class="nowcard card" style="--cc:var(--c-${t.cat})"><div style="min-width:0"><div class="lab">${lab}</div><h3>${esc(taskTitle(t))}</h3>
-    <div class="tm num">${esc(tm)} · +${taskXP(t)}</div></div>
-    <button class="c3d go big" data-done="${t.id}" data-k="${k}">${esc(l.doneBtn)}</button>${foot}</div>`;
+  } else {lab = `<i style="--cc:var(--c-${t.cat})"></i>${l.notYet}`; tm = timeLabel(t);}
+  return `<div class="nowcard card" style="--cc:var(--c-${t.cat})"><div style="min-width:0"><div class="lab">${lab} · ${l.cats[t.cat]}</div><h3>${esc(taskTitle(t))}</h3>
+    <div class="tm num">${esc(tm)} · <span style="white-space:nowrap">+${taskXP(t)} ${l.xp}</span></div></div>
+    <div class="donebox"><button class="c3d go big" data-done="${t.id}" data-k="${k}">${esc(l.doneBtn)}</button><small>${esc(l.doneCap)}</small></div>${foot}</div>`;
+}
+// no tasks at all yet: one obvious next step (paste the backup he sent), plus a way to add one by hand
+function importCardHTML(){
+  const l = L();
+  return `<div class="nowcard card solo"><div><h3>${esc(l.impTitle)}</h3><p>${esc(fill(l.impText,{c:coachName()}))}</p></div>
+    <button class="c3d go big" data-imp="1">${esc(l.impBtn)}</button>
+    <button class="ghost" data-add="1">${esc(l.orAdd)}</button></div>`;
 }
 function renderHome(){
   const P = PET[state.lang], l = L(), p = petNow(), list = tasksFor(today()), k = keyOf(today());
@@ -735,17 +837,35 @@ function renderHome(){
   if(p.hunger < 30) line = P.hungry; else if(p.mood < 30) line = P.sad;
   const bar = (v, id) => `<div class="track" style="--cc:${meterColor(id,v)}"><i id="${id}" style="width:${v}%"></i></div>`;
   const rb = (kind, emo, label, cls='') => `<button class="rbtn ${cls}" data-pet="${kind}"><b>${emo}</b><span>${esc(label)}</span></button>`;
-  return `<section class="home">
-    <div class="meters"><div class="meter">${esc(P.hungerL)} ${bar(p.hunger,'mH')}</div><div class="meter">${esc(P.moodL)} ${bar(p.mood,'mM')}</div></div>
+  const fresh = (state.pet.taps || 0) < 4;
+  return `<section class="home ${state.tasks.length ? '' : 'setup'}">
+    <div class="meters"><div class="meter">🍙 ${esc(P.hungerL)} ${bar(p.hunger,'mH')}</div><div class="meter">💗 ${esc(P.moodL)} ${bar(p.mood,'mM')}</div></div>
+    ${fresh ? `<div class="roomhint" id="roomHint">${esc(l.roomHint)}</div>` : ''}
     <div class="room">
-      <div class="bubble" id="petSay">${esc(line)}</div>
+      <div class="bubble" id="petSay" data-pet="poke" role="button">${esc(line)}</div>
       <div class="side">${rb('feed','🍙',P.feedL)}${rb('hug','🤗',P.hugL,'love')}${rb('pat','✋',P.patL)}</div>
-      <div class="charwrap"><div id="pet" class="pet idle" data-pet="poke" role="button" aria-label="${esc(coachName())}"><img src="${charSrc(petIdleExpr())}" alt="${esc(coachName())}"></div><div id="petfx"></div></div>
+      <div class="charwrap"><div class="duo">
+        <div class="who herw"><div id="her" class="pet her idle" data-her="1" role="button" aria-label="${esc(herName())}"><img src="${herSrc(herIdleExpr())}" alt="${esc(herName())}"></div></div>
+        <div class="who"><div id="pet" class="pet idle" data-pet="poke" role="button" aria-label="${esc(coachName())}"><img src="${charSrc(petIdleExpr())}" alt="${esc(coachName())}"></div>
+        ${fresh ? `<span class="tapme" id="tapMe">${esc(l.tapMe)}</span>` : ''}
+        <button class="nametag" data-rename="1" aria-label="${esc(l.renameL)}"><span>${esc(coachName())}</span><i>✏️</i></button></div>
+        </div><div id="petfx"></div></div>
       <div class="side">${rb('kiss','😘',P.kissL,'love')}${rb('hit','👊',P.hitL,'hit')}<a class="rbtn" href="stress.html" style="text-decoration:none"><b>💥</b><span>${esc(P.stressS)}</span></a></div>
       <div class="foods" id="foods" hidden>${FOODS.map(f => `<button data-pet="feed" data-food="${f}" aria-label="${esc(P.feedL)} ${f}">${f}</button>`).join('')}</div>
     </div>
     <div id="nowcard">${nowCardHTML()}</div>
   </section>`;
+}
+
+/* ---------- first-time guide ---------- */
+function showGuide(){
+  const l = L(), el = document.getElementById('celebrate');
+  el.innerHTML = `<img class="celchar" src="${charSrc('happy')}" alt=""><div class="celcard"><div class="ribbon">${esc(l.guideTitle)}</div>
+    <ol class="steps">${l.guide.map(x => `<li>${esc(fill(x,{c:coachName()}))}</li>`).join('')}</ol>
+    <button class="c3d go" id="gok" style="width:100%;margin-top:12px;font-size:17px">${esc(l.guideGo)}</button></div>`;
+  el.classList.add('show','guide'); el.onclick = null; clearTimeout(celTimer); el.scrollTop = 0;
+  if(profDlg.open) profDlg.close();
+  document.getElementById('gok').onclick = () => {el.classList.remove('show'); state.guided = 1; save();};
 }
 
 /* ---------- render: task list rows ---------- */
@@ -784,9 +904,10 @@ function taskRow(t, k, nm, isToday){
 const PX = 56;
 function weekNav(){
   const l = L(), ws = addDays(mondayOf(today()), ui.weekOffset*7), we = addDays(ws,6);
+  const same = ws.getMonth() === we.getMonth();
   const range = state.lang === 'zh'
-    ? `${ws.getMonth()+1}月${ws.getDate()}日 – ${we.getMonth()+1}月${we.getDate()}日`
-    : `${fmtDate(ws,{month:'short',day:'numeric'})} – ${fmtDate(we,{month:'short',day:'numeric'})}`;
+    ? `${ws.getMonth()+1}月${ws.getDate()}日–${same ? '' : (we.getMonth()+1)+'月'}${we.getDate()}日`
+    : `${fmtDate(ws,{month:'short',day:'numeric'})}–${same ? we.getDate() : fmtDate(we,{month:'short',day:'numeric'})}`;
   return `<div class="weeknav"><h2>${esc(range)}</h2>
     <button class="ghost" data-wk="-1" aria-label="${esc(l.prevWeek)}">‹</button>
     <button class="ghost" data-wk="0" ${ui.weekOffset===0?'disabled':''}>${l.thisWeekBtn}</button>
@@ -823,10 +944,13 @@ function renderWeekPhone(days){
     return `<button class="dchip ${k===tk?'today':''} ${k===ui.selDay?'sel':''}" data-sel="${k}">${l.daysShort[d.getDay()]}<b>${d.getDate()}</b>${mark || '<i></i>'}</button>`;
   }).join('');
   const dayTxt = state.lang === 'zh' ? `${sel.getMonth()+1}月${sel.getDate()}日 ${l.daysShort[sel.getDay()]}` : fmtDate(sel,{weekday:'long',month:'long',day:'numeric'});
+  if(!state.tasks.length) return weekNav() + `<div class="daystrip">${strip}</div>${importCardHTML()}`;
   return weekNav() + `<div class="daystrip">${strip}</div>
-    <div class="dayline"><h3>${esc(dayTxt)}</h3><span class="num muted">${list.filter(t => isDone(t,ui.selDay)).length}/${list.length}</span></div>
+    <div class="helpline">${l.weekHelp}</div>
+    <div class="dayline"><h3>${esc(dayTxt)}</h3>${list.length ? `<span class="num muted">${list.filter(t => isDone(t,ui.selDay)).length}/${list.length} ${l.doneL}</span>` : ''}</div>
     ${ui.selDay === tk && list.length ? `<div class="status">${statusLine(list, tk)}</div>` : ''}
-    ${list.length ? `<div class="sheet">${list.map(t => taskRow(t,ui.selDay,nm,ui.selDay===tk)).join('')}</div>` : `<div class="empty">${l.freeDay}</div>`}`;
+    ${list.length ? `<div class="sheet">${list.map(t => taskRow(t,ui.selDay,nm,ui.selDay===tk)).join('')}</div>` + (parseKey(ui.selDay) > today() ? `<div class="hint" style="margin:8px 4px 0">${l.futureNote}</div>` : '')
+      : `<div class="empty">${l.freeDay}<div style="margin-top:12px"><button class="c3d" data-add="${ui.selDay}">${esc(l.addDay)}</button></div></div>`}`;
 }
 function renderWeek(){
   const l = L(), ws = addDays(mondayOf(today()), ui.weekOffset*7), tk = keyOf(today());
@@ -881,9 +1005,13 @@ function renderAch(){
     return `<div class="badge ${got?'got':'locked'}"><div class="medal">${b.seal}</div><b>${esc(b[state.lang][0])}</b>
       <p>${esc(b[state.lang][1])}</p><p class="num">${got ? esc(got.replace(/-/g,'.')) : l.locked}</p></div>`;
   }).join('');
-  return `<h3 class="sec-title">${l.stickers} <small>${STICKERS.filter(s => li.lvl >= s.lv).length}/${STICKERS.length}</small></h3><div class="stickers">${stickers}</div>
-    <h3 class="sec-title">${l.badges} <small>${Object.keys(state.badges).length}/${BADGES.length}</small></h3><div class="badges">${badges}</div>
-    <h3 class="sec-title">${l.levels}</h3><ul class="ladder card">${ladder}</ul>`;
+  const c = coachName();
+  return `<div class="intro card"><h3>${l.level}${li.lvl} ${esc(levelTitle(li.lvl))}</h3>
+      <div class="xpbar"><i style="width:${(li.cur/li.need*100).toFixed(1)}%"></i><span>${esc(fill(l.toLv,{x:li.need-li.cur,l:li.lvl+1}))}</span></div>
+      <p>${esc(l.achIntro)}</p></div>
+    <h3 class="sec-title">${l.stickers} <small>${STICKERS.filter(s => li.lvl >= s.lv).length}/${STICKERS.length}</small></h3><p class="sec-sub">${esc(fill(l.stickHint,{c, h:herName()}))}</p><div class="stickers">${stickers}</div>
+    <h3 class="sec-title">${l.badges} <small>${Object.keys(state.badges).length}/${BADGES.length}</small></h3><p class="sec-sub">${esc(l.badgeHint)}</p><div class="badges">${badges}</div>
+    <h3 class="sec-title">${l.levels}</h3><p class="sec-sub">${esc(l.levelHint)}</p><ul class="ladder card">${ladder}</ul>`;
 }
 
 /* ---------- render: weekly report ---------- */
@@ -905,20 +1033,20 @@ function renderStats(){
   const hrs = m => (m/60).toFixed(1)+'h';
   const maxN = Math.max(1, ...perDay.map(p => p.n));
   return weekNav() + `
-    <h3 class="sec-title">${l.report}</h3>
+    <h3 class="sec-title">${l.report}</h3><p class="sec-sub">${esc(l.statsHint)}</p>
     <div class="report">
-      <div class="rrow"><span>${l.completion}</span><span class="lead"></span><b>${pct}%</b></div>
+      <div class="rrow"><span>${l.completion}<small class="rsub">${esc(l.complSub)}</small></span><span class="lead"></span><b>${pct}%</b></div>
       <div class="rrow"><span>${l.tasksDone}</span><span class="lead"></span><b>${done}/${total}</b></div>
-      <div class="rrow"><span>${l.hoursDone} <small class="muted">${l.focus}</small></span><span class="lead"></span><b>${hrs(doneMin)}</b></div>
-      <div class="rrow"><span>${l.streakDays}</span><span class="lead"></span><b>${streak()}</b></div>
+      <div class="rrow"><span>${l.hoursDone}<small class="rsub">${esc(l.hoursSub)}</small></span><span class="lead"></span><b>${hrs(doneMin)}</b></div>
+      <div class="rrow"><span>${l.streakDays}<small class="rsub">${esc(l.streakSub)}</small></span><span class="lead"></span><b>${streak()}</b></div>
     </div>
-    <h3 class="sec-title">${l.perDay}</h3>
+    <h3 class="sec-title">${l.perDay}</h3><p class="sec-sub">${esc(l.perDaySub)}</p>
     <div class="chartcard">
     <div class="cols">${perDay.map(p => `<div class="col"><small>${p.n ? p.dn+'/'+p.n : ''}</small>
       <div class="bar ${!p.dn?'zero':p.dn===p.n?'full':''}" style="height:${p.n ? Math.max(2, p.dn/maxN*100) : 2}%"></div></div>`).join('')}</div>
     <div class="axis"></div>
     <div class="cols" style="height:auto;margin-top:4px">${perDay.map(p => `<div class="col"><span>${l.daysShort[p.d.getDay()]}</span></div>`).join('')}</div></div>
-    <h3 class="sec-title">${l.perCat}</h3>
+    <h3 class="sec-title">${l.perCat}</h3><p class="sec-sub">${esc(l.perCatSub)}</p>
     <div class="chartcard"><div class="bars">${CATS.filter(c => plan[c]).map(c => `<div class="barrow" style="--cc:var(--c-${c})"><span class="cat">${l.cats[c]}</span>
       <div class="track"><i style="width:${got[c]/plan[c]*100}%"></i></div><span class="v">${hrs(got[c])} / ${hrs(plan[c])}</span></div>`).join('') || `<div class="hint">—</div>`}</div></div>`;
 }
@@ -930,6 +1058,7 @@ function render(){
   else document.documentElement.setAttribute('data-theme', state.theme);
   document.body.classList.toggle('wide', ui.tab === 'week' && !isPhone());
   document.body.classList.toggle('home', ui.tab === 'home');
+  document.body.classList.toggle('weektab', ui.tab === 'week');
   document.getElementById('warn').innerHTML = storageOK ? '' : `<div class="warn">${L().storageWarn}</div>`;
   renderHero(); renderTabs();
   const v = document.getElementById('view');
@@ -943,11 +1072,15 @@ function refreshHome(){
 
 const view = document.getElementById('view');
 view.addEventListener('click', e => {
+  if(e.target.closest('[data-her]')){herTap(); return;}
   const pa = e.target.closest('[data-pet]');
   if(pa){petAction(pa.dataset.pet, pa.dataset.food); return;}
   const g = e.target.closest('[data-go]');
   if(g){go(g.dataset.go); return;}
-  if(e.target.closest('[data-add]')){openTask(null, {date:keyOf(today())}); return;}
+  const ad = e.target.closest('[data-add]');
+  if(ad){openTask(null, {date:ad.dataset.add.length > 1 ? ad.dataset.add : keyOf(today())}); return;}
+  if(e.target.closest('[data-imp]')){openProfile({focus:'pasteTxt'}); return;}
+  if(e.target.closest('[data-rename]')){openProfile({focus:'pCoach'}); return;}
   const wk = e.target.closest('[data-wk]');
   if(wk){const n = +wk.dataset.wk; ui.weekOffset = n === 0 ? 0 : ui.weekOffset + n; ui.selDay = null; render(); return;}
   const sd = e.target.closest('[data-sel]');
@@ -1051,35 +1184,46 @@ function openTask(task, opts={}){
 
 /* ---------- settings dialog ---------- */
 const profDlg = document.getElementById('profDlg');
-function openProfile(){
-  const l = L(), C = COACH[state.lang], P = PET[state.lang];
-  document.getElementById('profBody').innerHTML = `
-    <h3>${l.profile}</h3>
-    <div class="prof-av"><div class="ava">${avatarHTML()}</div>
-      <div class="btnrow"><button class="primary" id="pUp">${l.upload}</button>
-      ${state.profile.avatar ? `<button class="ghost" id="pRm">${l.removePhoto}</button>` : ''}</div></div>
-    <div class="field"><label for="pName">${l.name}</label><input id="pName" maxlength="30" value="${esc(state.profile.name)}" placeholder="${esc(l.defaultName)}"></div>
-    <div class="field"><label for="pCoach">${l.coachLabel}</label><input id="pCoach" maxlength="30" value="${esc(state.profile.coach)}" placeholder="${esc(COACH_DEFAULT)}"></div>
-    <div class="field"><label for="pNicks">${C.nicks}</label><input id="pNicks" maxlength="120" value="${esc(state.profile.nicks)}" placeholder="baby, 宝贝, 学霸"></div>
-    <div class="row">
-      <div class="field"><label for="pLang">${l.language}</label><select id="pLang"><option value="en" ${state.lang==='en'?'selected':''}>English</option><option value="zh" ${state.lang==='zh'?'selected':''}>中文</option></select></div>
-      <div class="field"><label for="pTheme">${l.theme}</label><select id="pTheme">${['auto','light','dark'].map(x => `<option value="${x}" ${state.theme===x?'selected':''}>${l['theme'+x[0].toUpperCase()+x.slice(1)]}</option>`).join('')}</select></div>
-    </div>
-    <div class="field"><label class="switch"><input type="checkbox" id="pVoice" ${state.pet.voice?'checked':''}> ${P.voice}</label></div>
-    <div class="field"><label>${C.remind}</label>
-      <label class="switch"><input type="checkbox" id="pRem" ${state.remind.on?'checked':''}> ${C.before}
+profDlg.addEventListener('close', () => render());
+function openProfile(opt={}){
+  const l = L(), C = COACH[state.lang], P = PET[state.lang], c = coachName(), noTasks = !state.tasks.length;
+  const grp = (title, hint, body, cls='') => `<section class="grp ${cls}"><h4>${title}</h4>${hint ? `<div class="hint">${hint}</div>` : ''}${body}</section>`;
+  // schedule & backup: the first thing she needs before any tasks exist
+  const imp = grp(l.secImp, esc(fill(l.secImpHint,{c})), `
+      <textarea id="pasteTxt" rows="3" placeholder="${esc(l.pastePh)}" aria-label="${esc(l.pastePh)}"></textarea>
+      <div class="btnrow"><button class="c3d go" id="pasteGo" style="flex:1">${l.pasteGo}</button></div>
+      <div class="err" id="pErr" role="alert"></div>
+      ${noTasks ? '' : `<div class="hint" style="color:var(--danger);font-weight:700">${l.impWarn}</div>`}
+      <div class="btnrow" style="margin-top:10px"><button class="ghost" id="pImp">${l.importBtn}</button><button class="ghost" id="pExp">${l.exportBtn}</button></div>
+      <div class="hint" style="margin-bottom:12px">${l.fileHint}</div>`, noTasks ? 'top' : '');
+  const you = grp(l.secYou, '', `
+      <div class="prof-av"><div class="ava">${avatarHTML()}</div>
+        <div class="btnrow"><button class="primary" id="pUp">${l.upload}</button>
+        ${state.profile.avatar ? `<button class="ghost" id="pRm">${l.removePhoto}</button>` : ''}</div></div>
+      <div class="field"><label for="pName">${l.name}</label><input id="pName" maxlength="30" value="${esc(state.profile.name)}" placeholder="${esc(l.defaultName)}"></div>
+      <div class="field"><label for="pCoach">${l.coachLabel}</label><input id="pCoach" maxlength="30" value="${esc(state.profile.coach)}" placeholder="${esc(coachDefault())}">
+        <div class="hint">${l.coachHint}</div></div>
+      <div class="field"><label for="pHer">${l.herLabel}</label><input id="pHer" maxlength="30" value="${esc(state.profile.herName)}" placeholder="${esc(herDefault())}">
+        <div class="hint">${l.herHint}</div></div>
+      <div class="field"><label for="pNicks">${C.nicks}</label><input id="pNicks" maxlength="120" value="${esc(state.profile.nicks)}" placeholder="baby, 宝贝, 学霸"></div>
+      <div class="field"><label class="switch"><input type="checkbox" id="pVoice" ${state.pet.voice?'checked':''}> ${P.voice}</label></div>`);
+  const rem = grp(C.remind, C.remindNote, `
+      <div class="field"><label class="switch"><input type="checkbox" id="pRem" ${state.remind.on?'checked':''}> ${C.before}
         <select id="pBefore" style="width:auto" aria-label="${esc(l.reminderLead)}">${[0,5,10,15,30].map(m => `<option value="${m}" ${+state.remind.before===m?'selected':''}>${m} min</option>`).join('')}</select></label>
       ${'Notification' in window ? (Notification.permission === 'granted' ? `<div class="hint">${C.notifOn}</div>` :
         Notification.permission === 'denied' ? `<div class="hint">${C.notifBlocked}</div>` :
-        `<div class="btnrow"><button class="ghost" id="pNotif">${C.notif}</button></div>`) : ''}
-      <div class="hint">${C.remindNote}</div>
-      <div class="btnrow"><button class="c3d" id="pCal">${C.calBtn}</button></div>
-      <div class="hint">${C.calNote}</div></div>
-    <div class="field"><label>${l.backup}</label>
-      <div class="btnrow"><button class="ghost" id="pExp">${l.exportBtn}</button><button class="ghost" id="pImp">${l.importBtn}</button><button class="ghost" id="pPaste">${l.pasteBtn}</button></div>
-      <div id="pasteBox" hidden style="margin-top:8px"><textarea id="pasteTxt" rows="4" placeholder="${esc(l.pastePh)}" aria-label="${esc(l.pastePh)}"></textarea>
-        <div class="btnrow"><button class="primary" id="pasteGo">${l.pasteGo}</button></div></div>
-      <div class="err" id="pErr" role="alert"></div></div>
+        `<div class="btnrow"><button class="ghost" id="pNotif">${C.notif}</button></div>`) : ''}</div>
+      <div class="field"><div class="btnrow"><button class="c3d" id="pCal">${C.calBtn}</button></div>
+      <div class="hint">${C.calNote}</div></div>`);
+  const show = grp(l.secShow, '', `
+      <div class="row">
+        <div class="field"><label for="pLang">${l.language}</label><select id="pLang"><option value="en" ${state.lang==='en'?'selected':''}>English</option><option value="zh" ${state.lang==='zh'?'selected':''}>中文</option></select></div>
+        <div class="field"><label for="pTheme">${l.theme}</label><select id="pTheme">${['auto','light','dark'].map(x => `<option value="${x}" ${state.theme===x?'selected':''}>${l['theme'+x[0].toUpperCase()+x.slice(1)]}</option>`).join('')}</select></div>
+      </div>
+      <div class="field"><button class="ghost" id="pGuide" style="width:100%;min-height:46px">? ${l.replayGuide}</button></div>`);
+  document.getElementById('profBody').innerHTML = `
+    <div class="dlghead"><h3>${l.profile}</h3><button class="ghost" id="pX">${l.close}</button></div>
+    ${noTasks ? imp + you + rem : you + rem + imp}${show}
     <div class="actions"><button class="ghost danger" id="pReset">${l.reset}</button><span class="spacer"></span><button class="primary" id="pClose">${l.close}</button></div>`;
   document.getElementById('pUp').onclick = () => document.getElementById('avatarFile').click();
   const rm = document.getElementById('pRm');
@@ -1087,7 +1231,8 @@ function openProfile(){
   document.getElementById('pName').oninput = e => {state.profile.name = e.target.value.trim(); save(); renderHero();};
   document.getElementById('pLang').onchange = e => {state.lang = e.target.value; save(); render(); openProfile();};
   document.getElementById('pTheme').onchange = e => {state.theme = e.target.value; save(); render();};
-  document.getElementById('pCoach').oninput = e => {state.profile.coach = e.target.value; save();};
+  document.getElementById('pCoach').oninput = e => {state.profile.coach = e.target.value; save(); if(ui.tab === 'home'){const n = document.querySelector('.nametag span'); if(n) n.textContent = coachName();}};
+  document.getElementById('pHer').oninput = e => {state.profile.herName = e.target.value; save();};
   document.getElementById('pNicks').oninput = e => {state.profile.nicks = e.target.value; save();};
   document.getElementById('pVoice').onchange = e => {state.pet.voice = e.target.checked; save();};
   document.getElementById('pCal').onclick = exportCalendar;
@@ -1097,15 +1242,17 @@ function openProfile(){
   if(pn) pn.onclick = () => Notification.requestPermission().then(() => openProfile());
   document.getElementById('pExp').onclick = exportData;
   document.getElementById('pImp').onclick = () => document.getElementById('importFile').click();
-  document.getElementById('pPaste').onclick = () => {const b = document.getElementById('pasteBox'); b.hidden = !b.hidden; if(!b.hidden) document.getElementById('pasteTxt').focus();};
   document.getElementById('pasteGo').onclick = () => importText(document.getElementById('pasteTxt').value);
+  document.getElementById('pGuide').onclick = showGuide;
   const rs = document.getElementById('pReset');
   rs.onclick = () => {
     if(rs.dataset.armed){const lang = state.lang; state = freshState(); state.lang = lang; save(); profDlg.close(); render();}
     else {rs.dataset.armed = '1'; rs.textContent = l.resetConfirm;}
   };
-  document.getElementById('pClose').onclick = () => profDlg.close();
+  document.getElementById("pClose").onclick = document.getElementById("pX").onclick = () => profDlg.close();
   if(!profDlg.open) profDlg.showModal();
+  const f = opt.focus && document.getElementById(opt.focus);
+  if(f){f.focus(); f.scrollIntoView({block:'center'}); if(f.select) f.select();}
 }
 
 document.getElementById('avatarFile').onchange = e => {
@@ -1135,7 +1282,7 @@ function importText(txt){
   try{
     const s = JSON.parse(String(txt).trim());
     if(!s || !Array.isArray(s.tasks)) throw 0;
-    state = Object.assign(freshState(), s); save(); profDlg.close(); render(); toast('', L().imported);
+    state = migrate(Object.assign(freshState(), s)); save(); profDlg.close(); render(); toast('', L().imported);
   }catch(e){
     const pe = profDlg.open && document.getElementById('pErr');
     if(pe) pe.textContent = L().badImport; else toast('', L().badImport);
@@ -1181,12 +1328,13 @@ function celebrate(task, gain, newLevel, cleared){
   const el = document.getElementById('celebrate');
   el.innerHTML = `<img class="celchar" src="${charSrc(pose)}" alt=""><div class="celcard"><div class="ribbon">${esc(sealTxt)}</div><div class="xp">+${gain} ${l.xp}</div><p>${esc(msg)}</p>
     <div class="reward"><span class="re">${re}</span><div><div class="who2">${esc(coachName())}</div>${esc(fill(rt,{n:nick()}))}</div></div></div>`;
-  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  el.classList.remove('show','guide'); void el.offsetWidth; el.classList.add('show');
   el.onclick = () => el.classList.remove('show');
   clearTimeout(celTimer);
   celTimer = setTimeout(() => el.classList.remove('show'), big ? 6000 : 4200);
   thump();
   confetti(big ? 140 : 50);
+  herReact('happy', 'hop', 4500);
 }
 function toast(sealTxt, html){
   const t = document.createElement('div');
@@ -1268,7 +1416,9 @@ const COACH = {
 };
 function coachAvatar(pose='remind'){return `<div class="cav"><img src="${charSrc(pose)}" alt=""></div>`;}
 const fill = (s,o) => s.replace(/\{(\w)\}/g, (_,k) => o[k] ?? '');
-const coachName = () => (state.profile.coach || '').trim() || COACH_DEFAULT;
+// her own name for him wins; otherwise 安仁 in Chinese, Anren in English
+const coachDefault = () => state.lang === 'zh' ? COACH_DEFAULT : 'Anren';
+const coachName = () => {const n = String(state.profile.coach || '').trim(); return n && !/^claude$/i.test(n) ? n : coachDefault();};
 function nick(){
   const list = String(state.profile.nicks || '').split(/[,，、]/).map(s => s.trim()).filter(Boolean);
   return list.length ? pick(list) : (state.profile.name || L().defaultName);
@@ -1432,6 +1582,9 @@ function petAction(kind, food){
   const tray = document.getElementById('foods');
   if(kind === 'feed' && !food){tray.hidden = !tray.hidden; return;}
   if(tray) tray.hidden = true;
+  // after a few taps she knows how the room works, so the hints go away
+  state.pet.taps = (state.pet.taps || 0) + 1; save();
+  if(state.pet.taps >= 4) document.querySelectorAll('#tapMe,#roomHint').forEach(x => x.remove());
   let expr = 'happy', anim = 'love', line;
   const angry = Date.now() < angryUntil;
   if(kind === 'feed'){
@@ -1463,6 +1616,8 @@ function petAction(kind, food){
     else if(isNight()){line = pick(P.sleepy); expr = 'sleepy'; anim = 'hop';}
     else {line = pick(P.poke); expr = pick(['happy','left','right','kiss','love','remind']); anim = 'hop';}
   }
+  const hr = {feed: expr === 'chubby' ? 'chubby' : 'eat', hit:'pout', hug:'blush', kiss:'blush'}[kind];
+  if(hr) herReact(hr, kind === 'hit' ? 'angry' : 'love');
   el.className = 'pet'; void el.offsetWidth; el.className = 'pet ' + anim;
   el.querySelector('img').src = charSrc(expr);
   petSay(fill(line, {n}));
@@ -1476,6 +1631,29 @@ function petAction(kind, food){
     const pe = document.getElementById('pet');
     if(pe){pe.className = 'pet idle'; pe.querySelector('img').src = charSrc(petIdleExpr());}
   }, 2800);
+}
+
+/* ---------- her character (小春) ---------- */
+const herDefault = () => state.lang === 'zh' ? '小春' : 'Xiao Chun';
+const herName = () => String(state.profile.herName || '').trim() || herDefault();
+const HER = {
+  zh:['哼～看什么看！','嘿嘿～今天我一定能全部通关！','啊?! 戳我干嘛～','想想……先做哪个任务呢？','{c}，你也要陪我学习哦','做完这个就奖励自己一杯奶茶！'],
+  en:['Hmph~ what are you looking at!','Hehe~ I\'m clearing everything today!','What?! Why poke me~','Let me think… which task first?','{c}, stay and study with me','One more task, then bubble tea for me!']
+};
+function herIdleExpr(){return Date.now() < chubbyUntil ? 'chubby' : petNow().hunger < 30 ? 'hungry' : 'idle';}
+let herTimer;
+function herReact(expr, anim='hop', ms=2600){
+  const el = document.getElementById('her');
+  if(!el) return;
+  el.className = 'pet her'; void el.offsetWidth; el.className = 'pet her ' + anim;
+  el.querySelector('img').src = herSrc(expr);
+  clearTimeout(herTimer);
+  herTimer = setTimeout(() => {const h = document.getElementById('her'); if(h){h.className = 'pet her idle'; h.querySelector('img').src = herSrc(herIdleExpr());}}, ms);
+}
+function herTap(){
+  const tray = document.getElementById('foods'); if(tray) tray.hidden = true;
+  herReact(pick(['happy','kiss','pout','blush']), 'hop');
+  petSayText(herName() + (state.lang === 'zh' ? '：' : ': ') + fill(pick(HER[state.lang]), {c:coachName()}));
 }
 
 /* calendar file (.ics) so the phone's own calendar pops up his reminders */
@@ -1537,6 +1715,7 @@ matchMedia('(max-width:760px)').addEventListener('change', render);
 save();
 render();
 preloadChar();
+if(!state.guided) setTimeout(showGuide, 400);
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
