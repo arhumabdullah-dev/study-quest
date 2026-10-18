@@ -19,7 +19,7 @@ create table if not exists public.app_state (
   user_id uuid primary key references public.profiles(id) on delete cascade,
   data jsonb not null,
   updated_at timestamptz not null default now(),
-  updated_by uuid references public.profiles(id)
+  updated_by uuid references public.profiles(id) on delete set null
 );
 
 -- rewards, notes and kisses between the two of them
