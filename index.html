@@ -191,7 +191,7 @@ body.home .wrap{padding-bottom:calc(var(--navh) + 8px + env(safe-area-inset-bott
 /* bottom nav: four big round buttons */
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--sheet);border-radius:26px 26px 0 0;box-shadow:0 -4px 0 var(--shade);
   padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
-.tabs-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tabs-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
 .tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;font-size:12px;font-weight:800;color:var(--pencil);min-height:56px}
 .tab b{width:46px;height:40px;border-radius:16px;display:grid;place-items:center;transition:transform .15s}
 .tab.on{color:var(--ink)}
@@ -312,6 +312,42 @@ body.weektab .wrap{padding-bottom:calc(var(--navh) + 100px + env(safe-area-inset
 .barrow{display:grid;grid-template-columns:64px minmax(0,1fr) 88px;gap:10px;align-items:center;font-size:13px}
 .barrow .track{background:color-mix(in srgb,var(--cc,var(--blue)) 16%,var(--sheet))}
 .barrow .v{text-align:right;color:var(--pencil);font:700 12px var(--f-num)}
+
+/* spending diary (记账) */
+.mtop{margin-top:16px;padding:16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:end}
+.mtop .lab{font-size:13px;font-weight:800;color:var(--pencil)}
+.mtop .amt{font:900 38px/1.1 var(--f-num);overflow-wrap:anywhere}
+.mtop .sub{font-size:14px;font-weight:700;color:var(--pencil)}
+.mtop .sub b{color:var(--ink);font-family:var(--f-num)}
+.mtop .mchar{width:86px;align-self:end;margin:-10px -4px -16px 0;grid-row:1/3;grid-column:2}
+.mtop .mchar img{width:100%;height:auto;display:block}
+.mtop .full{grid-column:1/-1}
+.mtop .bud{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;margin-top:8px}
+.mtop .bud .track{flex:1;height:14px;background:var(--paper)}
+.mtop .bud.over{color:var(--danger)}
+.mtop .c3d{width:100%;min-height:56px;font:900 19px var(--f-body);margin-top:12px}
+.srow{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:2px solid var(--rule);cursor:pointer}
+.srow:last-child{border-bottom:0}
+.semo{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:color-mix(in srgb,var(--cc) 18%,var(--sheet))}
+.srow .st{font-weight:800;font-size:15px;overflow-wrap:anywhere}
+.srow .sm{font-size:12px;font-weight:700;color:var(--pencil);margin-top:1px}
+.srow .sa{font:900 17px var(--f-num)}
+.sday{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:800;color:var(--pencil);padding:12px 0 2px;border-bottom:2px solid var(--rule)}
+.sday b{font-family:var(--f-num);color:var(--ink)}
+.barrow.money{grid-template-columns:96px minmax(0,1fr) 92px}
+.barrow.money .cat{white-space:nowrap}
+.barrow.money .cat::before{display:none}
+.msets{padding:14px 16px;margin-top:4px}
+.msets .field>label{color:var(--ink)}
+.amtin{font:900 34px var(--f-num)!important;text-align:center;padding:8px 12px!important}
+.scats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 6px}
+.scats label{position:relative;min-width:0}
+.scats input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;padding:0;opacity:0;pointer-events:none}
+.scats span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border-radius:16px;background:var(--paper);font-size:12px;font-weight:800;cursor:pointer;user-select:none;text-align:center;line-height:1.2;min-height:62px}
+.scats span i{font-style:normal;font-size:24px;line-height:1}
+.scats input:checked+span{background:var(--sun);color:var(--on-sun);box-shadow:0 3px 0 var(--sun-e)}
+.scats input:focus-visible+span{outline:3px solid var(--blue)}
+.toast .cav{width:40px;height:40px}
 
 /* dialogs (bottom sheets) */
 dialog{border:0;padding:0;background:var(--sheet);color:var(--ink);width:100vw;max-width:560px;max-height:92vh;margin:auto auto 0;border-radius:26px 26px 0 0;overflow:auto;overscroll-behavior:contain}
@@ -463,6 +499,7 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 <div id="toasts"></div>
 
 <dialog id="taskDlg"><form class="dlg" id="taskForm" method="dialog"></form></dialog>
+<dialog id="spendDlg"><form class="dlg" id="spendForm" method="dialog"></form></dialog>
 <dialog id="profDlg"><div class="dlg" id="profBody"></div></dialog>
 <input type="file" id="avatarFile" accept="image/*" hidden>
 <input type="file" id="importFile" accept="application/json,.json" hidden>
@@ -474,12 +511,18 @@ const SEED_VER = 3;
 const CATS = ['english','class','study','sport','rest','life'];
 const CAT_EMOJI = {english:'📘',class:'🎓',study:'📚',sport:'🏸',rest:'😴',life:'🛁'};
 const DIFF_XP = {1:10,2:20,3:30};
+// spending diary (记账): amounts are kept in fen (1/100 yuan) so totals stay exact
+const SPEND_CATS = {food:['🍜','--c-sport'],drink:['🧋','--c-life'],transport:['🚌','--c-english'],shopping:['🛍️','--c-class'],
+  beauty:['💄','--pink'],study:['📚','--c-study'],daily:['🧴','--c-rest'],fun:['🎮','--sun-e'],sport:['🏸','--go'],
+  gift:['🎁','--red'],phone:['📱','--blue-e'],other:['✨','--pencil']};
+const PAYS = ['wechat','alipay','card','cash'];
 
 const ICONS = {
   home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
   week:'<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4M8 14l2 2 4-4"/>',
   ach:'<rect x="3" y="9" width="18" height="12" rx="2"/><path d="M12 9v12M3 13h18M12 9c-2-4-7-5-7-2s5 2 7 2c2 0 7 1 7-2s-5-2-7 2"/>',
   stats:'<path d="M5 20V12M12 20V5M19 20v-7"/>',
+  money:'<path d="M4 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a1 1 0 0 1-1-1V7z"/><path d="M4 7l11-3v3"/><path d="M15 13.5h5"/><circle cx="16" cy="13.5" r=".6" fill="currentColor"/>',
   gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
   flame:'<path d="M12 22c4 0 7-3 7-7 0-5-5-7-5-12-3 2-5 5-5 8-1-1-2-2-2-4-2 2-2 5-2 8 0 4 3 7 7 7z" fill="#ff7a1a" stroke="#ff7a1a"/><path d="M12 22c-2 0-3-1.5-3-3.5S12 14 12 14s3 2.5 3 4.5-1 3.5-3 3.5z" fill="#ffd23f" stroke="none"/>'
 };
@@ -487,7 +530,17 @@ const icon = k => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${IC
 
 const I18N = {
   en:{
-    tabs:{home:'Home',week:'Tasks',ach:'Rewards',stats:'Stats'},
+    tabs:{home:'Home',week:'Tasks',money:'Money',ach:'Rewards',stats:'Stats'},
+    money:{cats:{food:'Meals',drink:'Drinks & snacks',transport:'Transport',shopping:'Shopping',beauty:'Beauty',study:'Study',daily:'Daily needs',fun:'Fun',sport:'Sport',gift:'Gifts',phone:'Phone & data',other:'Other'},
+      pays:{wechat:'WeChat Pay',alipay:'Alipay',card:'Bank card',cash:'Cash'},
+      today:'Spent today', month:'{m} total', count:'{n} items', add:'+ Add a spend', addT:'Add a spend', editT:'Edit this spend',
+      amount:'How much (¥)', cat:'What was it for?', why:'Why did you buy it?', whyPh:'e.g. hotpot with my roommates', pay:'Paid with', date:'Day',
+      errAmt:'Enter how much you spent.', saved:'Saved! Today you spent {t} in total.', savedOver:'Saved. This month is {t} over budget… let\'s spend a bit less 🥺',
+      budget:'Monthly budget (¥)', budgetHint:'Set a number to see how much is left this month. Leave empty for no budget.', left:'{t} left of {b}', over:'{t} over the {b} budget',
+      none:'Nothing recorded this month. When you spend money, tap "Add a spend".', help:'Spent money? Tap <b>Add a spend</b>: the amount, what it was for, and why. Below you see each day and the whole month.',
+      byCat:'Where the money went', byCatSub:'This month, by category', last7:'Last 7 days', last7Sub:'Each bar is one day\'s spending', list:'Every spend', listSub:'Tap one to change or delete it',
+      share:'Let {c} see my spending', shareHint:'When on, {c} can see how much you spend each day on his page. Off by default.', setT:'Money settings',
+      prevM:'Previous month', nextM:'Next month', thisM:'This month', pctOf:'{p}%'},
     cats:{english:'English',class:'Class',study:'Study',sport:'Sport',rest:'Rest',life:'Self-care'},
     diff:{1:'Easy',2:'Normal',3:'Hard'},
     level:'Lv.', xp:'XP', toNext:'to next level', streakL:'day streak', doneL:'done', clearedL:'days cleared',
@@ -530,10 +583,20 @@ const I18N = {
     expHint:'This is all your progress. Copy it and send it to yourself (e.g. a chat with yourself) to keep it safe.', dlLink:'Nothing happened? Tap here to download the file.',
     secYou:'You & him', secShow:'Display', replayGuide:'Show the guide again',
     guideTitle:'How it works', guideGo:'Got it!',
-    guide:['This is {c}, and the girl next to him is you, {h}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Rewards shows medals and stickers you unlock.','The gear opens settings: sign in to your account (already have one? just sign in, no backup needed), import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
+    guide:['This is {c}, and the girl next to him is you, {h}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Money is your spending diary: record what you spend each day and why. Rewards shows medals and stickers you unlock.','The gear opens settings: sign in to your account (already have one? just sign in, no backup needed), import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
   },
   zh:{
-    tabs:{home:'主页',week:'任务',ach:'奖励',stats:'统计'},
+    tabs:{home:'主页',week:'任务',money:'记账',ach:'奖励',stats:'统计'},
+    money:{cats:{food:'餐饮',drink:'奶茶零食',transport:'交通',shopping:'购物',beauty:'美妆护肤',study:'学习',daily:'日用品',fun:'娱乐',sport:'运动',gift:'送礼',phone:'话费网费',other:'其他'},
+      pays:{wechat:'微信',alipay:'支付宝',card:'银行卡',cash:'现金'},
+      today:'今天花了', month:'{m}一共', count:'{n} 笔', add:'+ 记一笔', addT:'记一笔', editT:'修改这一笔',
+      amount:'花了多少钱（元）', cat:'花在哪一类', why:'为什么花这笔钱', whyPh:'比如：和室友吃火锅', pay:'用什么付的', date:'哪一天',
+      errAmt:'请输入花了多少钱。', saved:'记好啦！今天一共花了 {t}', savedOver:'记好了。这个月已经超出预算 {t} 了哦…省着点花 🥺',
+      budget:'每月预算（元）', budgetHint:'填一个数字，就能看到这个月还剩多少钱。不填 = 不设预算。', left:'还剩 {t}（预算 {b}）', over:'超出预算 {t}（预算 {b}）',
+      none:'这个月还没有记账。花了钱就点「记一笔」吧！', help:'花了钱就点<b>「记一笔」</b>：填金额、选类别、写一句为什么。下面能看到每天和每个月花了多少。',
+      byCat:'钱花在哪里', byCatSub:'这个月每一类花了多少', last7:'最近 7 天', last7Sub:'每根柱子是一天花的钱', list:'每一笔', listSub:'点一笔可以修改或删除',
+      share:'让{c}看到我的记账', shareHint:'打开后，{c}在他的页面上能看到你每天花了多少钱。默认关闭。', setT:'记账设置',
+      prevM:'上个月', nextM:'下个月', thisM:'本月', pctOf:'{p}%'},
     cats:{english:'英语',class:'课程',study:'自习',sport:'运动',rest:'休息',life:'生活'},
     diff:{1:'简单',2:'普通',3:'困难'},
     level:'Lv.', xp:'经验', toNext:'距离升级', streakL:'天连续', doneL:'个完成', clearedL:'天通关',
@@ -576,7 +639,7 @@ const I18N = {
     expHint:'这是你的全部进度。复制下来发给自己（比如微信「文件传输助手」）保存好。', dlLink:'没反应？点这里下载文件。',
     secYou:'你和他', secShow:'显示', replayGuide:'重新看一遍怎么玩',
     guideTitle:'怎么玩', guideGo:'知道啦！',
-    guide:['这是{c}，站在他旁边的女生就是你：{h}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：登录账号（已经有账号的话直接登录，不用粘贴备份）、导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
+    guide:['这是{c}，站在他旁边的女生就是你：{h}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「记账」记下每天花了多少钱、为什么花。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：登录账号（已经有账号的话直接登录，不用粘贴备份）、导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
   }
 };
 
@@ -660,11 +723,11 @@ function seedTasks(){
 /* ---------- state ---------- */
 let storageOK = true;
 let state = load();
-let ui = {tab:'home', weekOffset:0};
+let ui = {tab:'home', weekOffset:0, monthOffset:0};
 let freshStamp = null;
 
 function freshState(){
-  return {seedVer:SEED_VER,profile:{name:'',avatar:'',nicks:'',coach:'',herName:''},pet:{hunger:70,mood:80,last:Date.now(),voice:true},lang:/^zh/i.test(navigator.language || '') ? 'zh' : 'en',theme:'light',remind:{on:true,before:5},tasks:seedTasks(),done:{},badges:{}};
+  return {seedVer:SEED_VER,profile:{name:'',avatar:'',nicks:'',coach:'',herName:''},pet:{hunger:70,mood:80,last:Date.now(),voice:true},lang:/^zh/i.test(navigator.language || '') ? 'zh' : 'en',theme:'light',remind:{on:true,before:5},tasks:seedTasks(),done:{},badges:{},spend:[],budget:0,spendShare:false};
 }
 function mergeSeeds(s){
   for(const t of seedTasks()){
@@ -679,6 +742,7 @@ function mergeSeeds(s){
 function migrate(st){
   st.profile = Object.assign({name:'',avatar:'',nicks:'',coach:'',herName:''}, st.profile);
   if(/^\s*claude\s*$/i.test(st.profile.coach || '')) st.profile.coach = '';
+  if(!Array.isArray(st.spend)) st.spend = [];
   return st;
 }
 function load(){
@@ -836,7 +900,7 @@ function renderHero(){
 
 function renderTabs(){
   const l = L();
-  const tabs = ['home','week','ach','stats'];
+  const tabs = ['home','week','money','ach','stats'];
   document.getElementById('tabs').innerHTML = `<div class="tabs-in">` +
     tabs.map(t => `<button class="tab ${ui.tab===t?'on':''}" data-t="${t}"><b>${icon(t)}</b><span>${esc(l.tabs[t])}</span></button>`).join('') +
     `</div><button id="addBtn" class="c3d" aria-label="${esc(l.addQuest)}" ${ui.tab!=='week'?'hidden':''}><b>+</b>${esc(l.addShort)}</button>`;
@@ -845,7 +909,7 @@ function renderTabs(){
 }
 function go(tab){
   try{window.speechSynthesis?.cancel();}catch(e){}
-  ui.tab = tab; if(tab === 'week') ui.selDay = null;
+  ui.tab = tab; if(tab === 'week') ui.selDay = null; if(tab === 'money') ui.monthOffset = 0;
   render(); window.scrollTo(0,0);
 }
 
@@ -1110,6 +1174,140 @@ function renderStats(){
       <div class="track"><i style="width:${got[c]/plan[c]*100}%"></i></div><span class="v">${hrs(got[c])} / ${hrs(plan[c])}</span></div>`).join('') || `<div class="hint">—</div>`}</div></div>`;
 }
 
+/* ---------- render: spending diary (记账) ---------- */
+const spendSum = list => list.reduce((a,x) => a + (+x.fen || 0), 0);
+function yuan(fen){
+  const v = fen/100;
+  return '¥' + v.toLocaleString(locale(), {minimumFractionDigits: fen % 100 ? 2 : 0, maximumFractionDigits:2});
+}
+function monthStart(off){const d = today(); return new Date(d.getFullYear(), d.getMonth()+off, 1);}
+const monthName = d => state.lang === 'zh' ? `${d.getMonth()+1}月` : d.toLocaleDateString('en-US', {month:'long'});
+// over budget this month, in fen (0 = fine or no budget)
+function overBudget(){
+  if(!state.budget) return 0;
+  const mk = keyOf(monthStart(0)).slice(0,7);
+  return Math.max(0, spendSum(state.spend.filter(x => x.date.startsWith(mk))) - state.budget);
+}
+function spendRow(x){
+  const M = L().money, [emo, col] = SPEND_CATS[x.cat] || SPEND_CATS.other;
+  const meta = [x.note ? M.cats[x.cat] : '', M.pays[x.pay] || ''].filter(Boolean).join(' · ');
+  return `<div class="srow" data-spend="${esc(x.id)}" style="--cc:var(${col})"><div class="semo">${emo}</div>
+    <div style="min-width:0"><div class="st">${esc(x.note || M.cats[x.cat] || '')}</div>${meta ? `<div class="sm">${esc(meta)}</div>` : ''}</div>
+    <div class="sa">${yuan(x.fen)}</div></div>`;
+}
+function renderMoney(){
+  const l = L(), M = l.money, off = ui.monthOffset || 0, c = coachName();
+  const m0 = monthStart(off), mk = keyOf(m0).slice(0,7), tk = keyOf(today());
+  const items = state.spend.filter(x => x.date.startsWith(mk)).sort((a,b) => b.date.localeCompare(a.date) || b.at - a.at);
+  const tot = spendSum(items), todayTot = spendSum(state.spend.filter(x => x.date === tk));
+  const title = state.lang === 'zh' ? `${m0.getFullYear()}年${m0.getMonth()+1}月` : m0.toLocaleDateString('en-US', {month:'long', year:'numeric'});
+  const nav = `<div class="weeknav"><h2>${esc(title)}</h2>
+    <button class="ghost" data-mo="-1" aria-label="${esc(M.prevM)}">‹</button>
+    <button class="ghost" data-mo="0" ${off===0?'disabled':''}>${M.thisM}</button>
+    <button class="ghost" data-mo="1" aria-label="${esc(M.nextM)}" ${off>=0?'disabled':''}>›</button></div>`;
+  // the big card: today (this month) or the month total (older months), budget bar, add button
+  let bud = '';
+  if(state.budget){
+    const left = state.budget - tot, pct = Math.min(100, tot/state.budget*100);
+    bud = `<div class="bud full ${left < 0 ? 'over' : ''}"><div class="track" style="--cc:var(${left < 0 ? '--red' : pct > 80 ? '--sun' : '--go'})"><i style="width:${pct.toFixed(1)}%"></i></div>
+      <span>${esc(fill(left < 0 ? M.over : M.left, {t:yuan(Math.abs(left)), b:yuan(state.budget)}))}</span></div>`;
+  }
+  const pose = off === 0 && state.budget && tot > state.budget ? 'angry' : todayTot ? 'happy' : 'remind';
+  const head = off === 0
+    ? `<div><div class="lab">${M.today}</div><div class="amt">${yuan(todayTot)}</div></div>
+       <div class="sub">${esc(fill(M.month, {m:monthName(m0)}))} <b>${yuan(tot)}</b> · ${esc(fill(M.count, {n:items.length}))}</div>`
+    : `<div><div class="lab">${esc(fill(M.month, {m:monthName(m0)}))}</div><div class="amt">${yuan(tot)}</div></div>
+       <div class="sub">${esc(fill(M.count, {n:items.length}))}</div>`;
+  const top = `<div class="mtop card">${head}<div class="mchar"><img src="${charSrc(pose)}" alt="${esc(c)}"></div>${bud}
+    <button class="c3d pink full" data-addspend="1">${esc(M.add)}</button></div>`;
+  if(!items.length) return nav + top + `<div class="helpline" style="margin-top:14px">${M.help}</div><div class="empty">${esc(M.none)}</div>` + moneySettings();
+  // by category
+  const byCat = {};
+  for(const x of items) byCat[x.cat] = (byCat[x.cat] || 0) + x.fen;
+  const cats = Object.entries(byCat).sort((a,b) => b[1]-a[1]), maxC = cats[0][1];
+  const catHTML = cats.map(([k,v]) => {
+    const [emo, col] = SPEND_CATS[k] || SPEND_CATS.other;
+    return `<div class="barrow money" style="--cc:var(${col})"><span class="cat">${emo} ${esc(M.cats[k] || k)}</span>
+      <div class="track"><i style="width:${(v/maxC*100).toFixed(1)}%"></i></div><span class="v">${yuan(v)} · ${Math.round(v/tot*100)}%</span></div>`;
+  }).join('');
+  // last 7 days (this month's view only)
+  let week = '';
+  if(off === 0){
+    const days = [...Array(7)].map((_,i) => addDays(today(), i-6)).map(d => ({d, v:spendSum(state.spend.filter(x => x.date === keyOf(d)))}));
+    const mx = Math.max(1, ...days.map(p => p.v));
+    week = `<h3 class="sec-title">${M.last7}</h3><p class="sec-sub">${esc(M.last7Sub)}</p><div class="chartcard">
+      <div class="cols">${days.map(p => `<div class="col"><small>${p.v ? yuan(p.v).replace(/\.\d+$/,'') : ''}</small>
+        <div class="bar ${p.v ? '' : 'zero'}" style="height:${p.v ? Math.max(3, p.v/mx*100) : 2}%;${p.v ? 'background:var(--pink)' : ''}"></div></div>`).join('')}</div>
+      <div class="axis"></div>
+      <div class="cols" style="height:auto;margin-top:4px">${days.map(p => `<div class="col"><span>${keyOf(p.d) === tk ? l.todayL : l.daysShort[p.d.getDay()]}</span></div>`).join('')}</div></div>`;
+  }
+  // every spend, grouped by day
+  let list = '', day = '';
+  for(const x of items){
+    if(x.date !== day){
+      day = x.date;
+      const d = parseKey(day), dt = state.lang === 'zh' ? `${d.getMonth()+1}月${d.getDate()}日 ${l.daysShort[d.getDay()]}` : fmtDate(d, {weekday:'short', month:'short', day:'numeric'});
+      list += `<div class="sday"><span>${esc(day === tk ? l.todayL + ' · ' + dt : dt)}</span><b>${yuan(spendSum(items.filter(y => y.date === day)))}</b></div>`;
+    }
+    list += spendRow(x);
+  }
+  return nav + top + `
+    <h3 class="sec-title">${M.byCat}</h3><p class="sec-sub">${esc(M.byCatSub)}</p><div class="chartcard"><div class="bars">${catHTML}</div></div>
+    ${week}
+    <h3 class="sec-title">${M.list} <small>${esc(fill(M.count, {n:items.length}))}</small></h3><p class="sec-sub">${esc(M.listSub)}</p>
+    <div class="sheet">${list}</div>` + moneySettings();
+}
+function moneySettings(){
+  const M = L().money, c = coachName();
+  return `<h3 class="sec-title">${M.setT}</h3><div class="card msets">
+    <div class="field"><label for="mBudget">${M.budget}</label><input id="mBudget" type="number" inputmode="decimal" min="0" step="1" value="${state.budget ? state.budget/100 : ''}" placeholder="2000">
+      <div class="hint">${esc(M.budgetHint)}</div></div>
+    <label class="switch"><input type="checkbox" id="mShare" ${state.spendShare ? 'checked' : ''}> ${esc(fill(M.share, {c}))}</label>
+    <div class="hint" style="margin-bottom:6px">${esc(fill(M.shareHint, {c}))}</div></div>`;
+}
+
+const spendDlg = document.getElementById('spendDlg');
+function openSpend(item){
+  const l = L(), M = l.money, x = item || {cat:'food', pay:'wechat', note:'', date:keyOf(today()), fen:0};
+  document.getElementById('spendForm').innerHTML = `
+    <h3>${item ? M.editT : M.addT}</h3>
+    <div class="field"><label for="sAmt">${M.amount}</label><input id="sAmt" name="amt" class="amtin" type="text" inputmode="decimal" autocomplete="off" placeholder="0" value="${item ? x.fen/100 : ''}"></div>
+    <div class="field"><label>${M.cat}</label><div class="scats">
+      ${Object.entries(SPEND_CATS).map(([k,[emo]]) => `<label><input type="radio" name="cat" value="${k}" ${x.cat===k?'checked':''}><span><i>${emo}</i>${esc(M.cats[k])}</span></label>`).join('')}</div></div>
+    <div class="field"><label for="sNote">${M.why}</label><input id="sNote" name="note" maxlength="80" value="${esc(x.note)}" placeholder="${esc(M.whyPh)}"></div>
+    <div class="field"><label>${M.pay}</label><div class="seg">
+      ${PAYS.map(p => `<label><input type="radio" name="pay" value="${p}" ${x.pay===p?'checked':''}><span>${esc(M.pays[p])}</span></label>`).join('')}</div></div>
+    <div class="field"><label for="sDate">${M.date}</label><input type="date" id="sDate" name="date" value="${esc(x.date)}" max="${keyOf(today())}"></div>
+    <div class="err" id="sErr"></div>
+    <div class="actions">
+      ${item ? `<button type="button" class="ghost danger" id="sDel">${l.del}</button>` : ''}
+      <span class="spacer"></span>
+      <button type="button" class="ghost" id="sCancel">${l.cancel}</button>
+      <button type="submit" class="primary">${l.save}</button>
+    </div>`;
+  const f = document.getElementById('spendForm');
+  document.getElementById('sCancel').onclick = () => spendDlg.close();
+  const del = document.getElementById('sDel');
+  if(del) del.onclick = () => {
+    if(del.dataset.armed){state.spend = state.spend.filter(y => y.id !== item.id); save(); spendDlg.close(); render();}
+    else {del.dataset.armed = '1'; del.textContent = l.delConfirm;}
+  };
+  f.onsubmit = ev => {
+    ev.preventDefault();
+    const v = parseFloat(String(f.amt.value).replace(/[，,]/g,'.').replace(/[^\d.]/g,''));
+    if(!(v > 0) || v >= 1e7){document.getElementById('sErr').textContent = M.errAmt; f.amt.focus(); return;}
+    const data = {fen:Math.round(v*100), cat:f.cat.value, pay:f.pay.value, note:f.note.value.trim(), date:f.date.value || keyOf(today())};
+    if(item) Object.assign(item, data);
+    else state.spend.push(Object.assign({id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), at:Date.now()}, data));
+    save(); spendDlg.close(); render();
+    // 安仁 reacts: pleased, or sulking when the month goes over budget
+    const over = overBudget(), c = coachName();
+    toast('', `<span style="display:flex;gap:10px;align-items:center">${coachAvatar(over ? 'angry' : 'happy')}<span>${esc(over ? fill(M.savedOver, {t:yuan(over)}) : fill(M.saved, {t:yuan(spendSum(state.spend.filter(y => y.date === keyOf(today()))))}))}</span></span>`);
+  };
+  spendDlg.showModal();
+  if(!item) setTimeout(() => f.amt.focus(), 50);
+}
+
 /* ---------- main render ---------- */
 function render(){
   document.documentElement.lang = state.lang === 'zh' ? 'zh-CN' : 'en';
@@ -1121,7 +1319,7 @@ function render(){
   document.getElementById('warn').innerHTML = storageOK ? '' : `<div class="warn">${L().storageWarn}</div>`;
   renderHero(); renderTabs();
   const v = document.getElementById('view');
-  v.innerHTML = ui.tab==='home' ? renderHome() : ui.tab==='week' ? renderWeek() : ui.tab==='ach' ? renderAch() : renderStats();
+  v.innerHTML = ui.tab==='home' ? renderHome() : ui.tab==='week' ? renderWeek() : ui.tab==='money' ? renderMoney() : ui.tab==='ach' ? renderAch() : renderStats();
 }
 // light refresh for the home screen, so the clock moves without resetting what he is doing
 function refreshHome(){
@@ -1143,6 +1341,11 @@ view.addEventListener('click', e => {
   if(e.target.closest('[data-rename]')){openProfile({focus:'pCoach'}); return;}
   const wk = e.target.closest('[data-wk]');
   if(wk){const n = +wk.dataset.wk; ui.weekOffset = n === 0 ? 0 : ui.weekOffset + n; ui.selDay = null; render(); return;}
+  if(e.target.closest('[data-addspend]')){openSpend(null); return;}
+  const sp = e.target.closest('[data-spend]');
+  if(sp){const x = state.spend.find(y => y.id === sp.dataset.spend); if(x) openSpend(x); return;}
+  const mo = e.target.closest('[data-mo]');
+  if(mo){const n = +mo.dataset.mo; ui.monthOffset = n === 0 ? 0 : Math.min(0, ui.monthOffset + n); render(); return;}
   const sd = e.target.closest('[data-sel]');
   if(sd){ui.selDay = sd.dataset.sel; render(); return;}
   const dn = e.target.closest('[data-done]');
@@ -1156,6 +1359,12 @@ view.addEventListener('click', e => {
     m = Math.min(m, 23*60+30);
     openTask(null, {date: col.dataset.day, start: `${pad(Math.floor(m/60))}:${pad(m%60)}`});
   }
+});
+
+// 记账 settings: monthly budget and whether he may see her spending
+view.addEventListener('change', e => {
+  if(e.target.id === 'mBudget'){const v = parseFloat(e.target.value); state.budget = v > 0 ? Math.round(v*100) : 0; save(); render();}
+  if(e.target.id === 'mShare'){state.spendShare = e.target.checked; save();}
 });
 
 /* ---------- task dialog ---------- */
@@ -1371,11 +1580,13 @@ function importText(txt){
     const s = JSON.parse(String(txt).trim());
     if(!s || typeof s !== 'object' || !Array.isArray(s.tasks)) throw 0;
     // a schedule he sends has no photo / her names: keep what she already set on this phone
-    const keep = state.profile, guided = state.guided, pet = state.pet;
+    const keep = state.profile, guided = state.guided, pet = state.pet, money = {spend:state.spend, budget:state.budget, spendShare:state.spendShare};
     state = migrate(Object.assign(freshState(), s));
     if((+(s.pet && s.pet.last) || 0) < (+pet.last || 0)) state.pet = pet;
     for(const k of ['name','avatar','herName','nicks','coach']) if(!String(state.profile[k] || '').trim() && keep[k]) state.profile[k] = keep[k];
     if(guided) state.guided = guided;
+    // a schedule from him carries no spending: keep hers
+    if(!Array.isArray(s.spend)) Object.assign(state, money);
     save(); profDlg.close(); render(); toast('', L().imported);
   }catch(e){
     const pe = profDlg.open && document.getElementById('pErr');
@@ -2006,6 +2217,9 @@ async function pullState(){
     // first sign-in with progress on this phone: keep both
     if(d.tasks.length) state.tasks = d.tasks;
     for(const k of ['name','herName','nicks','coach']) if(!String(state.profile[k] || '').trim() && d.profile && d.profile[k]) state.profile[k] = d.profile[k];
+    const ids = new Set(state.spend.map(x => x.id));
+    if(Array.isArray(d.spend)) state.spend.push(...d.spend.filter(x => x && !ids.has(x.id)));
+    if(!state.budget && d.budget) state.budget = d.budget;
   } else state.tasks = d.tasks;                                       // he edited her schedule
   state.done = Object.assign({}, d.done || {}, state.done);
   state.badges = Object.assign({}, d.badges || {}, state.badges);
@@ -2046,7 +2260,7 @@ function nextMsg(){
   clearTimeout(msgTimer);
   if(!msgQ.length || document.hidden) return;
   const el = document.getElementById('celebrate');
-  if(el.classList.contains('show') || taskDlg.open || profDlg.open){msgTimer = setTimeout(nextMsg, 2500); return;}
+  if(el.classList.contains('show') || taskDlg.open || spendDlg.open || profDlg.open){msgTimer = setTimeout(nextMsg, 2500); return;}
   const m = msgQ.shift(), a = accT(), k = a.kinds[m.kind] ? m.kind : 'note', c = coachName();
   const pose = {kiss:'kiss', hug:'love', gift:'happy', reward:'happy', note:'remind'}[k];
   el.innerHTML = `<img class="celchar" src="${charSrc(pose)}" alt=""><div class="celcard"><div class="ribbon">${esc(fill(a.kinds[k], {c}))}</div>
