@@ -348,6 +348,53 @@ body.weektab .wrap{padding-bottom:calc(var(--navh) + 100px + env(safe-area-inset
 .scats input:checked+span{background:var(--sun);color:var(--on-sun);box-shadow:0 3px 0 var(--sun-e)}
 .scats input:focus-visible+span{outline:3px solid var(--blue)}
 .toast .cav{width:40px;height:40px}
+.srow .sa.in{color:var(--good)}
+.typeseg{margin-bottom:14px}
+.typeseg input:checked+span{background:var(--pink);color:var(--on);box-shadow:0 2px 0 var(--pink-e)}
+.typeseg label:last-child input:checked+span{background:var(--go);box-shadow:0 2px 0 var(--go-e)}
+
+/* study tools row on home + their panels */
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tool{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;min-height:50px;border:0;border-radius:18px;background:var(--sheet);color:var(--ink);
+  box-shadow:0 4px 0 var(--shade);font:800 15px var(--f-body);padding:0 6px;min-width:0}
+.tool:active{transform:translateY(3px);box-shadow:0 1px 0 var(--shade)}
+.tool b{font-size:21px;line-height:1;flex:none}
+.tool span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool.run{background:var(--go);color:var(--on);box-shadow:0 4px 0 var(--go-e)}
+.tool .dot{position:absolute;top:-5px;right:-3px;min-width:22px;height:22px;border-radius:999px;background:var(--red);color:var(--on);font:900 12px/22px var(--f-num);padding:0 6px;text-align:center}
+.tlead{margin:-6px 0 14px;font-size:14px;font-weight:600;color:var(--pencil);line-height:1.45}
+.tchar{display:block;height:130px;width:auto;margin:0 auto -6px}
+.ring{--p:0;width:min(62vw,230px);max-width:100%;aspect-ratio:1;margin:6px auto 12px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--go) calc(var(--p) * 1%),var(--paper) 0)}
+.ring>div{width:84%;aspect-ratio:1;border-radius:50%;background:var(--sheet);display:grid;place-items:center;align-content:center;gap:2px;text-align:center}
+.ring b{font:900 46px/1 var(--f-num)}
+.ring small{font-size:13px;font-weight:800;color:var(--pencil);max-width:80%;overflow-wrap:anywhere}
+.tbig{width:100%;min-height:56px;font:900 19px var(--f-body)}
+.tstat{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tstat span{background:var(--paper);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:800}
+.flash{text-align:center;background:var(--paper);border-radius:24px;padding:22px 14px;margin-bottom:14px}
+.flash .w{font:900 34px/1.2 var(--f-body);overflow-wrap:anywhere}
+.flash .m{font-size:20px;font-weight:800;margin-top:12px;overflow-wrap:anywhere}
+.flash .ghost{margin-top:10px;min-height:44px}
+.wrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:9px 0;border-bottom:2px solid var(--rule)}
+.wrow:last-child{border-bottom:0}
+.wrow b{font-weight:800;overflow-wrap:anywhere}
+.wrow small{display:block;font-size:13px;color:var(--pencil);font-weight:600;overflow-wrap:anywhere}
+.boxes{display:flex;gap:2px}
+.boxes i{width:7px;height:7px;border-radius:50%;background:var(--rule)}
+.boxes i.on{background:var(--go)}
+.wrow .ghost{min-height:44px;min-width:44px;padding:6px 10px}
+.moods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.moods label{position:relative;min-width:0}
+.moods input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;padding:0;opacity:0;pointer-events:none}
+.moods span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 2px;border-radius:18px;background:var(--paper);font-size:13px;font-weight:800;cursor:pointer;user-select:none}
+.moods span i{font-style:normal;font-size:32px;line-height:1.1}
+.moods input:checked+span{background:var(--sun);color:var(--on-sun);box-shadow:0 3px 0 var(--sun-e)}
+.moods input:focus-visible+span{outline:3px solid var(--blue)}
+.mcal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mcal button{border:0;background:var(--paper);border-radius:12px;padding:4px 0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 11px var(--f-num);color:var(--pencil)}
+.mcal button i{font-style:normal;font-size:20px;line-height:1.2;min-height:24px}
+.mcal button.sel{background:var(--sun);color:var(--on-sun)}
 
 /* dialogs (bottom sheets) */
 dialog{border:0;padding:0;background:var(--sheet);color:var(--ink);width:100vw;max-width:560px;max-height:92vh;margin:auto auto 0;border-radius:26px 26px 0 0;overflow:auto;overscroll-behavior:contain}
@@ -480,7 +527,7 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 .coachbox .btns{display:flex;gap:6px;flex-wrap:wrap}
 .coachbox .btns button{padding:8px 14px;font-size:14px}
 
-@media (max-height:700px){.room{--H:min(32vh,300px,calc((100vw - 152px) / .95))}@supports (height:1dvh){.room{--H:min(30dvh,300px,calc((100vw - 152px) / .95))}}.charwrap{padding-top:70px}.room{min-height:262px}.side{gap:8px}.home{gap:8px}
+@media (max-height:700px){.room{--H:min(28vh,300px,calc((100vw - 152px) / .95))}@supports (height:1dvh){.room{--H:min(26dvh,300px,calc((100vw - 152px) / .95))}}.charwrap{padding-top:66px}.room{min-height:232px}.side{gap:6px;padding-bottom:10px}.home{gap:7px}.tool{min-height:44px}
   #celebrate.guide .celchar{height:min(16vh,130px)}.steps li{font-size:13px;padding:7px 10px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -500,6 +547,7 @@ dialog::backdrop{background:rgba(20,26,50,.5)}
 
 <dialog id="taskDlg"><form class="dlg" id="taskForm" method="dialog"></form></dialog>
 <dialog id="spendDlg"><form class="dlg" id="spendForm" method="dialog"></form></dialog>
+<dialog id="toolDlg"><div class="dlg" id="toolBody"></div></dialog>
 <dialog id="profDlg"><div class="dlg" id="profBody"></div></dialog>
 <input type="file" id="avatarFile" accept="image/*" hidden>
 <input type="file" id="importFile" accept="application/json,.json" hidden>
@@ -515,6 +563,7 @@ const DIFF_XP = {1:10,2:20,3:30};
 const SPEND_CATS = {food:['🍜','--c-sport'],drink:['🧋','--c-life'],transport:['🚌','--c-english'],shopping:['🛍️','--c-class'],
   beauty:['💄','--pink'],study:['📚','--c-study'],daily:['🧴','--c-rest'],fun:['🎮','--sun-e'],sport:['🏸','--go'],
   gift:['🎁','--red'],phone:['📱','--blue-e'],other:['✨','--pencil']};
+const IN_CATS = {allowance:['💰','--go'],hongbao:['🧧','--red'],job:['💼','--blue'],scholarship:['🏅','--sun-e'],refund:['↩️','--c-study'],otherin:['✨','--pencil']};
 const PAYS = ['wechat','alipay','card','cash'];
 
 const ICONS = {
@@ -540,7 +589,10 @@ const I18N = {
       none:'Nothing recorded this month. When you spend money, tap "Add a spend".', help:'Spent money? Tap <b>Add a spend</b>: the amount, what it was for, and why. Below you see each day and the whole month.',
       byCat:'Where the money went', byCatSub:'This month, by category', last7:'Last 7 days', last7Sub:'Each bar is one day\'s spending', list:'Every spend', listSub:'Tap one to change or delete it',
       share:'Let {c} see my spending', shareHint:'When on, {c} can see how much you spend each day on his page. Off by default.', setT:'Money settings',
-      prevM:'Previous month', nextM:'Next month', thisM:'This month', pctOf:'{p}%'},
+      prevM:'Previous month', nextM:'Next month', thisM:'This month', pctOf:'{p}%',
+      out:'Spending', in:'Income', inCats:{allowance:'Allowance',hongbao:'Red packet',job:'Part-time job',scholarship:'Scholarship',refund:'Refund',otherin:'Other'},
+      inCat:'Where did it come from?', inWhy:'Note', inWhyPh:'e.g. allowance from Mom', inPay:'Received in', income:'Income {t}', balance:'Left {t}', addIn:'Add income', editIn:'Edit this income',
+      nag:'Did you spend anything today? Add it before bed, it only takes 30 seconds.', nagBtn:'Add a spend', remindL:'Remind me at 9 pm to record my spending'},
     cats:{english:'English',class:'Class',study:'Study',sport:'Sport',rest:'Rest',life:'Self-care'},
     diff:{1:'Easy',2:'Normal',3:'Hard'},
     level:'Lv.', xp:'XP', toNext:'to next level', streakL:'day streak', doneL:'done', clearedL:'days cleared',
@@ -583,7 +635,7 @@ const I18N = {
     expHint:'This is all your progress. Copy it and send it to yourself (e.g. a chat with yourself) to keep it safe.', dlLink:'Nothing happened? Tap here to download the file.',
     secYou:'You & him', secShow:'Display', replayGuide:'Show the guide again',
     guideTitle:'How it works', guideGo:'Got it!',
-    guide:['This is {c}, and the girl next to him is you, {h}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Money is your spending diary: record what you spend each day and why. Rewards shows medals and stickers you unlock.','The gear opens settings: sign in to your account (already have one? just sign in, no backup needed), import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
+    guide:['This is {c}, and the girl next to him is you, {h}. Tap him, feed him, hug him… he reacts to everything. Tap his name tag to rename him.','The card at the bottom is what you should do now. When you finish, tap Done! to earn XP and a reward from {c}.','Tasks shows each day: tap the circle when a task is done, + Add makes a new one. Money is your spending diary: record what you spend each day and why. The 🍅 Focus, 📖 Words and 💭 Mood buttons on Home are your study timer, word cards and mood diary. Rewards shows medals and stickers you unlock.','The gear opens settings: sign in to your account (already have one? just sign in, no backup needed), import your schedule, change names, add reminders to your phone calendar. Tap ? to see this again.']
   },
   zh:{
     tabs:{home:'主页',week:'任务',money:'记账',ach:'奖励',stats:'统计'},
@@ -596,7 +648,10 @@ const I18N = {
       none:'这个月还没有记账。花了钱就点「记一笔」吧！', help:'花了钱就点<b>「记一笔」</b>：填金额、选类别、写一句为什么。下面能看到每天和每个月花了多少。',
       byCat:'钱花在哪里', byCatSub:'这个月每一类花了多少', last7:'最近 7 天', last7Sub:'每根柱子是一天花的钱', list:'每一笔', listSub:'点一笔可以修改或删除',
       share:'让{c}看到我的记账', shareHint:'打开后，{c}在他的页面上能看到你每天花了多少钱。默认关闭。', setT:'记账设置',
-      prevM:'上个月', nextM:'下个月', thisM:'本月', pctOf:'{p}%'},
+      prevM:'上个月', nextM:'下个月', thisM:'本月', pctOf:'{p}%',
+      out:'支出', in:'收入', inCats:{allowance:'生活费',hongbao:'红包',job:'兼职',scholarship:'奖学金',refund:'退款',otherin:'其他'},
+      inCat:'钱从哪里来', inWhy:'备注', inWhyPh:'比如：妈妈给的生活费', inPay:'收到哪里', income:'收入 {t}', balance:'结余 {t}', addIn:'记一笔收入', editIn:'修改这笔收入',
+      nag:'今天花钱了吗？睡觉前记一笔吧，30 秒就好～', nagBtn:'记一笔', remindL:'每天晚上 9 点提醒我记账'},
     cats:{english:'英语',class:'课程',study:'自习',sport:'运动',rest:'休息',life:'生活'},
     diff:{1:'简单',2:'普通',3:'困难'},
     level:'Lv.', xp:'经验', toNext:'距离升级', streakL:'天连续', doneL:'个完成', clearedL:'天通关',
@@ -639,7 +694,7 @@ const I18N = {
     expHint:'这是你的全部进度。复制下来发给自己（比如微信「文件传输助手」）保存好。', dlLink:'没反应？点这里下载文件。',
     secYou:'你和他', secShow:'显示', replayGuide:'重新看一遍怎么玩',
     guideTitle:'怎么玩', guideGo:'知道啦！',
-    guide:['这是{c}，站在他旁边的女生就是你：{h}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「记账」记下每天花了多少钱、为什么花。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：登录账号（已经有账号的话直接登录，不用粘贴备份）、导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
+    guide:['这是{c}，站在他旁边的女生就是你：{h}。点他、喂他、抱他……他都会有反应。点他脚下的名字可以给他改名。','下面的卡片是你现在要做的事。做完点「完成！」，拿经验，还有{c}给你的奖励。','「任务」里看每天的安排，做完点圆圈「打卡」，点「+ 添加」加新任务。「记账」记下每天花了多少钱、为什么花。主页上的 🍅专注、📖单词、💭心情 是番茄钟、背单词和心情日记。「奖励」里有升级解锁的勋章和表情包。','右上角齿轮是设置：登录账号（已经有账号的话直接登录，不用粘贴备份）、导入课表、改名字、把提醒加到手机日历。忘了怎么玩就点「?」。']
   }
 };
 
@@ -727,7 +782,7 @@ let ui = {tab:'home', weekOffset:0, monthOffset:0};
 let freshStamp = null;
 
 function freshState(){
-  return {seedVer:SEED_VER,profile:{name:'',avatar:'',nicks:'',coach:'',herName:''},pet:{hunger:70,mood:80,last:Date.now(),voice:true},lang:/^zh/i.test(navigator.language || '') ? 'zh' : 'en',theme:'light',remind:{on:true,before:5},tasks:seedTasks(),done:{},badges:{},spend:[],budget:0,spendShare:false};
+  return {seedVer:SEED_VER,profile:{name:'',avatar:'',nicks:'',coach:'',herName:''},pet:{hunger:70,mood:80,last:Date.now(),voice:true},lang:/^zh/i.test(navigator.language || '') ? 'zh' : 'en',theme:'light',remind:{on:true,before:5},tasks:seedTasks(),done:{},badges:{},spend:[],budget:0,spendShare:false,moneyRemind:true,bonus:{},words:[],moods:{},moodShare:false,focusLog:[],focusRun:null};
 }
 function mergeSeeds(s){
   for(const t of seedTasks()){
@@ -742,7 +797,8 @@ function mergeSeeds(s){
 function migrate(st){
   st.profile = Object.assign({name:'',avatar:'',nicks:'',coach:'',herName:''}, st.profile);
   if(/^\s*claude\s*$/i.test(st.profile.coach || '')) st.profile.coach = '';
-  if(!Array.isArray(st.spend)) st.spend = [];
+  for(const k of ['spend','words','focusLog']) if(!Array.isArray(st[k])) st[k] = [];
+  for(const k of ['bonus','moods']) if(!st[k] || typeof st[k] !== 'object' || Array.isArray(st[k])) st[k] = {};
   return st;
 }
 function load(){
@@ -789,7 +845,8 @@ function tasksFor(d){
     .sort((a,b) => mins(a.start)-mins(b.start));
 }
 
-function totalXP(){return Object.values(state.done).reduce((a,b) => a+(+b||0), 0);}
+// XP = finished tasks + study-tool bonuses (focus sessions, words remembered)
+function totalXP(){return [...Object.values(state.done), ...Object.values(state.bonus || {})].reduce((a,b) => a+(+b||0), 0);}
 function levelInfo(xp){
   let lvl = 1, need = 100, rest = xp;
   while(rest >= need){rest -= need; lvl++; need = 100 + (lvl-1)*50;}
@@ -976,6 +1033,7 @@ function renderHome(){
       <div class="side">${rb('kiss','😘',P.kissL,'love')}${rb('hit','👊',P.hitL,'hit')}<a class="rbtn" href="stress.html" style="text-decoration:none"><b>💥</b><span>${esc(P.stressS)}</span></a></div>
       <div class="foods" id="foods" hidden>${FOODS.map(f => `<button data-pet="feed" data-food="${f}" aria-label="${esc(P.feedL)} ${f}">${f}</button>`).join('')}</div>
     </div>
+    ${toolsRowHTML()}
     <div id="nowcard">${nowCardHTML()}</div>
   </section>`;
 }
@@ -1175,7 +1233,11 @@ function renderStats(){
 }
 
 /* ---------- render: spending diary (记账) ---------- */
+const isOut = x => x.type !== 'in';
+const catOf = x => (isOut(x) ? SPEND_CATS : IN_CATS)[x.cat] || ['✨','--pencil'];
+const catName = x => {const M = L().money; return (isOut(x) ? M.cats : M.inCats)[x.cat] || '';};
 const spendSum = list => list.reduce((a,x) => a + (+x.fen || 0), 0);
+const outSum = list => spendSum(list.filter(isOut));
 function yuan(fen){
   const v = fen/100;
   return '¥' + v.toLocaleString(locale(), {minimumFractionDigits: fen % 100 ? 2 : 0, maximumFractionDigits:2});
@@ -1186,20 +1248,21 @@ const monthName = d => state.lang === 'zh' ? `${d.getMonth()+1}月` : d.toLocale
 function overBudget(){
   if(!state.budget) return 0;
   const mk = keyOf(monthStart(0)).slice(0,7);
-  return Math.max(0, spendSum(state.spend.filter(x => x.date.startsWith(mk))) - state.budget);
+  return Math.max(0, outSum(state.spend.filter(x => x.date.startsWith(mk))) - state.budget);
 }
 function spendRow(x){
-  const M = L().money, [emo, col] = SPEND_CATS[x.cat] || SPEND_CATS.other;
-  const meta = [x.note ? M.cats[x.cat] : '', M.pays[x.pay] || ''].filter(Boolean).join(' · ');
+  const M = L().money, [emo, col] = catOf(x), out = isOut(x);
+  const meta = [x.note ? catName(x) : '', M.pays[x.pay] || ''].filter(Boolean).join(' · ');
   return `<div class="srow" data-spend="${esc(x.id)}" style="--cc:var(${col})"><div class="semo">${emo}</div>
-    <div style="min-width:0"><div class="st">${esc(x.note || M.cats[x.cat] || '')}</div>${meta ? `<div class="sm">${esc(meta)}</div>` : ''}</div>
-    <div class="sa">${yuan(x.fen)}</div></div>`;
+    <div style="min-width:0"><div class="st">${esc(x.note || catName(x))}</div>${meta ? `<div class="sm">${esc(meta)}</div>` : ''}</div>
+    <div class="sa ${out ? '' : 'in'}">${out ? '' : '+'}${yuan(x.fen)}</div></div>`;
 }
 function renderMoney(){
   const l = L(), M = l.money, off = ui.monthOffset || 0, c = coachName();
   const m0 = monthStart(off), mk = keyOf(m0).slice(0,7), tk = keyOf(today());
   const items = state.spend.filter(x => x.date.startsWith(mk)).sort((a,b) => b.date.localeCompare(a.date) || b.at - a.at);
-  const tot = spendSum(items), todayTot = spendSum(state.spend.filter(x => x.date === tk));
+  const outs = items.filter(isOut), tot = spendSum(outs), income = spendSum(items) - tot;
+  const todayTot = outSum(state.spend.filter(x => x.date === tk));
   const title = state.lang === 'zh' ? `${m0.getFullYear()}年${m0.getMonth()+1}月` : m0.toLocaleDateString('en-US', {month:'long', year:'numeric'});
   const nav = `<div class="weeknav"><h2>${esc(title)}</h2>
     <button class="ghost" data-mo="-1" aria-label="${esc(M.prevM)}">‹</button>
@@ -1212,28 +1275,32 @@ function renderMoney(){
     bud = `<div class="bud full ${left < 0 ? 'over' : ''}"><div class="track" style="--cc:var(${left < 0 ? '--red' : pct > 80 ? '--sun' : '--go'})"><i style="width:${pct.toFixed(1)}%"></i></div>
       <span>${esc(fill(left < 0 ? M.over : M.left, {t:yuan(Math.abs(left)), b:yuan(state.budget)}))}</span></div>`;
   }
+  const inLine = income ? `<div class="sub">${esc(fill(M.income, {t:yuan(income)}))} · <b>${esc(fill(M.balance, {t:(income < tot ? '-' : '') + yuan(Math.abs(income - tot))}))}</b></div>` : '';
   const pose = off === 0 && state.budget && tot > state.budget ? 'angry' : todayTot ? 'happy' : 'remind';
   const head = off === 0
     ? `<div><div class="lab">${M.today}</div><div class="amt">${yuan(todayTot)}</div></div>
        <div class="sub">${esc(fill(M.month, {m:monthName(m0)}))} <b>${yuan(tot)}</b> · ${esc(fill(M.count, {n:items.length}))}</div>`
     : `<div><div class="lab">${esc(fill(M.month, {m:monthName(m0)}))}</div><div class="amt">${yuan(tot)}</div></div>
        <div class="sub">${esc(fill(M.count, {n:items.length}))}</div>`;
-  const top = `<div class="mtop card">${head}<div class="mchar"><img src="${charSrc(pose)}" alt="${esc(c)}"></div>${bud}
+  const top = `<div class="mtop card">${head}<div class="mchar"><img src="${charSrc(pose)}" alt="${esc(c)}"></div>${inLine}${bud}
     <button class="c3d pink full" data-addspend="1">${esc(M.add)}</button></div>`;
   if(!items.length) return nav + top + `<div class="helpline" style="margin-top:14px">${M.help}</div><div class="empty">${esc(M.none)}</div>` + moneySettings();
-  // by category
-  const byCat = {};
-  for(const x of items) byCat[x.cat] = (byCat[x.cat] || 0) + x.fen;
-  const cats = Object.entries(byCat).sort((a,b) => b[1]-a[1]), maxC = cats[0][1];
-  const catHTML = cats.map(([k,v]) => {
-    const [emo, col] = SPEND_CATS[k] || SPEND_CATS.other;
-    return `<div class="barrow money" style="--cc:var(${col})"><span class="cat">${emo} ${esc(M.cats[k] || k)}</span>
-      <div class="track"><i style="width:${(v/maxC*100).toFixed(1)}%"></i></div><span class="v">${yuan(v)} · ${Math.round(v/tot*100)}%</span></div>`;
-  }).join('');
+  // by category (spending only)
+  let catHTML = '';
+  if(outs.length){
+    const byCat = {};
+    for(const x of outs) byCat[x.cat] = (byCat[x.cat] || 0) + x.fen;
+    const cats = Object.entries(byCat).sort((a,b) => b[1]-a[1]), maxC = cats[0][1];
+    catHTML = `<h3 class="sec-title">${M.byCat}</h3><p class="sec-sub">${esc(M.byCatSub)}</p><div class="chartcard"><div class="bars">` + cats.map(([k,v]) => {
+      const [emo, col] = SPEND_CATS[k] || SPEND_CATS.other;
+      return `<div class="barrow money" style="--cc:var(${col})"><span class="cat">${emo} ${esc(M.cats[k] || k)}</span>
+        <div class="track"><i style="width:${(v/maxC*100).toFixed(1)}%"></i></div><span class="v">${yuan(v)} · ${Math.round(v/tot*100)}%</span></div>`;
+    }).join('') + `</div></div>`;
+  }
   // last 7 days (this month's view only)
   let week = '';
   if(off === 0){
-    const days = [...Array(7)].map((_,i) => addDays(today(), i-6)).map(d => ({d, v:spendSum(state.spend.filter(x => x.date === keyOf(d)))}));
+    const days = [...Array(7)].map((_,i) => addDays(today(), i-6)).map(d => ({d, v:outSum(state.spend.filter(x => x.date === keyOf(d)))}));
     const mx = Math.max(1, ...days.map(p => p.v));
     week = `<h3 class="sec-title">${M.last7}</h3><p class="sec-sub">${esc(M.last7Sub)}</p><div class="chartcard">
       <div class="cols">${days.map(p => `<div class="col"><small>${p.v ? yuan(p.v).replace(/\.\d+$/,'') : ''}</small>
@@ -1241,19 +1308,17 @@ function renderMoney(){
       <div class="axis"></div>
       <div class="cols" style="height:auto;margin-top:4px">${days.map(p => `<div class="col"><span>${keyOf(p.d) === tk ? l.todayL : l.daysShort[p.d.getDay()]}</span></div>`).join('')}</div></div>`;
   }
-  // every spend, grouped by day
+  // every entry, grouped by day (the day total counts spending only)
   let list = '', day = '';
   for(const x of items){
     if(x.date !== day){
       day = x.date;
       const d = parseKey(day), dt = state.lang === 'zh' ? `${d.getMonth()+1}月${d.getDate()}日 ${l.daysShort[d.getDay()]}` : fmtDate(d, {weekday:'short', month:'short', day:'numeric'});
-      list += `<div class="sday"><span>${esc(day === tk ? l.todayL + ' · ' + dt : dt)}</span><b>${yuan(spendSum(items.filter(y => y.date === day)))}</b></div>`;
+      list += `<div class="sday"><span>${esc(day === tk ? l.todayL + ' · ' + dt : dt)}</span><b>${yuan(outSum(items.filter(y => y.date === day)))}</b></div>`;
     }
     list += spendRow(x);
   }
-  return nav + top + `
-    <h3 class="sec-title">${M.byCat}</h3><p class="sec-sub">${esc(M.byCatSub)}</p><div class="chartcard"><div class="bars">${catHTML}</div></div>
-    ${week}
+  return nav + top + catHTML + week + `
     <h3 class="sec-title">${M.list} <small>${esc(fill(M.count, {n:items.length}))}</small></h3><p class="sec-sub">${esc(M.listSub)}</p>
     <div class="sheet">${list}</div>` + moneySettings();
 }
@@ -1262,20 +1327,26 @@ function moneySettings(){
   return `<h3 class="sec-title">${M.setT}</h3><div class="card msets">
     <div class="field"><label for="mBudget">${M.budget}</label><input id="mBudget" type="number" inputmode="decimal" min="0" step="1" value="${state.budget ? state.budget/100 : ''}" placeholder="2000">
       <div class="hint">${esc(M.budgetHint)}</div></div>
+    <label class="switch" style="margin-bottom:12px"><input type="checkbox" id="mNag" ${state.moneyRemind !== false ? 'checked' : ''}> ${esc(M.remindL)}</label>
     <label class="switch"><input type="checkbox" id="mShare" ${state.spendShare ? 'checked' : ''}> ${esc(fill(M.share, {c}))}</label>
     <div class="hint" style="margin-bottom:6px">${esc(fill(M.shareHint, {c}))}</div></div>`;
 }
 
 const spendDlg = document.getElementById('spendDlg');
 function openSpend(item){
-  const l = L(), M = l.money, x = item || {cat:'food', pay:'wechat', note:'', date:keyOf(today()), fen:0};
+  const l = L(), M = l.money, x = item || {type:'out', cat:'food', pay:'wechat', note:'', date:keyOf(today()), fen:0};
+  const out = isOut(x);
+  const grid = (cats, names, name, sel) => `<div class="scats">${Object.entries(cats).map(([k,[emo]]) =>
+    `<label><input type="radio" name="${name}" value="${k}" ${sel===k?'checked':''}><span><i>${emo}</i>${esc(names[k])}</span></label>`).join('')}</div>`;
   document.getElementById('spendForm').innerHTML = `
-    <h3>${item ? M.editT : M.addT}</h3>
+    <h3 id="sTitle">${item ? (out ? M.editT : M.editIn) : M.addT}</h3>
+    <div class="seg typeseg"><label><input type="radio" name="type" value="out" ${out?'checked':''}><span>${esc(M.out)}</span></label>
+      <label><input type="radio" name="type" value="in" ${!out?'checked':''}><span>${esc(M.in)}</span></label></div>
     <div class="field"><label for="sAmt">${M.amount}</label><input id="sAmt" name="amt" class="amtin" type="text" inputmode="decimal" autocomplete="off" placeholder="0" value="${item ? x.fen/100 : ''}"></div>
-    <div class="field"><label>${M.cat}</label><div class="scats">
-      ${Object.entries(SPEND_CATS).map(([k,[emo]]) => `<label><input type="radio" name="cat" value="${k}" ${x.cat===k?'checked':''}><span><i>${emo}</i>${esc(M.cats[k])}</span></label>`).join('')}</div></div>
-    <div class="field"><label for="sNote">${M.why}</label><input id="sNote" name="note" maxlength="80" value="${esc(x.note)}" placeholder="${esc(M.whyPh)}"></div>
-    <div class="field"><label>${M.pay}</label><div class="seg">
+    <div class="field" id="sOutCats"><label>${M.cat}</label>${grid(SPEND_CATS, M.cats, 'cat', out ? x.cat : 'food')}</div>
+    <div class="field" id="sInCats"><label>${M.inCat}</label>${grid(IN_CATS, M.inCats, 'icat', out ? 'allowance' : x.cat)}</div>
+    <div class="field"><label for="sNote" id="sNoteL">${M.why}</label><input id="sNote" name="note" maxlength="80" value="${esc(x.note)}" placeholder="${esc(M.whyPh)}"></div>
+    <div class="field"><label id="sPayL">${M.pay}</label><div class="seg">
       ${PAYS.map(p => `<label><input type="radio" name="pay" value="${p}" ${x.pay===p?'checked':''}><span>${esc(M.pays[p])}</span></label>`).join('')}</div></div>
     <div class="field"><label for="sDate">${M.date}</label><input type="date" id="sDate" name="date" value="${esc(x.date)}" max="${keyOf(today())}"></div>
     <div class="err" id="sErr"></div>
@@ -1286,6 +1357,17 @@ function openSpend(item){
       <button type="submit" class="primary">${l.save}</button>
     </div>`;
   const f = document.getElementById('spendForm');
+  const syncType = () => {
+    const o = f.type.value === 'out';
+    document.getElementById('sOutCats').hidden = !o;
+    document.getElementById('sInCats').hidden = o;
+    document.getElementById('sNoteL').textContent = o ? M.why : M.inWhy;
+    f.note.placeholder = o ? M.whyPh : M.inWhyPh;
+    document.getElementById('sPayL').textContent = o ? M.pay : M.inPay;
+    if(!item) document.getElementById('sTitle').textContent = o ? M.addT : M.addIn;
+  };
+  f.querySelectorAll('[name=type]').forEach(r => r.onchange = syncType);
+  syncType();
   document.getElementById('sCancel').onclick = () => spendDlg.close();
   const del = document.getElementById('sDel');
   if(del) del.onclick = () => {
@@ -1296,17 +1378,316 @@ function openSpend(item){
     ev.preventDefault();
     const v = parseFloat(String(f.amt.value).replace(/[，,]/g,'.').replace(/[^\d.]/g,''));
     if(!(v > 0) || v >= 1e7){document.getElementById('sErr').textContent = M.errAmt; f.amt.focus(); return;}
-    const data = {fen:Math.round(v*100), cat:f.cat.value, pay:f.pay.value, note:f.note.value.trim(), date:f.date.value || keyOf(today())};
+    const o = f.type.value === 'out';
+    const data = {type:o ? 'out' : 'in', fen:Math.round(v*100), cat:o ? f.cat.value : f.icat.value, pay:f.pay.value, note:f.note.value.trim(), date:f.date.value || keyOf(today())};
     if(item) Object.assign(item, data);
     else state.spend.push(Object.assign({id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), at:Date.now()}, data));
     save(); spendDlg.close(); render();
+    if(!o) return;
     // 安仁 reacts: pleased, or sulking when the month goes over budget
-    const over = overBudget(), c = coachName();
-    toast('', `<span style="display:flex;gap:10px;align-items:center">${coachAvatar(over ? 'angry' : 'happy')}<span>${esc(over ? fill(M.savedOver, {t:yuan(over)}) : fill(M.saved, {t:yuan(spendSum(state.spend.filter(y => y.date === keyOf(today()))))}))}</span></span>`);
+    const over = overBudget();
+    toast('', `<span style="display:flex;gap:10px;align-items:center">${coachAvatar(over ? 'angry' : 'happy')}<span>${esc(over ? fill(M.savedOver, {t:yuan(over)}) : fill(M.saved, {t:yuan(outSum(state.spend.filter(y => y.date === keyOf(today()))))}))}</span></span>`);
   };
   spendDlg.showModal();
   if(!item) setTimeout(() => f.amt.focus(), 50);
 }
+
+/* ---------- study tools: focus timer, word cards, mood diary ---------- */
+const MOODS = {great:'😄', good:'🙂', ok:'😐', sad:'😢', angry:'😠', tired:'😴'};
+const MOOD_POSE = {great:'happy', good:'happy', ok:'normal', sad:'love', angry:'remind', tired:'sleepy'};
+const WORD_GAP = [0,1,2,4,7,15,30];      // days until a word comes back, by how many times in a row she remembered it
+const WORD_XP_DAY = 30;                  // most XP a day of word review can give
+const TOOLS = {
+  zh:{
+    names:{focus:'专注', words:'单词', mood:'心情'},
+    focus:{title:'番茄钟专注', lead:'选好时间，点开始。{c}陪你一起学，做完拿经验。', mins:'专注多久', what:'学什么', free:'自由学习', minU:'分钟',
+      start:'开始专注', pause:'暂停', resume:'继续', quit:'放弃', quitSure:'再点一次放弃', with:'{c}在陪你一起学习…', paused:'暂停中',
+      keepOpen:'专注时保持 App 打开。锁屏也没关系，回来会接着算。', today:'今天专注 {n} 次 · {m}', doneR:'专注完成', doneMsg:'专注了 {m}！起来走走，喝点水吧。'},
+    words:{title:'背单词', lead:'加上要记的单词，每天复习一下。记得的隔几天再出现，忘了的明天再来。', total:'一共 {n} 个', due:'今天要复习 {n} 个', mastered:'已掌握 {n} 个',
+      review:'开始复习（{n} 个）', noDue:'今天的单词都复习完啦！明天再来。', add:'添加单词', word:'英文单词', meaning:'中文意思', addBtn:'添加',
+      bulk:'一次加很多', bulkHint:'一行一个，单词和意思中间空一格，比如：apple 苹果', bulkBtn:'全部添加', added:'加好了 {n} 个单词', dup:'这些单词已经有了',
+      show:'看答案', forgot:'忘了', remember:'记得', finish:'复习完成', finishMsg:'记得 {r} 个，忘了 {w} 个。忘了的明天还会出现。',
+      list:'我的单词', empty:'还没有单词，先在上面加几个吧！', delSure:'再点删除', listen:'🔊 听发音', errWord:'请输入单词和意思。', back:'‹ 返回', more:'显示全部 {n} 个'},
+    mood:{title:'心情日记', lead:'每天选一个心情，写一句话。', how:'今天心情怎么样？', howDay:'{d} 的心情', note:'发生了什么？（可以不写）', notePh:'比如：英语考试过啦！',
+      save:'保存', last:'最近两周', tapDay:'点一天可以补记或修改',
+      share:'让{c}看到我的心情', shareHint:'打开后，{c}在他的页面上能看到你每天的心情和那句话。默认关闭。',
+      names:{great:'超开心', good:'不错', ok:'一般', sad:'难过', angry:'生气', tired:'好累'},
+      reply:{great:'看到你开心，我也超开心！', good:'不错不错，继续保持哦～', ok:'平平淡淡也很好。要不要喂我吃点东西？',
+        sad:'抱抱你……有什么事都可以跟我说。', angry:'谁惹你生气了？要不要去解压室打老板出出气？', tired:'辛苦啦，今天早点睡，明天再加油。'}}
+  },
+  en:{
+    names:{focus:'Focus', words:'Words', mood:'Mood'},
+    focus:{title:'Focus timer', lead:'Pick a length and tap start. {c} studies with you, and you earn XP when it\'s done.', mins:'How long', what:'Studying', free:'Free study', minU:'min',
+      start:'Start focusing', pause:'Pause', resume:'Resume', quit:'Give up', quitSure:'Tap again to give up', with:'{c} is studying with you…', paused:'Paused',
+      keepOpen:'Keep the app open while you focus. Locking the screen is fine; the timer keeps counting.', today:'Today: {n} sessions · {m}', doneR:'Focus done', doneMsg:'You focused for {m}! Stand up, stretch and drink some water.'},
+    words:{title:'Word cards', lead:'Add the words you want to learn and review them every day. Words you remember come back days later; words you forget come back tomorrow.', total:'{n} words', due:'{n} to review today', mastered:'{n} mastered',
+      review:'Start review ({n})', noDue:'All of today\'s words are done! Come back tomorrow.', add:'Add a word', word:'English word', meaning:'Meaning', addBtn:'Add',
+      bulk:'Add many at once', bulkHint:'One per line, word then meaning, e.g. apple 苹果', bulkBtn:'Add all', added:'Added {n} words', dup:'Those words are already in your list',
+      show:'Show answer', forgot:'Forgot', remember:'Got it', finish:'Review done', finishMsg:'Remembered {r}, forgot {w}. The ones you forgot come back tomorrow.',
+      list:'My words', empty:'No words yet. Add a few above!', delSure:'Tap to delete', listen:'🔊 Listen', errWord:'Enter the word and its meaning.', back:'‹ Back', more:'Show all {n}'},
+    mood:{title:'Mood diary', lead:'Pick a mood each day and write one line.', how:'How do you feel today?', howDay:'Mood on {d}', note:'What happened? (optional)', notePh:'e.g. passed my English test!',
+      save:'Save', last:'Last two weeks', tapDay:'Tap a day to fill it in or change it',
+      share:'Let {c} see my mood', shareHint:'When on, {c} can see your mood and your line for each day on his page. Off by default.',
+      names:{great:'Great', good:'Good', ok:'Okay', sad:'Sad', angry:'Angry', tired:'Tired'},
+      reply:{great:'Seeing you happy makes me happy too!', good:'Nice, keep it up!', ok:'A quiet day is fine too. Want to feed me something?',
+        sad:'Big hug… you can tell me anything.', angry:'Who made you angry? Want to punch the boss in the Stress Room?', tired:'You worked hard. Sleep early tonight; tomorrow we go again.'}}
+  }
+};
+const TL = () => TOOLS[state.lang] || TOOLS.en;
+
+// bonus XP lives in state.bonus['YYYY-MM-DD|kind']; returns the new level if she levelled up
+function addBonus(kind, xp){
+  if(!(xp > 0)) return 0;
+  const before = levelInfo(totalXP()).lvl, key = keyOf(today()) + '|' + kind;
+  state.bonus[key] = (+state.bonus[key] || 0) + xp;
+  save();
+  const after = levelInfo(totalXP()).lvl;
+  checkBadges().forEach((b,i) => setTimeout(() => toast(b.seal, `${esc(L().newBadge)}${L().colon}<b>${esc(b[state.lang][0])}</b>`), 1200 + i*900));
+  return after > before ? after : 0;
+}
+function celebrateTool(ribbon, gain, msg, newLevel){
+  const l = L(), el = document.getElementById('celebrate');
+  if(newLevel){ribbon = l.levelUp; msg += ` ${l.youAreNow} ${l.level}${newLevel} ${levelTitle(newLevel)}`;}
+  el.innerHTML = `<img class="celchar" src="${charSrc('happy')}" alt=""><div class="celcard"><div class="ribbon">${esc(ribbon)}</div>
+    ${gain ? `<div class="xp">+${gain} ${l.xp}</div>` : ''}<p>${esc(msg)}</p></div>`;
+  el.classList.remove('show','guide'); void el.offsetWidth; el.classList.add('show');
+  el.onclick = () => el.classList.remove('show');
+  clearTimeout(celTimer); celTimer = setTimeout(() => el.classList.remove('show'), 5000);
+  thump(); confetti(newLevel ? 140 : 60); herReact('happy', 'hop', 4500);
+}
+const toolDlg = document.getElementById('toolDlg'), toolBody = document.getElementById('toolBody');
+toolDlg.addEventListener('close', () => {ui.tool = null; ui.rev = null; try{speechSynthesis.cancel();}catch(e){} render();});
+function openTool(kind){
+  ui.tool = kind; ui.rev = null; if(kind === 'mood') ui.moodDay = keyOf(today());
+  paintTool();
+  if(!toolDlg.open) toolDlg.showModal();
+  toolDlg.scrollTop = 0;
+}
+function paintTool(){
+  const head = t => `<div class="dlghead"><h3>${esc(t)}</h3><button class="ghost" data-tclose="1">${esc(L().close)}</button></div>`;
+  const T = TL();
+  toolBody.innerHTML = ui.tool === 'focus' ? head(T.focus.title) + focusHTML() : ui.tool === 'words' ? head(T.words.title) + wordsHTML() : head(T.mood.title) + moodHTML();
+}
+function toolsRowHTML(){
+  const T = TL(), run = state.focusRun, due = dueWords().length, mood = state.moods[keyOf(today())];
+  return `<div class="tools">
+    <button class="tool ${run ? 'run' : ''}" data-tool="focus"><b>🍅</b><span id="toolClock">${run ? focusClock() : esc(T.names.focus)}</span></button>
+    <button class="tool" data-tool="words"><b>📖</b><span>${esc(T.names.words)}</span>${due ? `<i class="dot">${due > 99 ? '99+' : due}</i>` : ''}</button>
+    <button class="tool" data-tool="mood"><b>${mood ? MOODS[mood.m] : '💭'}</b><span>${esc(mood ? T.mood.names[mood.m] : T.names.mood)}</span></button></div>`;
+}
+
+/* focus timer: state.focusRun = {end, total, mins, label, left}; `left` is set while paused */
+const focusLeft = () => {const r = state.focusRun; return r ? Math.max(0, r.left != null ? r.left : r.end - Date.now()) : 0;};
+const focusClock = () => {const s = Math.ceil(focusLeft()/1000); return `${pad(Math.floor(s/60))}:${pad(s%60)}`;};
+function focusHTML(){
+  const T = TL().focus, l = L(), c = coachName(), r = state.focusRun, k = keyOf(today());
+  const log = state.focusLog.filter(x => x.date === k), mins = log.reduce((a,x) => a + x.mins, 0);
+  const stat = log.length ? `<div class="tstat"><span>🍅 ${esc(fill(T.today, {n:log.length, m:fmtDur(mins)}))}</span></div>` : '';
+  if(r){
+    const p = 100 - focusLeft()/r.total*100;
+    return `<img class="tchar" src="${charSrc(r.left != null ? 'sleepy' : 'remind')}" alt="">
+      <div class="ring" id="focusRing" style="--p:${p.toFixed(2)}"><div><b id="focusClock">${focusClock()}</b><small>${esc(r.label)}</small></div></div>
+      <p class="tlead" style="text-align:center;margin:0 0 14px">${esc(r.left != null ? T.paused : fill(T.with, {c}))}</p>
+      <div class="btnrow"><button class="c3d ${r.left != null ? 'go' : ''}" data-focus="${r.left != null ? 'resume' : 'pause'}" style="flex:1;min-height:52px;font-size:17px">${esc(r.left != null ? T.resume : T.pause)}</button>
+        <button class="ghost danger" data-focus="quit" style="min-height:52px">${esc(T.quit)}</button></div>
+      <div class="hint" style="text-align:center">${esc(T.keepOpen)}</div>`;
+  }
+  const list = tasksFor(today()).filter(t => t.cat !== 'rest' && !isDone(t,k));
+  const last = +lsGet('sq.focusMins') || 25;
+  return `<p class="tlead">${esc(fill(T.lead, {c}))}</p>${stat}
+    <div class="field"><label>${T.mins}</label><div class="seg">${[15,25,45].map(m => `<label><input type="radio" name="fmins" value="${m}" ${m===last?'checked':''}><span>${m} ${T.minU}</span></label>`).join('')}</div></div>
+    <div class="field"><label for="fWhat">${T.what}</label><select id="fWhat"><option value="">${esc(T.free)}</option>${list.map(t => `<option>${esc(taskTitle(t))}</option>`).join('')}</select></div>
+    <button class="c3d go tbig" data-focus="start">${esc(T.start)}</button>
+    <div class="hint" style="text-align:center">${esc(T.keepOpen)}</div>`;
+}
+function focusAct(a, btn){
+  const T = TL().focus, r = state.focusRun;
+  if(a === 'start'){
+    const m = +(toolBody.querySelector('[name=fmins]:checked') || {}).value || 25, what = document.getElementById('fWhat').value;
+    lsSet('sq.focusMins', m);
+    state.focusRun = {end:Date.now() + m*60000, total:m*60000, mins:m, label:what || T.free, left:null};
+  } else if(a === 'pause' && r){r.left = focusLeft();}
+  else if(a === 'resume' && r){r.end = Date.now() + r.left; r.left = null;}
+  else if(a === 'quit'){
+    if(!btn.dataset.armed){btn.dataset.armed = '1'; btn.textContent = T.quitSure; return;}
+    state.focusRun = null;
+  }
+  save(); paintTool();
+}
+function finishFocus(){
+  const r = state.focusRun; if(!r) return;
+  state.focusRun = null;
+  state.focusLog.push({date:keyOf(today()), mins:r.mins, label:r.label, at:Date.now()});
+  if(state.focusLog.length > 400) state.focusLog = state.focusLog.slice(-400);
+  const gain = Math.round(r.mins * .6), lv = addBonus('focus', gain);
+  if(toolDlg.open) toolDlg.close(); else render();
+  celebrateTool(TL().focus.doneR, gain, fill(TL().focus.doneMsg, {m:fmtDur(r.mins)}), lv);
+}
+function focusTick(){
+  const r = state.focusRun; if(!r) return;
+  if(r.left == null && Date.now() >= r.end){finishFocus(); return;}
+  const c = document.getElementById('focusClock'), tc = document.getElementById('toolClock'), ring = document.getElementById('focusRing');
+  if(c) c.textContent = focusClock();
+  if(tc) tc.textContent = focusClock();
+  if(ring) ring.style.setProperty('--p', (100 - focusLeft()/r.total*100).toFixed(2));
+}
+
+/* word cards: {id, w, m, box, due:'YYYY-MM-DD', at} */
+const dueWords = () => state.words.filter(w => w.due <= keyOf(today()));
+function parseWordLine(s){
+  s = s.trim(); if(!s) return null;
+  const m = s.match(/^(.+?)\s*(?:\t|\s[-–—=:：|]\s|[：:=|])\s*(.+)$/) || s.match(/^([A-Za-z][A-Za-z'’ .\-]*?)\s*([^\x00-\x7F].*)$/) || s.match(/^(\S+)\s+(.+)$/);
+  if(!m) return null;
+  const w = m[1].replace(/[\s\-–—]+$/,'').trim(), mean = m[2].trim();
+  return w && mean ? {w, m:mean} : null;
+}
+function addWords(pairs){
+  const have = new Set(state.words.map(x => x.w.toLowerCase())), k = keyOf(today());
+  let n = 0;
+  for(const p of pairs){
+    if(!p || have.has(p.w.toLowerCase())) continue;
+    have.add(p.w.toLowerCase());
+    state.words.unshift({id:'w'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), w:p.w.slice(0,60), m:p.m.slice(0,120), box:0, due:k, at:Date.now()});
+    n++;
+  }
+  if(n) save();
+  return n;
+}
+function speak(word){
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word); u.lang = 'en-US'; u.rate = .85;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function wordsHTML(){
+  const T = TL().words, rv = ui.rev;
+  if(rv){
+    const w = state.words.find(x => x.id === rv.q[rv.i]);
+    if(!w) return '';
+    return `<button class="ghost" data-word="back" style="margin-bottom:12px">${esc(T.back)}</button>
+      <div class="tstat"><span class="num">${rv.i + 1} / ${rv.q.length}</span><span>✓ ${rv.r}</span><span>✗ ${rv.w}</span></div>
+      <div class="flash"><div class="w">${esc(w.w)}</div><button class="ghost" data-say="${esc(w.w)}">${esc(T.listen)}</button>
+        ${rv.shown ? `<div class="m">${esc(w.m)}</div>` : ''}</div>
+      ${rv.shown ? `<div class="btnrow"><button class="c3d red" data-word="forgot" style="flex:1;min-height:56px;font-size:18px">${esc(T.forgot)}</button>
+        <button class="c3d go" data-word="remember" style="flex:1;min-height:56px;font-size:18px">${esc(T.remember)}</button></div>`
+        : `<button class="c3d blue tbig" data-word="show">${esc(T.show)}</button>`}`;
+  }
+  const due = dueWords().length, mastered = state.words.filter(w => w.box >= 5).length;
+  const shown = ui.allWords ? state.words : state.words.slice(0, 30);
+  const rows = shown.map(w => `<div class="wrow"><div><b>${esc(w.w)}</b><small>${esc(w.m)}</small></div>
+    <div class="boxes" aria-hidden="true">${[1,2,3,4,5].map(i => `<i class="${w.box >= i ? 'on' : ''}"></i>`).join('')}</div>
+    <button class="ghost" data-wdel="${esc(w.id)}" aria-label="${esc(L().del)}">✕</button></div>`).join('');
+  return `<p class="tlead">${esc(T.lead)}</p>
+    ${state.words.length ? `<div class="tstat"><span>${esc(fill(T.total, {n:state.words.length}))}</span><span>${esc(fill(T.due, {n:due}))}</span><span>${esc(fill(T.mastered, {n:mastered}))}</span></div>` : ''}
+    ${due ? `<button class="c3d go tbig" data-word="start">${esc(fill(T.review, {n:due}))}</button>` : state.words.length ? `<div class="helpline" style="text-align:center">${esc(T.noDue)}</div>` : ''}
+    <section class="grp" style="margin-top:16px"><h4>${esc(T.add)}</h4>
+      <div class="row" style="margin-top:8px"><div class="field"><label for="wW">${T.word}</label><input id="wW" autocapitalize="off" autocomplete="off" spellcheck="false" maxlength="60" placeholder="apple"></div>
+        <div class="field"><label for="wM">${T.meaning}</label><input id="wM" maxlength="120" placeholder="苹果"></div></div>
+      <div class="err" id="wErr"></div>
+      <div class="btnrow" style="margin:0 0 12px"><button class="c3d" data-word="add" style="flex:1;min-height:48px">${esc(T.addBtn)}</button></div>
+      <details style="margin-bottom:12px"><summary style="font-weight:800;cursor:pointer;min-height:32px">${esc(T.bulk)}</summary>
+        <div class="hint" style="margin:6px 0">${esc(T.bulkHint)}</div><textarea id="wBulk" rows="5" placeholder="apple 苹果&#10;look after 照顾"></textarea>
+        <div class="btnrow"><button class="ghost" data-word="bulk">${esc(T.bulkBtn)}</button></div></details></section>
+    <h3 class="sec-title" style="margin-top:6px">${esc(T.list)}</h3>
+    ${state.words.length ? `<div>${rows}</div>${!ui.allWords && state.words.length > 30 ? `<button class="ghost" data-word="all" style="width:100%;margin-top:8px;min-height:44px">${esc(fill(T.more, {n:state.words.length}))}</button>` : ''}`
+      : `<div class="empty">${esc(T.empty)}</div>`}`;
+}
+function wordAct(a){
+  const T = TL().words, rv = ui.rev, k = keyOf(today());
+  if(a === 'add'){
+    const w = document.getElementById('wW').value.trim(), m = document.getElementById('wM').value.trim();
+    if(!w || !m){document.getElementById('wErr').textContent = T.errWord; return;}
+    const n = addWords([{w, m}]);
+    toast('', esc(n ? fill(T.added, {n}) : T.dup));
+    paintTool(); setTimeout(() => {const i = document.getElementById('wW'); if(i) i.focus();}, 30);
+    return;
+  }
+  if(a === 'bulk'){
+    const n = addWords(document.getElementById('wBulk').value.split(/\r?\n/).map(parseWordLine));
+    toast('', esc(n ? fill(T.added, {n}) : T.dup)); paintTool(); return;
+  }
+  if(a === 'all'){ui.allWords = true; paintTool(); return;}
+  if(a === 'start'){
+    const q = dueWords().sort(() => Math.random() - .5).map(w => w.id);
+    ui.rev = {q, i:0, shown:false, r:0, w:0, again:new Set()};
+  } else if(a === 'back'){ui.rev = null;}
+  else if(a === 'show' && rv){rv.shown = true; const w = state.words.find(x => x.id === rv.q[rv.i]); if(w) speak(w.w);}
+  else if((a === 'remember' || a === 'forgot') && rv){
+    const w = state.words.find(x => x.id === rv.q[rv.i]);
+    if(w){
+      if(a === 'remember'){
+        rv.r++;
+        if(!rv.again.has(w.id)){w.box = Math.min(WORD_GAP.length - 1, w.box + 1); w.due = keyOf(addDays(today(), WORD_GAP[w.box]));}
+      } else {
+        rv.w++; w.box = 0; w.due = keyOf(addDays(today(), 1));
+        if(!rv.again.has(w.id)){rv.again.add(w.id); rv.q.push(w.id);}   // once more at the end of this round
+      }
+      save();
+    }
+    rv.i++; rv.shown = false;
+    if(rv.i >= rv.q.length){
+      const got = +state.bonus[k + '|words'] || 0, gain = Math.max(0, Math.min(rv.r, WORD_XP_DAY - got));
+      const lv = addBonus('words', gain), msg = fill(T.finishMsg, {r:rv.r, w:rv.w});
+      ui.rev = null; paintTool();
+      celebrateTool(T.finish, gain, msg, lv);
+      return;
+    }
+  }
+  paintTool();
+}
+
+/* mood diary: state.moods['YYYY-MM-DD'] = {m, note, at} */
+function moodHTML(){
+  const T = TL().mood, l = L(), c = coachName(), day = ui.moodDay || keyOf(today()), cur = state.moods[day] || {};
+  const isToday = day === keyOf(today()), d = parseKey(day);
+  const dayTxt = state.lang === 'zh' ? `${d.getMonth()+1}月${d.getDate()}日` : fmtDate(d, {month:'short', day:'numeric'});
+  const cal = [...Array(14)].map((_,i) => addDays(today(), i-13)).map(x => {
+    const k = keyOf(x), m = state.moods[k];
+    return `<button class="${k === day ? 'sel' : ''}" data-mday="${k}" aria-label="${esc(k)}"><i>${m ? MOODS[m.m] : ''}</i>${x.getDate()}</button>`;
+  }).join('');
+  return `<p class="tlead">${esc(T.lead)}</p>
+    <div class="field"><label>${esc(isToday ? T.how : fill(T.howDay, {d:dayTxt}))}</label><div class="moods">
+      ${Object.entries(MOODS).map(([k,e]) => `<label><input type="radio" name="mood" value="${k}" ${cur.m===k?'checked':''}><span><i>${e}</i>${esc(T.names[k])}</span></label>`).join('')}</div></div>
+    <div class="field"><label for="mNote">${esc(T.note)}</label><input id="mNote" maxlength="120" value="${esc(cur.note || '')}" placeholder="${esc(T.notePh)}"></div>
+    <button class="c3d go tbig" data-mood="save">${esc(T.save)}</button>
+    <h3 class="sec-title" style="margin-top:28px">${esc(T.last)}</h3><p class="sec-sub">${esc(T.tapDay)}</p>
+    <div class="mcal">${cal}</div>
+    <div style="margin-top:16px"><label class="switch"><input type="checkbox" id="moodShare" ${state.moodShare ? 'checked' : ''}> ${esc(fill(T.share, {c}))}</label>
+    <div class="hint">${esc(fill(T.shareHint, {c}))}</div></div>`;
+}
+function moodSave(){
+  const T = TL().mood, sel = toolBody.querySelector('[name=mood]:checked');
+  if(!sel) return;
+  const day = ui.moodDay || keyOf(today()), m = sel.value;
+  state.moods[day] = {m, note:document.getElementById('mNote').value.trim(), at:Date.now()};
+  save(); toolDlg.close();
+  toast('', `<span style="display:flex;gap:10px;align-items:center">${coachAvatar(MOOD_POSE[m])}<span>${esc(T.reply[m])}</span></span>`);
+  if(m === 'sad' || m === 'tired') herReact('pout', 'hop', 3000); else if(m === 'great' || m === 'good') herReact('happy', 'hop', 3000);
+}
+
+toolBody.addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.dataset.tclose){toolDlg.close(); return;}
+  if(b.dataset.focus){focusAct(b.dataset.focus, b); return;}
+  if(b.dataset.word){wordAct(b.dataset.word); return;}
+  if(b.dataset.say){speak(b.dataset.say); return;}
+  if(b.dataset.wdel){
+    if(!b.dataset.armed){b.dataset.armed = '1'; b.textContent = TL().words.delSure; return;}
+    state.words = state.words.filter(w => w.id !== b.dataset.wdel); save(); paintTool(); return;
+  }
+  if(b.dataset.mday){ui.moodDay = b.dataset.mday; paintTool(); return;}
+  if(b.dataset.mood){moodSave(); return;}
+});
+toolBody.addEventListener('change', e => {
+  if(e.target.id === 'moodShare'){state.moodShare = e.target.checked; save();}
+});
+toolBody.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && (e.target.id === 'wW' || e.target.id === 'wM')){
+    e.preventDefault();
+    if(e.target.id === 'wW') document.getElementById('wM').focus(); else wordAct('add');
+  }
+});
 
 /* ---------- main render ---------- */
 function render(){
@@ -1342,6 +1723,8 @@ view.addEventListener('click', e => {
   const wk = e.target.closest('[data-wk]');
   if(wk){const n = +wk.dataset.wk; ui.weekOffset = n === 0 ? 0 : ui.weekOffset + n; ui.selDay = null; render(); return;}
   if(e.target.closest('[data-addspend]')){openSpend(null); return;}
+  const tl = e.target.closest('[data-tool]');
+  if(tl){openTool(tl.dataset.tool); return;}
   const sp = e.target.closest('[data-spend]');
   if(sp){const x = state.spend.find(y => y.id === sp.dataset.spend); if(x) openSpend(x); return;}
   const mo = e.target.closest('[data-mo]');
@@ -1365,6 +1748,7 @@ view.addEventListener('click', e => {
 view.addEventListener('change', e => {
   if(e.target.id === 'mBudget'){const v = parseFloat(e.target.value); state.budget = v > 0 ? Math.round(v*100) : 0; save(); render();}
   if(e.target.id === 'mShare'){state.spendShare = e.target.checked; save();}
+  if(e.target.id === 'mNag'){state.moneyRemind = e.target.checked; save();}
 });
 
 /* ---------- task dialog ---------- */
@@ -1575,18 +1959,20 @@ function exportData(){
   if(sb) sb.onclick = () => shareFile(f, fail);
   box.scrollIntoView({block:'nearest'});
 }
+// her own records that a schedule backup from him doesn't carry
+const OWN_KEYS = ['spend','budget','spendShare','moneyRemind','bonus','words','moods','moodShare','focusLog','focusRun'];
 function importText(txt){
   try{
     const s = JSON.parse(String(txt).trim());
     if(!s || typeof s !== 'object' || !Array.isArray(s.tasks)) throw 0;
     // a schedule he sends has no photo / her names: keep what she already set on this phone
-    const keep = state.profile, guided = state.guided, pet = state.pet, money = {spend:state.spend, budget:state.budget, spendShare:state.spendShare};
+    const keep = state.profile, guided = state.guided, pet = state.pet, own = Object.fromEntries(OWN_KEYS.map(k => [k, state[k]]));
     state = migrate(Object.assign(freshState(), s));
     if((+(s.pet && s.pet.last) || 0) < (+pet.last || 0)) state.pet = pet;
     for(const k of ['name','avatar','herName','nicks','coach']) if(!String(state.profile[k] || '').trim() && keep[k]) state.profile[k] = keep[k];
     if(guided) state.guided = guided;
-    // a schedule from him carries no spending: keep hers
-    if(!Array.isArray(s.spend)) Object.assign(state, money);
+    // a schedule from him carries no spending, words, moods…: keep hers
+    for(const k of OWN_KEYS) if(!(k in s)) state[k] = own[k];
     save(); profDlg.close(); render(); toast('', L().imported);
   }catch(e){
     const pe = profDlg.open && document.getElementById('pErr');
@@ -1742,16 +2128,18 @@ function coachGreeting(list, k, nm){
   return hi + ' ' + fill(c.left, {d:dn, r:list.length-dn, t:taskTitle(nx), s:nx.start});
 }
 let coachTimer;
-function coachSay(msg, task, k){
+function coachSay(msg, task, k, act){
   const c = COACH[state.lang], el = document.getElementById('coach');
   el.innerHTML = `<div class="coachbox">${coachAvatar(task ? 'happy' : 'remind')}<div style="flex:1;min-width:0">
     <div class="who2">${esc(coachName())}</div><div class="msg">${esc(msg)}</div>
-    <div class="btns">${task ? `<button class="c3d go" id="coachDone">${c.doneBtn}</button>` : ''}<button class="ghost" id="coachOk">${c.ok}</button></div></div></div>`;
+    <div class="btns">${task ? `<button class="c3d go" id="coachDone">${c.doneBtn}</button>` : ''}${act ? `<button class="c3d pink" id="coachAct">${esc(act.label)}</button>` : ''}<button class="ghost" id="coachOk">${c.ok}</button></div></div></div>`;
   el.classList.add('show');
   const hide = () => el.classList.remove('show');
   document.getElementById('coachOk').onclick = hide;
   const db = document.getElementById('coachDone');
   if(db) db.onclick = () => {hide(); if(!isDone(task,k)) toggleDone(task,k);};
+  const ab = document.getElementById('coachAct');
+  if(ab) ab.onclick = () => {hide(); act.fn();};
   clearTimeout(coachTimer);
   coachTimer = setTimeout(hide, 60000);
   beep();
@@ -1772,7 +2160,16 @@ function beep(){
   }catch(e){}
 }
 const fired = new Set();
+// 9 pm: nothing recorded today in 记账 (only once she has started using it, once a day)
+function moneyNag(){
+  const k = keyOf(today()), nm = nowMin(), M = L().money;
+  if(state.moneyRemind === false || !state.spend.length || nm < 21*60 || nm > 23*60+30 || lsGet('sq.moneyNag') === k || state.spend.some(x => x.date === k)) return;
+  if(spendDlg.open || toolDlg.open) return;
+  lsSet('sq.moneyNag', k);
+  coachSay(M.nag, null, null, {label:M.nagBtn, fn:() => {go('money'); openSpend(null);}});
+}
 function checkReminders(){
+  moneyNag();
   if(!state.remind || !state.remind.on) return;
   const c = COACH[state.lang], d = today(), k = keyOf(d), nm = nowMin();
   const before = +state.remind.before || 0;
@@ -2217,12 +2614,17 @@ async function pullState(){
     // first sign-in with progress on this phone: keep both
     if(d.tasks.length) state.tasks = d.tasks;
     for(const k of ['name','herName','nicks','coach']) if(!String(state.profile[k] || '').trim() && d.profile && d.profile[k]) state.profile[k] = d.profile[k];
-    const ids = new Set(state.spend.map(x => x.id));
-    if(Array.isArray(d.spend)) state.spend.push(...d.spend.filter(x => x && !ids.has(x.id)));
+    for(const key of ['spend','words']){
+      const ids = new Set(state[key].map(x => x.id));
+      if(Array.isArray(d[key])) state[key].push(...d[key].filter(x => x && !ids.has(x.id)));
+    }
+    state.moods = Object.assign({}, d.moods || {}, state.moods);
+    if(!state.focusLog.length && Array.isArray(d.focusLog)) state.focusLog = d.focusLog;
     if(!state.budget && d.budget) state.budget = d.budget;
   } else state.tasks = d.tasks;                                       // he edited her schedule
   state.done = Object.assign({}, d.done || {}, state.done);
   state.badges = Object.assign({}, d.badges || {}, state.badges);
+  state.bonus = Object.assign({}, d.bonus || {}, state.bonus);
   lsSet('sq.lastPush', row.updated_at);
   save();
   if(last && theirs) toast('', esc(fill(accT().hisEdit, {c:coachName()})));
@@ -2260,7 +2662,7 @@ function nextMsg(){
   clearTimeout(msgTimer);
   if(!msgQ.length || document.hidden) return;
   const el = document.getElementById('celebrate');
-  if(el.classList.contains('show') || taskDlg.open || spendDlg.open || profDlg.open){msgTimer = setTimeout(nextMsg, 2500); return;}
+  if(el.classList.contains('show') || taskDlg.open || spendDlg.open || toolDlg.open || profDlg.open){msgTimer = setTimeout(nextMsg, 2500); return;}
   const m = msgQ.shift(), a = accT(), k = a.kinds[m.kind] ? m.kind : 'note', c = coachName();
   const pose = {kiss:'kiss', hug:'love', gift:'happy', reward:'happy', note:'remind'}[k];
   el.innerHTML = `<img class="celchar" src="${charSrc(pose)}" alt=""><div class="celcard"><div class="ribbon">${esc(fill(a.kinds[k], {c}))}</div>
@@ -2539,6 +2941,7 @@ setInterval(() => {
   else if(ui.tab === 'week') render();
 }, 30000);
 setInterval(checkReminders, 20000);
+setInterval(focusTick, 1000);
 setTimeout(checkReminders, 1500);
 
 matchMedia('(max-width:760px)').addEventListener('change', render);

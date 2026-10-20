@@ -25,6 +25,8 @@ Two home-screen web apps for one person: a Chinese university student (her boyfr
 - A task: `{id, title, titleZh, cat, start:'HH:MM', end:'HH:MM'|'', repeat:[0-6 weekdays, 0=Sun], date:'YYYY-MM-DD'|null, diff:1|2|3, notes}`. Weekly tasks use `repeat`; one-off tasks use `date`. Times cannot cross midnight (use a note instead).
 - Completion: `state.done['<taskId>|YYYY-MM-DD'] = xpEarned`. XP, level, streak and badges are all derived from `done`.
 - Spending diary (记账 tab): `state.spend = [{id, fen, cat, pay, note, date:'YYYY-MM-DD', at}]` (amounts in fen = 1/100 yuan), `state.budget` (fen per month, 0 = none), `state.spendShare` (she lets him see it on partner.html; off by default). Categories in `SPEND_CATS`, payment methods in `PAYS`. Money never gives XP. A schedule import without `spend` keeps her spending.
+- Income lives in the same `state.spend` list with `type:'in'` (categories `IN_CATS`); spending is everything else. `state.moneyRemind` = the 9 pm "did you record today?" pop-up (only once she has used 记账).
+- Study tools (home row 🍅专注 / 📖单词 / 💭心情, one `toolDlg` panel): `state.focusRun` (running timer, end timestamp so a locked screen keeps counting), `state.focusLog`; `state.words = [{id, w, m, box, due}]` reviewed Leitner-style (`WORD_GAP` days); `state.moods['YYYY-MM-DD'] = {m, note}`, `state.moodShare` for his page. Bonus XP from focus and remembered words goes in `state.bonus['YYYY-MM-DD|kind']` and counts in `totalXP()` (partner.html adds it too). `OWN_KEYS` lists her records a schedule import must keep.
 - `SEED_VER` / `mergeSeeds()` exist for adding built-in tasks to existing saves; currently unused because seeds are empty.
 
 ## Releasing a change

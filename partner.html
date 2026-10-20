@@ -356,6 +356,7 @@ const T = {
     upPh:'在这里粘贴备份文字…', upFile:'选择 .json 文件', upGo:'上传课表', upOk:'已上传 {n} 个任务！她打开 App 就会自动更新',
     errUpEmpty:'先粘贴备份文字，或者选一个文件。', errUpJson:'这不是有效的备份文字。请把备份完整复制过来再试。', errUpTasks:'备份里没有找到课表（tasks）。请确认复制的是学习闯关的备份。',
     upHomeT:'她的课表还是空的', upHomeP:'可以在「课表」里一次上传她的完整课表。', upHomeBtn:'去上传课表',
+    moodT:'她的心情', moodNone:'今天还没记心情', moodNames:{great:'超开心',good:'不错',ok:'一般',sad:'难过',angry:'生气',tired:'好累'}, moodLow:'她今天不太开心，去「送爱」抱抱她吧',
     spT:'她的记账', spToday:'今天花了', spMonth:'这个月', spBudget:'预算 {b}', spNone:'今天还没有记账',
     spCats:{food:'餐饮',drink:'奶茶零食',transport:'交通',shopping:'购物',beauty:'美妆护肤',study:'学习',daily:'日用品',fun:'娱乐',sport:'运动',gift:'送礼',phone:'话费网费',other:'其他'}
   },
@@ -399,6 +400,7 @@ const T = {
     upPh:'Paste the backup text here…', upFile:'Choose a .json file', upGo:'Upload schedule', upOk:'Uploaded {n} tasks! Her app updates next time she opens it',
     errUpEmpty:'Paste the backup text or choose a file first.', errUpJson:'That isn\'t valid backup text. Copy the whole backup and try again.', errUpTasks:'No schedule (tasks) found in that backup. Make sure it\'s a Study Quest backup.',
     upHomeT:'Her schedule is still empty', upHomeP:'You can upload her whole schedule at once in Schedule.', upHomeBtn:'Upload her schedule',
+    moodT:'Her mood', moodNone:'No mood recorded today', moodNames:{great:'Great',good:'Good',ok:'Okay',sad:'Sad',angry:'Angry',tired:'Tired'}, moodLow:'She is not feeling great today. Send her a hug in Send love',
     spT:'Her spending', spToday:'Spent today', spMonth:'This month', spBudget:'budget {b}', spNone:'Nothing recorded today',
     spCats:{food:'Meals',drink:'Drinks & snacks',transport:'Transport',shopping:'Shopping',beauty:'Beauty',study:'Study',daily:'Daily needs',fun:'Fun',sport:'Sport',gift:'Gifts',phone:'Phone & data',other:'Other'}
   }
@@ -463,7 +465,7 @@ function tasksFor(d){
 }
 function herStats(){
   const done = herDone();
-  const xp = Object.values(done).reduce((a,b) => a+(+b||0), 0);
+  const xp = [...Object.values(done), ...Object.values(herData().bonus || {})].reduce((a,b) => a+(+b||0), 0);   // tasks + focus/word bonuses
   const dates = new Set(Object.keys(done).map(k => k.split('|')[1]));
   let d = herToday(), streak = 0;
   if(!dates.has(keyOf(d))) d = addDays(d,-1);
@@ -787,7 +789,7 @@ function renderHome(){
         <span class="big">${dn}/${list.length}</span></div>
       <div class="meter"><span>${l.weekPct}</span><div class="track"><i style="width:${st.wPct}%"></i></div><span class="num">${st.wPct}%</span></div>
       ${list.length ? rows : `<div class="empty">${l.noTasks}</div>`}
-    </div>${spendCard()}${herTasks().length ? '' : upNote()}`;
+    </div>${moodCard()}${spendCard()}${herTasks().length ? '' : upNote()}`;
   bindHome(); bindUpNote();
   const doll = document.getElementById('herDoll');
   doll.onclick = () => {
@@ -797,6 +799,19 @@ function renderHome(){
     toast(l.tapHer);
   };
 }
+/* her mood diary, only when she shares it */
+const MOOD_EMO = {great:'😄', good:'🙂', ok:'😐', sad:'😢', angry:'😠', tired:'😴'};
+function moodCard(){
+  const d = herData(), l = L();
+  if(!d.moodShare || !d.moods || typeof d.moods !== 'object') return '';
+  const tk = keyOf(herToday()), cur = d.moods[tk];
+  const week = [...Array(7)].map((_,i) => addDays(herToday(), i-6)).map(x => {const m = d.moods[keyOf(x)];
+    return `<div style="text-align:center;font-size:11px;font-weight:700;color:var(--pencil)"><div style="font-size:22px;min-height:30px">${m ? MOOD_EMO[m.m] || '' : '·'}</div>${x.getDate()}</div>`;}).join('');
+  return `<div class="card today"><div class="thead"><h2>${l.moodT}</h2><span class="big">${cur ? MOOD_EMO[cur.m] || '' : ''}</span></div>
+    ${cur ? `<div class="t-title">${esc(l.moodNames[cur.m] || '')}${cur.note ? ' · ' + esc(cur.note) : ''}</div>${cur.m === 'sad' || cur.m === 'angry' || cur.m === 'tired' ? `<div class="t-meta" style="margin-top:4px">💗 ${l.moodLow}</div>` : ''}`
+      : `<div class="t-meta">${l.moodNone}</div>`}
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px">${week}</div></div>`;
+}
 /* her spending diary, only when she has switched on sharing in her app */
 const SP_EMO = {food:'🍜',drink:'🧋',transport:'🚌',shopping:'🛍️',beauty:'💄',study:'📚',daily:'🧴',fun:'🎮',sport:'🏸',gift:'🎁',phone:'📱',other:'✨'};
 const yuan = fen => '¥' + (fen/100).toLocaleString(locale(), {minimumFractionDigits: fen % 100 ? 2 : 0, maximumFractionDigits:2});
@@ -805,7 +820,8 @@ function spendCard(){
   if(!d.spendShare || !Array.isArray(d.spend)) return '';
   const tk = keyOf(herToday()), mk = tk.slice(0,7);
   const sum = a => a.reduce((s,x) => s + (+x.fen || 0), 0);
-  const todays = d.spend.filter(x => x.date === tk).sort((a,b) => (b.at||0) - (a.at||0)), month = sum(d.spend.filter(x => String(x.date).startsWith(mk)));
+  const outs = d.spend.filter(x => x.type !== 'in');
+  const todays = outs.filter(x => x.date === tk).sort((a,b) => (b.at||0) - (a.at||0)), month = sum(outs.filter(x => String(x.date).startsWith(mk)));
   const rows = todays.map(x => `<div class="trow" style="grid-template-columns:36px minmax(0,1fr) auto;min-height:48px"><div style="font-size:22px;text-align:center">${SP_EMO[x.cat] || '✨'}</div>
     <div><div class="t-title">${esc(x.note || l.spCats[x.cat] || '')}</div>${x.note ? `<div class="t-meta">${esc(l.spCats[x.cat] || '')}</div>` : ''}</div><b class="num">${yuan(+x.fen || 0)}</b></div>`).join('');
   return `<div class="card today"><div class="thead"><h2>${l.spT}</h2><span class="big">${yuan(sum(todays))}</span></div>
